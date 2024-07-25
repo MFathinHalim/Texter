@@ -28,16 +28,23 @@ router
   .get(async (req: Request, res: Response) => {
     try {
       try {
-        const data = req.query.id
-          ? await PostsClass.getData(req.query.id?.toString(), 0, 0)
-          : {};
+        const id = req.query.id ? req.query.id.toString() : "";
 
-        if (data) {
-          return res.render(req.query.id ? "details" : "homepage", data);
-        } else {
-          // Handle case where data is not found or undefined
-          return res.render("homepage", {}); // Render homepage with empty data
-        }
+        PostsClass.getData(id, 0, 0)
+          .then((data) => {
+            if (data) {
+              // Render halaman yang sesuai dengan data
+              return res.render(id ? "details" : "homepage", data);
+            } else {
+              // Handle case where data is not found or undefined
+              return res.render("homepage", {}); // Render homepage with empty data
+            }
+          })
+          .catch((error) => {
+            // Tangani error jika terjadi selama proses
+            console.error("Error fetching data:", error);
+            return res.render("homepage", {}); // Render homepage dengan data kosong sebagai fallback
+          });
       } catch (error) {
         // Handle error if getData function throws an error
         console.error("Error fetching data:", error);
@@ -135,7 +142,9 @@ router.route("/like/").post(async (req: Request, res: Response) => {
   let likes: number | postType = 0;
   if (checkToken) {
     const user: any = await userClass.checkUserUname(req.body.user.username);
-    likes = await PostsClass.liking(req.body.id, user);
+    if (user && req.body.user.username) {
+      likes = await PostsClass.liking(req.body.id, user);
+    }
   }
   return res.json({
     likes: likes,
@@ -254,11 +263,12 @@ router
   });
 
 router.route("/user/check").get(async (req: Request, res: Response) => {
-  const checkUser: boolean = await userClass.checkIsUserBan(
-    req.query.username?.toString() || ""
+  const checkUser = await userClass.checkIsUserBan(
+    req.query.id?.toString() || ""
   );
   return res.json({
-    check: checkUser,
+    check: checkUser.ban,
+    user: checkUser,
   });
 });
 

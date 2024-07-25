@@ -44,18 +44,16 @@
         if(!username) {
             window.location.href = "/login"
         }
-        fetch(`/user/check?username=${username}`).then(res => res.json()).then(check => {
-            if(check.check === true) {
+        fetch(`/user/check?id=${id}`).then(res => res.json()).then(check => {
+            if(check.check === true || check.user.username !== username || check.user.name !== name || check.user.id !== id) {
                 logout()
             } 
-            fetch(`/user/details/json/${username}`).then(res => res.json()).then(hasil => {
-                document.getElementById("mypfp").src = hasil.user.user.pp;
-                document.getElementById("myname").innerText = hasil.user.user.name;
-                document.getElementById("myusername").innerText = `@${hasil.user.user.username}`;
-                document.getElementById("mydesc").innerText = hasil.user.user.desc != undefined ? hasil.user.user.desc : "";
-                document.getElementById("myfollowing").innerHTML = `<i class="fa-solid fa-user-group"></i> ${hasil.user.user.following.length} following`;
-                document.getElementById("myfollowers").innerHTML = `<i class="fa-solid fa-user-group"></i> ${hasil.user.user.followers.length} followers`;
-            });
+            document.getElementById("mypfp").src = check.user.pp;
+            document.getElementById("myname").innerText = check.user.name;
+            document.getElementById("myusername").innerText = `@${check.user.username}`;
+            document.getElementById("mydesc").innerText = check.user.desc != undefined ? check.user.desc : "";
+            document.getElementById("myfollowing").innerHTML = `<i class="fa-solid fa-user-group"></i> ${check.user.following.length} following`;
+            document.getElementById("myfollowers").innerHTML = `<i class="fa-solid fa-user-group"></i> ${check.user.followers.length} followers`;
             return
         });
         fetch('/madeToken', {
@@ -70,7 +68,7 @@
         }).then(res => res.json()).then(data => {
             sessionStorage.setItem('token', data.token); 
         });
-    }
+
 
     const token = sessionStorage.getItem('token');
     // Send a fetch request to the server for posting
@@ -97,7 +95,7 @@
             time: time,
             user: {username: username, name: name, id: id},
             like: { total: 0, users: [] },
-            replyTo: replyTo ? JSON.parse(replyTo).id : "",
+            replyTo: replyTo ? replyTo : "",
             ogId: ogId,
             repost: repost,
             reQuote: reQuote ? JSON.parse(reQuote) : undefined
@@ -211,6 +209,6 @@
             window.location.reload()
         })
     }
-
+    }
 </script>
 </html>

@@ -58,6 +58,7 @@ class Users {
     desc: string
   ): Promise<userType> {
     password = await bcrypt.hash(btoa(password), 10);
+    if (username === "") return this.#error[0];
     //untuk signup
     const isNameTaken = await this.#users.findOne({
       $or: [{ username: username }],
@@ -72,9 +73,9 @@ class Users {
         Math.random().toString(16).slice(2) +
         "tme:" +
         time,
-      name: name,
-      username: username,
-      desc: desc,
+      name: name.replace(/<[^>]+>/g, ""),
+      username: username.replace(/<[^>]+>/g, ""),
+      desc: desc.replace(/<[^>]+>/g, ""),
       password: password,
       pp: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
       ban: false,
@@ -90,7 +91,10 @@ class Users {
   async login(username: string, password: string): Promise<userType | {}> {
     //Login
     try {
-      const user = await this.#users.findOne({ username, ban: false });
+      const user = await this.#users.findOne({
+        username: username.replace(/<[^>]+>/g, ""),
+        ban: false,
+      });
       if (!user) {
         return this.#error[1]; // User not found or banned
       }
@@ -102,8 +106,8 @@ class Users {
       if (!isPasswordValid) return this.#error[1]; // Invalid password
 
       return {
-        username: user.username,
-        name: user.name,
+        username: user.username.replace(/<[^>]+>/g, ""),
+        name: user.name.replace(/<[^>]+>/g, ""),
         id: user.id,
       };
     } catch (error) {
@@ -247,13 +251,15 @@ class Users {
     }
   }
 
-  async checkIsUserBan(username: string): Promise<boolean> {
+  async checkIsUserBan(
+    id: string
+  ): Promise<(Document<userType, any, any> & userType) | userType> {
     const user: (Document<userType, any, any> & userType) | null =
-      await this.#users.findOne({ username: username });
-    if (user && user.ban !== true) {
-      return false;
+      await this.#users.findOne({ id: id });
+    if (user) {
+      return user;
     } else {
-      return true;
+      return this.#error[1];
     }
   }
   async editProfile(
@@ -262,6 +268,7 @@ class Users {
   ): Promise<userType | {}> {
     try {
       const user = await this.#users.findOne({ id: userData.id });
+      if (userData.username === "") return this.#error[0];
       if (!user) {
         return this.#error[1]; // User not found
       }
@@ -272,10 +279,10 @@ class Users {
 
       await user.save();
       return {
-        username: user.username,
-        name: user.name,
+        username: user.username.replace(/<[^>]+>/g, ""),
+        name: user.name.replace(/<[^>]+>/g, ""),
         pp: user.pp,
-        desc: user.desc,
+        desc: user.desc.replace(/<[^>]+>/g, ""),
       };
     } catch (error) {
       console.error("Error editing profile:", error);

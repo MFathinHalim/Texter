@@ -128,7 +128,7 @@ class Posts {
           },
         })
         .exec();
-      posts = posts.filter((post) => post.user.id === userId);
+      posts = posts.filter((post) => post.user?.id === userId);
       return { posts };
     } else {
       try {

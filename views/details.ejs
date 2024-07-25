@@ -9,23 +9,23 @@
 <div class="p-3 border-light rounded-0 pb-0">
   <div class="d-flex align-items-center" id="top">
     <a
-      href="/user/details/<%= post.user.username %>"
+      href="/user/details/<%= post.user.username.replace(/<[^>]+>/g, "") %>"
       class="d-flex align-items-center"
     >
       <img
         src="<%= post.user.pp %>"
         class="rounded-circle"
-        style="max-height: 80px; border: 2px solid var(--accent1)"
+        style="height: 80px; width:80px; border: 2px solid var(--accent1)"
       />
     </a>
     <div class="d-flex flex-column ms-2 me-auto">
       <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
-      <h3 class="h2" style="margin-bottom: 3px"><%= post.user.name %></h3>
+      <h3 class="h2" style="margin-bottom: 3px"><%= post.user.name.replace(/<[^>]+>/g, "") %></h3>
       <p style="margin-bottom: 5px" class="text-secondary">
-        @<%= post.user.username %>
+        @<%= post.user.username.replace(/<[^>]+>/g, "") %>
       </p>
       <p style="margin-bottom: 0">
-        <%= post.user.desc != "" ? post.user.desc : "" %>
+        <%= post.user.desc != "" ? post.user.desc.replace(/<[^>]+>/g, "") : "" %>
       </p>
     </div>
 
@@ -58,8 +58,8 @@
     <div class="d-flex flex-column ms-2 me-auto pt-2">
       <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
       <h4>
-        <%= post.user.name %> <%= post.reQuote ? `is Requote to
-        ${post.reQuote.user.name}` : "" %>
+        <%= post.user.name.replace(/<[^>]+>/g, "") %> <%= post.reQuote ? `is
+        Requote to ${post.reQuote.user.name.replace(/<[^>]+>/g, "")}` : "" %>
       </h4>
       <h4 class="text-secondary"><%= post.time %></h4>
     </div>
@@ -78,7 +78,7 @@
       <article class="d-flex pt-2">
         <img class="pfp rounded-circle" src="<%= post.reQuote.user.pp %>" />
         <div class="ms-2">
-          <h4 class="mb-1"><%= post.reQuote.user.name %></h4>
+          <h4 class="mb-1"><%= post.reQuote.user.name.replace(/<[^>]+>/g, "") %></h4>
           <h5 class="text-secondary"><%= post.reQuote.time %></h5>
         </div>
       </article>
@@ -115,7 +115,7 @@
 <form
   class="bg-dark text-white post p-3 border-light rounded-0 pb-0"
   id="reply"
-  onsubmit="sendPostRequest(this, '<%= JSON.stringify(post) %>', undefined, undefined, undefined)"
+  onsubmit="sendPostRequest(this, '<%= post.id %>', undefined, undefined, undefined)"
 >
   <div class="d-flex flex-column mb-2">
     <label for="title" class="h5 text-warning">
@@ -155,7 +155,7 @@
 </form>
 <form
   class="bg-dark text-white post p-3 border-light rounded-0 pb-0"
-  onsubmit="sendPostRequest(this, undefined, '<%= JSON.stringify(post) %>', undefined, undefined)"
+  onsubmit="sendPostRequest(this, undefined, '<%= JSON.stringify({ id: post.id, user: post.user, time: post.time, title: post.title})%>', undefined, undefined)"
 >
   <div class="d-flex flex-column mb-2">
     <label for="title" class="h5 text-success">
@@ -205,8 +205,8 @@
       <div class="d-flex flex-column ms-2 me-auto pt-2">
         <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
         <h4>
-          <%= reply.user.name %> <%= reply.reQuote ? `is Requote to
-          ${reply.reQuote.user.name}` : "" %>
+          <%= reply.user.name.replace(/<[^>]+>/g, "") %> <%= reply.reQuote ? `is
+          Requote to ${reply.reQuote.user.name.replace(/<[^>]+>/g, "")}` : "" %>
         </h4>
         <h4 class="text-secondary"><%= reply.time %></h4>
       </div>

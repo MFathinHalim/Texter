@@ -76,16 +76,23 @@
         ${
           post.repost
             ? `
-          <h4>${post.user.name} was reposted</h4>
-          <img class="pfp rounded-circle" style="max-width: 150px; max-height: 150px;" src="${post.user.pp}" />
-          <h3>${post.repost.name}</h3>
+          <h4>${post.user.name.replace(/<[^>]+>/g, "")} was reposted</h4>
+          <img class="pfp rounded-circle" style="max-width: 150px; max-height: 150px;" src="${
+            post.user.pp
+          }" />
+          <h3>${post.repost.name.replace(/<[^>]+>/g, "")}</h3>
         `
             : `
             <img class="pfp rounded-circle" src="${post.user.pp}" />
             <div class="ms-2">
               <h4>
-                ${post.user.name} ${
-                post.reQuote ? `is Requote to ${post.reQuote.user.name}` : ""
+                ${post.user.name.replace(/<[^>]+>/g, "")} ${
+                post.reQuote
+                  ? `is Requote to ${post.reQuote.user.name.replace(
+                      /<[^>]+>/g,
+                      ""
+                    )}`
+                  : ""
               }
               </h4>
               `
@@ -114,7 +121,10 @@
             <article class="d-flex pt-2">
               <img class="pfp rounded-circle" src="${post.reQuote.user.pp}" />
               <div class="ms-2">
-                <h4 class="mb-0">${post.reQuote.user.name}</h4>
+                <h4 class="mb-0">${post.reQuote.user.name.replace(
+                  /<[^>]+>/g,
+                  ""
+                )}</h4>
                 <h5 class="text-secondary">${post.reQuote.time}</h5>
               </div>
             </article>
