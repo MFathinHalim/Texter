@@ -77,11 +77,18 @@
     function sendPostRequest(form, replyTo, reQuote, ogId, repostPost) {
         event.preventDefault(); // Prevent default form submission
         document.getElementById("loading-screen").classList.remove("d-none");
-        repostPost = repostPost ? JSON.parse(repostPost) : undefined;
+        repostPost = repostPost ? repostPost : undefined;
         const time = new Date().toLocaleDateString();
         const repost = repostPost ? repostPost.user : undefined;
         const formData = new FormData(); 
-        form.querySelector("button").remove()
+        if(!repostPost) {
+            form.querySelector("button").remove()
+            if (form.querySelector("#img").files[0]) {
+                formData.append('image', form.querySelector("#img").files[0]); 
+            } else {
+                formData.append('image', ''); // Empty string if no image selected
+            }
+        }
 
         // Append data to FormData
         const data = {
@@ -99,11 +106,6 @@
         formData.append('data', JSON.stringify(data));
         formData.append('token', token); // Assuming you have 'token' available
         // Handle image upload
-        if (form.querySelector("#img").files[0]) {
-            formData.append('image', form.querySelector("#img").files[0]); 
-        } else {
-            formData.append('image', ''); // Empty string if no image selected
-        }
 
         // Send POST request using fetch
         fetch('/', {

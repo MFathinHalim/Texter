@@ -139,14 +139,21 @@
         }" class="btn btn-outline-secondary rounded-pill text-black ms-2">
             <i class="fa-solid fa-comment"></i> Reply
         </a>
-        <button class="btn btn-outline-success rounded-pill ms-2" onclick="sendPostRequest(undefined, undefined, undefined, '${
+        <button class="btn btn-outline-success rounded-pill ms-2" onclick='sendPostRequest(undefined, undefined, undefined, "${
           post.id
-        }', ${JSON.stringify(post)
+        }", ${JSON.stringify({
+        title: post.title,
+        user: {
+          id: post.user.id,
+          name: post.user.name,
+          username: post.user.username,
+        },
+      })
         .replace(/</g, "\\u003c")
         .replace(
           />/g,
           "\\u003e"
-        )})"><i class="fa-solid fa-recycle"></i> Repost</button>
+        )})'><i class="fa-solid fa-recycle"></i> Repost</button>
       </div>
     </div>
     `;

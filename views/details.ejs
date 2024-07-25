@@ -15,7 +15,7 @@
       <img
         src="<%= post.user.pp %>"
         class="rounded-circle"
-        style="max-height: 100px; border: 2px solid var(--accent1)"
+        style="max-height: 80px; border: 2px solid var(--accent1)"
       />
     </a>
     <div class="d-flex flex-column ms-2 me-auto">
@@ -106,7 +106,7 @@
     </a>
     <button
       class="btn btn-outline-success rounded-pill ms-2"
-      onclick="sendPostRequest(undefined, undefined, undefined, '<%= post.id %>', '<%= JSON.stringify(post) %>')"
+      onclick="sendPostRequest(undefined, undefined, undefined, '<%= post.id %>', '<%= JSON.stringify({title: post.title,user: {id: post.user.id,name: post.user.name,username: post.user.username,},}) %>')"
     >
       <i class="fa-solid fa-recycle"></i> Repost
     </button>
