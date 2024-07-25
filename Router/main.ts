@@ -77,14 +77,30 @@ router
             img = result.url; // Save the uploaded image URL
 
             // Post data to PostsClass
-            await PostsClass.posting(userData, user, img);
-            return res.redirect(`/?id=${req.body.id}`);
+            await PostsClass.posting(userData, user, img)
+              .then(() => {
+                res.redirect(`/?id=${req.body.id}`);
+              })
+              .catch((error) => {
+                // Tangani error jika diperlukan
+                console.error("Error posting:", error);
+                // Atau tampilkan pesan error
+                res.status(500).send("Error posting");
+              });
           }
         );
       } else {
         // Post data to PostsClass
-        await PostsClass.posting(userData, user, img);
-        return res.redirect(`/?id=${req.body.id}`);
+        await PostsClass.posting(userData, user, img)
+          .then(() => {
+            res.redirect(`/?id=${req.body.id}`);
+          })
+          .catch((error) => {
+            // Tangani error jika diperlukan
+            console.error("Error posting:", error);
+            // Atau tampilkan pesan error
+            res.status(500).send("Error posting");
+          });
       }
     } catch (error) {
       console.error("Error posting data:", error);
@@ -109,7 +125,7 @@ router.route("/like/").post(async (req: Request, res: Response) => {
   let likes: number | postType = 0;
   if (checkToken) {
     const user: any = await userClass.checkUserId(req.body.user.id);
-    likes = await PostsClass.liking(req.body.post.id, user);
+    likes = await PostsClass.liking(req.body.id, user);
   }
   return res.json({
     likes: likes,
@@ -244,7 +260,7 @@ router
   }) //untuk get login, ya di render aja
   .post(async (req: Request, res: Response) => {
     let result: any = await userClass.login(
-      req.body.username,
+      req.body.username.replace(" ", ""),
       req.body.password
     ); //liat hasil resultnya nih
 

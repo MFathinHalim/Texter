@@ -76,6 +76,7 @@
     // Send a fetch request to the server for posting
     function sendPostRequest(form, replyTo, reQuote, ogId, repostPost) {
         event.preventDefault(); // Prevent default form submission
+        document.getElementById("loading-screen").classList.remove("d-none");
         repostPost = repostPost ? JSON.parse(repostPost) : undefined;
         const time = new Date().toLocaleDateString();
         const repost = repostPost ? repostPost.user : undefined;
@@ -167,15 +168,14 @@
         })
     }
 
-    function sendLikeRequest(post, button) {
-        post = JSON.parse(post)
+    function sendLikeRequest(id, button) {
         fetch(`/like/`, {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-            post: post,
+            id: id,
             user: {
                 id: id,
                 username: username,

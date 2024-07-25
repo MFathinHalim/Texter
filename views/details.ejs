@@ -1,4 +1,11 @@
-<%- include("partials/header.ejs") %> <% if(post) { %>
+<%- include("partials/header.ejs") %>
+<div id="loading-screen" class="d-none">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <p>Loading...</p>
+</div>
+<% if(post) { %>
 <div class="p-3 border-light rounded-0 pb-0">
   <div class="d-flex align-items-center" id="top">
     <a

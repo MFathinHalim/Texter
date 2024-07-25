@@ -1,0 +1,9 @@
+<%- include("partials/header.ejs") %>
+<div class="container border-light rounded-lg p-3">
+  <h2>Error</h2>
+  <p>Type: <%= type %></p>
+  <p>Error: <%= error.name %></p>
+  <a class="text-info text-decoration-underline" href="/login">Back</a>
+  <!-- Tambahkan pesan error atau informasi tambahan yang relevan -->
+</div>
+<%- include("partials/footer.ejs") %>

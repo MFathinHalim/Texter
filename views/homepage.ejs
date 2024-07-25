@@ -38,6 +38,12 @@
         Post
       </button>
     </div>
+    <div id="loading-screen" class="d-none">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p>Loading...</p>
+    </div>
   </form>
   <div id="post-container"></div>
 </div>
@@ -124,9 +130,9 @@
           : ""
       }
       <div class="d-flex">
-        <button class="btn btn-outline-danger rounded-pill" onclick="sendLikeRequest('${escapeHTMLAttribute(
-          JSON.stringify(post)
-        )}', this)">
+        <button class="btn btn-outline-danger rounded-pill" onclick="sendLikeRequest('${
+          post.id
+        }', this)">
         <i class="fa-solid fa-heart"></i> ${post.like.total}
         </button>
         <a href="/?id=${
