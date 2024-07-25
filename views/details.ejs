@@ -244,7 +244,7 @@
     .then((res) => res.json())
     .then((check) => {
       if (check.isFollowing) {
-        followBtn.innerText = "Unfollow";
+        followBtn.innerText = "Remove";
         followBtn.classList.remove("btn-outline-success");
         followBtn.classList.add("btn-outline-danger");
       }
