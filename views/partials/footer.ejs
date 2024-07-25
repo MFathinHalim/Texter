@@ -81,6 +81,7 @@
         const time = new Date().toLocaleDateString();
         const repost = repostPost ? repostPost.user : undefined;
         const formData = new FormData(); 
+        form.querySelector("button").remove()
 
         // Append data to FormData
         const data = {

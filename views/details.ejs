@@ -94,7 +94,7 @@
   <div class="d-flex mb-2">
     <button
       class="btn btn-outline-danger rounded-pill"
-      onclick="sendLikeRequest('<%= JSON.stringify(post) %>', this)"
+      onclick="sendLikeRequest('<%= post.id %>', this)"
     >
       <i class="fa-solid fa-heart"></i> <%= post.like.total %>
     </button>
@@ -219,7 +219,7 @@
   <div class="d-flex mb-2">
     <button
       class="btn btn-outline-danger rounded-pill"
-      onclick="sendLikeRequest('<%= JSON.stringify(reply) %>', this)"
+      onclick="sendLikeRequest('<%= reply.id %>', this)"
     >
       <i class="fa-solid fa-heart"></i> <%= reply.like.total %>
     </button>

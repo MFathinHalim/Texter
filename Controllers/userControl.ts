@@ -76,7 +76,7 @@ class Users {
       username: username,
       desc: desc,
       password: password,
-      pp: "https://cdn.glitch.global/55de0177-2d52-43bf-a066-45796ec8e7c9/fathin.jpeg?v=1713409662281",
+      pp: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
       ban: false,
       followers: [],
       following: [],
@@ -229,6 +229,17 @@ class Users {
   ): Promise<(Document<userType, any, any> & userType) | userType> {
     const user: (Document<userType, any, any> & userType) | null =
       await this.#users.findOne({ id: userId });
+    if (user) {
+      return user;
+    } else {
+      return this.#error[1];
+    }
+  }
+  async checkUserUname(
+    username: string
+  ): Promise<(Document<userType, any, any> & userType) | userType> {
+    const user: (Document<userType, any, any> & userType) | null =
+      await this.#users.findOne({ username: username });
     if (user) {
       return user;
     } else {

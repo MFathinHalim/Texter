@@ -27,11 +27,21 @@ router
   .route("/") // Route /
   .get(async (req: Request, res: Response) => {
     try {
-      const data = req.query.id
-        ? await PostsClass.getData(req.query.id?.toString(), 0, 0)
-        : {};
-      if (data) {
-        return res.render(req.query.id ? "details" : "homepage", data);
+      try {
+        const data = req.query.id
+          ? await PostsClass.getData(req.query.id?.toString(), 0, 0)
+          : {};
+
+        if (data) {
+          return res.render(req.query.id ? "details" : "homepage", data);
+        } else {
+          // Handle case where data is not found or undefined
+          return res.render("homepage", {}); // Render homepage with empty data
+        }
+      } catch (error) {
+        // Handle error if getData function throws an error
+        console.error("Error fetching data:", error);
+        return res.status(500).send("Error fetching data");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -124,7 +134,7 @@ router.route("/like/").post(async (req: Request, res: Response) => {
   const checkToken: boolean = await userClass.checkAccessToken(req.body.token);
   let likes: number | postType = 0;
   if (checkToken) {
-    const user: any = await userClass.checkUserId(req.body.user.id);
+    const user: any = await userClass.checkUserUname(req.body.user.username);
     likes = await PostsClass.liking(req.body.id, user);
   }
   return res.json({
