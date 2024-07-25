@@ -45,7 +45,7 @@
             window.location.href = "/login"
         }
         fetch(`/user/check?id=${id}`).then(res => res.json()).then(check => {
-            if(check.check === true || check.user.username !== username || check.user.name !== name || check.user.id !== id) {
+            if(check.check === true || check.user.username !== username || check.user.id !== id) {
                 logout()
             } 
             document.getElementById("mypfp").src = check.user.pp;
