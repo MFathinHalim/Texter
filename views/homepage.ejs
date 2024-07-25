@@ -56,7 +56,6 @@
       const response = await fetch(`/get
 /posts?page=${page}&limit=${postsPerPage}`);
       const data = await response.json();
-      console.log(data);
       return data.posts.posts;
     } catch (error) {
       console.error("Error fetching posts:", error);
