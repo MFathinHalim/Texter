@@ -1,0 +1,68 @@
+<%- include("partials/header.ejs") %>
+<div>
+  <h1 class="d-none" id="username"><%= user.username %></h1>
+  <h3>Edit Your Profile</h3>
+  <form
+    class="card bg-dark text-light p-3 border-light rounded-0"
+    enctype="multipart/form-data"
+    onsubmit="sendEditProfile(this, '<%= user.id %>')"
+  >
+    <div class="mb-3">
+      <label for="displayName" class="form-label">Display Name</label>
+      <input
+        type="text"
+        class="form-control border-light"
+        id="displayName"
+        name="displayName"
+        value="<%= user.name %>"
+        placeholder="Enter your new display name"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="img" class="form-label">Profile Picture</label>
+      <br />
+      <input
+        type="file"
+        class="form-control d-none"
+        id="img"
+        name="image"
+        accept="image/*"
+      />
+      <label
+        for="img"
+        class="btn btn-outline-secondary rounded-pill p-3 pt-2 pb-2"
+        style="font-size: larger"
+      >
+        <i class="fa-solid fa-image"></i> Upload New Picture
+      </label>
+      <img id="preview" src="<%= user.pp %>" class="rounded-circle pfp ms-2" />
+    </div>
+    <div class="mb-3">
+      <label for="desc" class="form-label">Description</label>
+      <textarea
+        style="height: 120px"
+        type="text"
+        class="form-control border-light"
+        id="desc"
+        name="desc"
+        placeholder="Enter your new description"
+      >
+<%= user.desc %>
+</textarea
+      >
+    </div>
+    <button
+      type="submit"
+      class="btn btn-secondary rounded-pill p-4 pt-2 pb-2"
+      style="font-size: larger"
+    >
+      Save Changes
+    </button>
+  </form>
+</div>
+<%- include("partials/footer.ejs") %>
+<script>
+  if (username !== "<%= user.username %>") {
+    window.location.href = "/user/details/<%= user.username %>";
+  }
+</script>

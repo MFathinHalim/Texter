@@ -1,0 +1,262 @@
+<%- include("partials/header.ejs") %> <% if(post) { %>
+<div class="p-3 border-light rounded-0 pb-0">
+  <div class="d-flex align-items-center" id="top">
+    <a
+      href="/user/details/<%= post.user.username %>"
+      class="d-flex align-items-center"
+    >
+      <img
+        src="<%= post.user.pp %>"
+        class="rounded-circle"
+        style="max-height: 100px; border: 2px solid var(--accent1)"
+      />
+    </a>
+    <div class="d-flex flex-column ms-2 me-auto">
+      <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
+      <h3 class="h2" style="margin-bottom: 3px"><%= post.user.name %></h3>
+      <p style="margin-bottom: 5px" class="text-secondary">
+        @<%= post.user.username %>
+      </p>
+      <p style="margin-bottom: 0">
+        <%= post.user.desc != "" ? post.user.desc : "" %>
+      </p>
+    </div>
+
+    <button
+      class="btn btn-outline-success rounded-pill ms-0 p-3 pt-1 pb-1"
+      style="height: fit-content; font-size: larger"
+      onclick="followPost('<%= post.user.username %>')"
+      id="follow"
+    >
+      Follow
+    </button>
+  </div>
+  <div class="d-flex mt-3" style="padding-left: 5px">
+    <p style="color: var(--accent1)">
+      <i class="fa-solid fa-user-group"></i> <%= post.user.following.length %>
+      following
+    </p>
+    <p class="ms-2" style="color: var(--accent2)">
+      <i class="fa-solid fa-user-group"></i> <%= post.user.followers.length %>
+      followers
+    </p>
+  </div>
+</div>
+<div class="card bg-dark text-white p-3 border-light post rounded-0">
+  <a
+    href="/user/details/<%= post.user.username %>"
+    class="d-flex align-items-center"
+  >
+    <img src="<%= post.user.pp %>" class="pfp rounded-circle" />
+    <div class="d-flex flex-column ms-2 me-auto pt-2">
+      <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
+      <h4>
+        <%= post.user.name %> <%= post.reQuote ? `is Requote to
+        ${post.reQuote.user.name}` : "" %>
+      </h4>
+      <h4 class="text-secondary"><%= post.time %></h4>
+    </div>
+  </a>
+  <h3 class="h4 mt-2"><%= post.title %></h3>
+  <% if(post.img) { %>
+  <img
+    style="border-radius: 2% !important"
+    class="mb-3"
+    src="<%= post.img %>"
+    onerror="this.remove()"
+  />
+  <% } %> <% if(post.reQuote) { %>
+  <div class="card bg-dark text-white p-3 pt-2 mb-2 mt-2 border-1 border-light">
+    <a href="/?id=<%= post.reQuote.id %>">
+      <article class="d-flex pt-2">
+        <img class="pfp rounded-circle" src="<%= post.reQuote.user.pp %>" />
+        <div class="ms-2">
+          <h4 class="mb-1"><%= post.reQuote.user.name %></h4>
+          <h5 class="text-secondary"><%= post.reQuote.time %></h5>
+        </div>
+      </article>
+      <h3 class="ms-2 h4 mt-2">
+        <%= post.reQuote.title.replace(/<[^>]+>/g, "") %>
+      </h3>
+      <% if(post.reQuote.img) { %>
+      <img style="border-radius: 2% !important" src="<%= post.reQuote.img %>" />
+      <% } %>
+    </a>
+  </div>
+  <% } %>
+  <div class="d-flex mb-2">
+    <button
+      class="btn btn-outline-danger rounded-pill"
+      onclick="sendLikeRequest('<%= JSON.stringify(post) %>', this)"
+    >
+      <i class="fa-solid fa-heart"></i> <%= post.like.total %>
+    </button>
+    <a
+      href="#reply"
+      class="btn btn-outline-secondary rounded-pill text-black ms-2"
+    >
+      <i class="fa-solid fa-comment"></i> Reply
+    </a>
+    <button
+      class="btn btn-outline-success rounded-pill ms-2"
+      onclick="sendPostRequest(undefined, undefined, undefined, '<%= post.id %>', '<%= JSON.stringify(post) %>')"
+    >
+      <i class="fa-solid fa-recycle"></i> Repost
+    </button>
+  </div>
+</div>
+<form
+  class="bg-dark text-white post p-3 border-light rounded-0 pb-0"
+  id="reply"
+  onsubmit="sendPostRequest(this, '<%= JSON.stringify(post) %>', undefined, undefined, undefined)"
+>
+  <div class="d-flex flex-column mb-2">
+    <label for="title" class="h5 text-warning">
+      Reply <i class="fa-solid fa-reply"></i
+    ></label>
+    <textarea
+      type="text"
+      class="form-control border-light"
+      id="title"
+      name="title"
+      placeholder="What's Happening?!"
+    ></textarea>
+  </div>
+  <div class="mb-3 d-flex justify-content-between">
+    <input
+      type="file"
+      class="form-control d-none"
+      id="img"
+      name="image"
+      accept="image/*"
+    />
+    <label
+      for="img"
+      class="btn btn-outline-secondary rounded-pill p-3 pt-2 pb-2"
+      style="font-size: larger"
+    >
+      <i class="fa-solid fa-image"></i>
+    </label>
+    <button
+      type="submit"
+      class="btn btn-primary rounded-pill p-4 pt-2 pb-2"
+      style="font-size: larger"
+    >
+      Post
+    </button>
+  </div>
+</form>
+<form
+  class="bg-dark text-white post p-3 border-light rounded-0 pb-0"
+  onsubmit="sendPostRequest(this, undefined, '<%= JSON.stringify(post) %>', undefined, undefined)"
+>
+  <div class="d-flex flex-column mb-2">
+    <label for="title" class="h5 text-success">
+      Requote <i class="fa-solid fa-recycle"></i
+    ></label>
+    <textarea
+      type="text"
+      class="form-control border-light"
+      id="title"
+      name="title"
+      placeholder="What's Happening?!"
+    ></textarea>
+  </div>
+  <div class="mb-3 d-flex justify-content-between">
+    <input
+      type="file"
+      class="form-control d-none"
+      id="img"
+      name="image"
+      accept="image/*"
+    />
+    <label
+      for="img"
+      class="btn btn-outline-secondary rounded-pill p-3 pt-2 pb-2"
+      style="font-size: larger"
+    >
+      <i class="fa-solid fa-image"></i>
+    </label>
+    <button
+      type="submit"
+      class="btn btn-primary rounded-pill p-4 pt-2 pb-2"
+      style="font-size: larger"
+    >
+      Post
+    </button>
+  </div>
+</form>
+
+<% replies.forEach((reply) => { %>
+<div class="card bg-dark text-white p-3 post rounded-0 border-light">
+  <a href="/?id=<%=reply.id %>">
+    <a
+      href="/user/details/<%= reply.user.username %>"
+      class="d-flex align-items-center"
+    >
+      <img src="<%= reply.user.pp %>" class="pfp rounded-circle" />
+      <div class="d-flex flex-column ms-2 me-auto pt-2">
+        <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
+        <h4>
+          <%= reply.user.name %> <%= reply.reQuote ? `is Requote to
+          ${reply.reQuote.user.name}` : "" %>
+        </h4>
+        <h4 class="text-secondary"><%= reply.time %></h4>
+      </div>
+    </a>
+    <h3 class="h4 mt-1"><%= reply.title.replace(/<[^>]+>/g, "") %></h3>
+    <% if(reply.img) { %>
+    <img style="border-radius: 2% !important" src="<%= reply.img %>" />
+    <% } %>
+  </a>
+  <div class="d-flex mb-2">
+    <button
+      class="btn btn-outline-danger rounded-pill"
+      onclick="sendLikeRequest('<%= JSON.stringify(reply) %>', this)"
+    >
+      <i class="fa-solid fa-heart"></i> <%= reply.like.total %>
+    </button>
+    <a
+      href="/?id=<%= reply.id %>"
+      class="btn btn-outline-secondary rounded-pill text-black ms-2"
+    >
+      <i class="fa-solid fa-comment"></i> Reply
+    </a>
+    <button
+      class="btn btn-outline-success rounded-pill ms-2"
+      onclick="sendPostRequest(undefined, undefined, undefined, '<%= reply.id %>', '<%= JSON.stringify(reply) %>')"
+    >
+      <i class="fa-solid fa-recycle"></i> Repost
+    </button>
+  </div>
+</div>
+<% }); %> <% } %> <%- include("partials/footer.ejs") %>
+<script>
+  const followBtn = document.getElementById("follow");
+  fetch(`/user/follow/<%= post.user.username %>?myname=${username}`)
+    .then((res) => res.json())
+    .then((check) => {
+      if (check.isFollowing) {
+        followBtn.innerText = "Unfollow";
+        followBtn.classList.remove("btn-outline-success");
+        followBtn.classList.add("btn-outline-danger");
+      }
+    });
+
+  if ("<%= post.user.username %>" === username) {
+    followBtn.remove();
+    // Membuat elemen <a> untuk tombol
+    let profileLink = document.createElement("a");
+
+    // Menetapkan atribut href ke URL profil dengan username
+    profileLink.setAttribute("href", "/profile/" + username);
+
+    // Menambahkan kelas Bootstrap untuk tampilan tombol
+    profileLink.classList.add("btn", "btn-outline-warning", "rounded-pill");
+    // Menambahkan teks atau konten di dalam tombol
+    profileLink.textContent = "Edit";
+
+    // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
+    document.getElementById("top").appendChild(profileLink);
+  }
+</script>

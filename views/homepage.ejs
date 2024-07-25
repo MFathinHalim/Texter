@@ -1,0 +1,167 @@
+<%- include("partials/header.ejs") %>
+<div>
+  <form
+    class="card bg-dark text-light p-3 border-light rounded-0"
+    enctype="multipart/form-data"
+    onsubmit="sendPostRequest(this, undefined, undefined, undefined, undefined)"
+  >
+    <div class="mb-3">
+      <textarea
+        style="height: 120px"
+        type="text"
+        class="form-control border-light"
+        id="title"
+        name="title"
+        placeholder="What's Happening?!"
+      ></textarea>
+    </div>
+    <div class="mb-3 d-flex justify-content-between">
+      <input
+        type="file"
+        class="form-control d-none"
+        id="img"
+        name="image"
+        accept="image/*"
+      />
+      <label
+        for="img"
+        class="btn btn-outline-secondary rounded-pill p-3 pt-2 pb-2"
+        style="font-size: larger"
+      >
+        <i class="fa-solid fa-image"></i>
+      </label>
+      <button
+        type="submit"
+        class="btn btn-primary rounded-pill p-4 pt-2 pb-2"
+        style="font-size: larger"
+      >
+        Post
+      </button>
+    </div>
+  </form>
+  <div id="post-container"></div>
+</div>
+<script>
+  const postContainer = document.getElementById("post-container");
+  let currentPage = 1;
+  const postsPerPage = 10; // Adjust as needed
+  async function fetchPosts(page) {
+    try {
+      const response = await fetch(`/get
+/posts?page=${page}&limit=${postsPerPage}`);
+      const data = await response.json();
+      console.log(data);
+      return data.posts.posts;
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      return [];
+    }
+  }
+  function escapeHTMLAttribute(jsonString) {
+    return jsonString.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+  function renderPosts(posts) {
+    posts.forEach((post) => {
+      const postElement = document.createElement("div");
+      postElement.innerHTML = `
+    <div class="card bg-dark text-white p-3 post rounded-0 border-light">
+      <a href="/?id=${post.repost ? post.ogId : post.id}">
+        <div>
+        <article class="d-flex pt-2">
+        ${
+          post.repost
+            ? `
+          <h4>${post.user.name} was reposted</h4>
+          <img class="pfp rounded-circle" style="max-width: 150px; max-height: 150px;" src="${post.user.pp}" />
+          <h3>${post.repost.name}</h3>
+        `
+            : `
+            <img class="pfp rounded-circle" src="${post.user.pp}" />
+            <div class="ms-2">
+              <h4>
+                ${post.user.name} ${
+                post.reQuote ? `is Requote to ${post.reQuote.user.name}` : ""
+              }
+              </h4>
+              `
+        }
+              <h4 class="text-secondary">${post.time}</h4>
+            </div>
+        </article>
+      </div>
+        <h3 class="h4 mt-2">${post.title.replace(/<[^>]+>/g, "")}</h3>
+        ${
+          post.img
+            ? `<img
+                style="border-radius: 2% !important"
+                class="mb-3"
+                src="${post.img}"
+                onerror="this.remove()"
+              />`
+            : ""
+        }
+      </a>
+      ${
+        post.reQuote
+          ? `
+        <div class="card bg-dark text-white p-2 mb-2 mt-2 border-1 border-secondary">
+          <a href="/?id=${post.reQuote.id}">
+            <article class="d-flex pt-2">
+              <img class="pfp rounded-circle" src="${post.reQuote.user.pp}" />
+              <div class="ms-2">
+                <h4 class="mb-0">${post.reQuote.user.name}</h4>
+                <h5 class="text-secondary">${post.reQuote.time}</h5>
+              </div>
+            </article>
+            <h3 class="h4 mt-2">${post.reQuote.title.replace(
+              /<[^>]+>/g,
+              ""
+            )}</h3>
+            ${post.reQuote.img ? `<img src="${post.reQuote.img}" />` : ""}
+          </a>
+        </div>
+      `
+          : ""
+      }
+      <div class="d-flex">
+        <button class="btn btn-outline-danger rounded-pill" onclick="sendLikeRequest('${escapeHTMLAttribute(
+          JSON.stringify(post)
+        )}', this)">
+        <i class="fa-solid fa-heart"></i> ${post.like.total}
+        </button>
+        <a href="/?id=${
+          post.id
+        }" class="btn btn-outline-secondary rounded-pill text-black ms-2">
+            <i class="fa-solid fa-comment"></i> Reply
+        </a>
+        <button class="btn btn-outline-success rounded-pill ms-2" onclick="sendPostRequest(undefined, undefined, undefined, '${
+          post.id
+        }', ${JSON.stringify(post)
+        .replace(/</g, "\\u003c")
+        .replace(
+          />/g,
+          "\\u003e"
+        )})"><i class="fa-solid fa-recycle"></i> Repost</button>
+      </div>
+    </div>
+    `;
+      postContainer.appendChild(postElement);
+    });
+  }
+  async function loadMorePosts() {
+    currentPage++;
+    const newPosts = await fetchPosts(currentPage);
+    renderPosts(newPosts);
+  }
+  // Initial load
+  fetchPosts(currentPage).then(renderPosts);
+  // Add scroll listener for infinite scrolling
+  window.addEventListener("scroll", () => {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    if (scrollTop + clientHeight >= scrollHeight - 100) {
+      // Adjust threshold as needed
+      loadMorePosts();
+    }
+  });
+</script>
+<%- include("partials/footer.ejs") %>

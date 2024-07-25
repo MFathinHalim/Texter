@@ -1,0 +1,12 @@
+<%- include("partials/header.ejs") %>
+<h3 class="border-light p-3">Welcome <%= name %>! We'll be redirect you...</h3>
+<script>
+  const userData = localStorage.getItem("username");
+  if (!userData) {
+    localStorage.setItem("name", "<%= name %>");
+    localStorage.setItem("username", "<%= username %>");
+    localStorage.setItem("id", "<%= id %>");
+  }
+  window.location.href = "/";
+</script>
+<%- include("partials/footer.ejs") %>

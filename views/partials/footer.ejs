@@ -1,0 +1,214 @@
+</div>
+ <div class="col-12 col-lg-3 h-100">
+      <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg">
+        <div class="card-body">
+          <h3 class="card-title">RULES</h3>
+          <p class="card-text">Rules for posting
+            <ul>
+                <li>No Toxic</li>
+                <li>No NSFW (Not Safe For Work)</li>
+                <li>No Cyberbulying</li>
+                <li>Just Have Fun :D</li>
+            </ul>
+          </p>
+        </div>
+      </div>
+      <div class="card bg-dark text-white d-none d-lg-flex border-light p-3 rounded-lg mt-3">
+        <h5>Made By Fathin</h5>
+        <p class="mb-0">made by <a href="https://www.fathin.my.id" class="text-info">M.Fathin Halim</a></p>
+        <hr
+            style="
+              opacity: 100%;
+              border-top: 1px solid var(--success) !important;
+            "
+        />
+        <a class="text-warning" href="https://saweria.co/mfathinhalim">Support This Web In Saweria^^</a>
+      </div>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+<script>
+    const username = localStorage.getItem("username");
+    const name = localStorage.getItem("name");
+    const id = localStorage.getItem("id");
+
+    function logout() {
+        localStorage.removeItem("name");
+        localStorage.removeItem("username");
+        localStorage.removeItem("id");
+
+        return window.location.href = "/login"
+    }
+
+    if (!window.location.href.toString().includes("/login") && !window.location.href.toString().includes("/signup") ){
+        if(!username) {
+            window.location.href = "/login"
+        }
+        fetch(`/user/check?username=${username}`).then(res => res.json()).then(check => {
+            if(check.check === true) {
+                logout()
+            } 
+            fetch(`/user/details/json/${username}`).then(res => res.json()).then(hasil => {
+                document.getElementById("mypfp").src = hasil.user.user.pp;
+                document.getElementById("myname").innerText = hasil.user.user.name;
+                document.getElementById("myusername").innerText = `@${hasil.user.user.username}`;
+                document.getElementById("mydesc").innerText = hasil.user.user.desc != undefined ? hasil.user.user.desc : "";
+                document.getElementById("myfollowing").innerHTML = `<i class="fa-solid fa-user-group"></i> ${hasil.user.user.following.length} following`;
+                document.getElementById("myfollowers").innerHTML = `<i class="fa-solid fa-user-group"></i> ${hasil.user.user.followers.length} followers`;
+            });
+            return
+        });
+        fetch('/madeToken', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: id,
+                username: username,
+            }),
+        }).then(res => res.json()).then(data => {
+            sessionStorage.setItem('token', data.token); 
+        });
+    }
+
+    const token = sessionStorage.getItem('token');
+    // Send a fetch request to the server for posting
+    function sendPostRequest(form, replyTo, reQuote, ogId, repostPost) {
+        event.preventDefault(); // Prevent default form submission
+        repostPost = repostPost ? JSON.parse(repostPost) : undefined;
+        const time = new Date().toLocaleDateString();
+        const repost = repostPost ? repostPost.user : undefined;
+        const formData = new FormData(); 
+
+        // Append data to FormData
+        const data = {
+            id: "txtr" + Math.random().toString(16).slice(2) + "tme:" + time,
+            title: repostPost ? repostPost.title : form.querySelector("#title").value,
+            time: time,
+            user: {username: username, name: name, id: id},
+            like: { total: 0, users: [] },
+            replyTo: replyTo ? JSON.parse(replyTo).id : "",
+            ogId: ogId,
+            repost: repost,
+            reQuote: reQuote ? JSON.parse(reQuote) : undefined
+        };
+
+        formData.append('data', JSON.stringify(data));
+        formData.append('token', token); // Assuming you have 'token' available
+        // Handle image upload
+        if (form.querySelector("#img").files[0]) {
+            formData.append('image', form.querySelector("#img").files[0]); 
+        } else {
+            formData.append('image', ''); // Empty string if no image selected
+        }
+
+        // Send POST request using fetch
+        fetch('/', {
+            method: 'POST',
+            body: formData,
+        }).then(() => {
+            // Redirect after successful POST request
+            return repostPost === undefined ? window.location.href = `/?id=${data.id}` : window.location.href = `/?id=${data.ogId}`;
+        }).catch(error => {
+            console.error('Error sending POST request:', error);
+        });
+    }
+      function previewImage(event) {
+        var input = event.target;
+
+        // Ensure that file is selected
+        if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            var preview = document.getElementById("preview");
+            preview.src = e.target.result;
+        };
+
+        reader.readAsDataURL(input.files[0]); // Read the uploaded file as a URL
+        }
+    }  
+    var inputFile = document.getElementById("img");
+    inputFile.addEventListener("change", previewImage);
+
+
+    function sendEditProfile(myForm, id) {
+        event.preventDefault(); // Prevent default form submission
+        const formData = new FormData(); 
+        const name = document.getElementById("displayName").value;
+        console.log(name)
+        const username = document.getElementById("username").innerText;
+        const desc = document.getElementById("desc").value;
+        // Append data to FormData
+        const data = {
+            id: id,
+            username: username,
+            name: name,
+            pp: "",
+            desc: desc
+        };
+
+        formData.append('data', JSON.stringify(data));
+        formData.append('token', token); // Assuming you have 'token' available
+        // Handle image upload
+        if (myForm.querySelector("#img").files[0]) {
+            formData.append('image', myForm.querySelector("#img").files[0]); 
+        } else {
+            formData.append('image', ''); // Empty string if no image selected
+        }
+
+        // Send POST request using fetch
+        fetch(`/profile/${username}`, {
+            method: 'POST',
+            body: formData,
+        }).then(() => {
+            window.location.href = "/user/details/" + username
+        })
+    }
+
+    function sendLikeRequest(post, button) {
+        post = JSON.parse(post)
+        fetch(`/like/`, {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+            post: post,
+            user: {
+                id: id,
+                username: username,
+                name: name
+            },
+            token: token
+            }),
+        })
+        .then(res => res.json()) // Parse the JSON response
+        .then(data => { 
+            button.innerHTML = '<i class="fa-solid fa-heart"></i> ' + data.likes; // Update the button text with the new like count
+        })
+        .catch(error => {
+            console.error("Error sending like request:", error); 
+            // Handle errors, e.g., display an error message to the user
+        });
+    }
+
+    function followPost(target) {
+        fetch(`/user/follow/${target}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: token,
+                myname: username
+            }),
+        })
+        .then(() => {
+            window.location.reload()
+        })
+    }
+
+</script>
+</html>

@@ -1,0 +1,201 @@
+@import url("https://fonts.googleapis.com/css?family=Mulish:700|Ubuntu:400");
+
+:root {
+  --text: #ededed;
+  --text2: #b6b6b6;
+  --background: #000000;
+  --background2: #12121298;
+  --background3: #f7f5fe;
+  --primary: #f8f6fe;
+  --secondary: #393e46;
+  --accent1: #ffd36b;
+  --accent2: #8cbde8;
+  --success: #71d474;
+  --error: #e88c8c;
+}
+
+.border-light {
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.card:hover {
+  background-color: var(--background2) !important;
+}
+
+@media (max-width: 600px) {
+  .container,
+  #main {
+    padding: 0 !important;
+    padding-left: 5px !important;
+  }
+}
+
+.post.border-light {
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-top: none !important;
+}
+
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  opacity: 90%;
+}
+
+.text-warning {
+  color: var(--accent1) !important;
+}
+.text-danger {
+  color: var(--error) !important;
+}
+.text-success {
+  color: var(--success) !important;
+}
+
+.pfp {
+  border: 2px solid var(--accent1);
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+}
+h4 {
+  font-family: "Mulish" !important;
+}
+
+body {
+  background: var(--background) !important;
+  color: var(--text) !important;
+  font-family: "Ubuntu" !important;
+}
+
+a {
+  color: var(--text) !important;
+  text-decoration: none !important;
+}
+
+.btn-primary {
+  background-color: var(--accent2) !important;
+  border: 1px solid var(--accent2) !important;
+  color: var(--background) !important;
+}
+
+.btn-danger {
+  background-color: var(--error) !important;
+  border: 1px solid var(--error) !important;
+  color: var(--background) !important;
+}
+
+.btn-secondary {
+  background-color: var(--accent1) !important;
+  border: 1px solid var(--accent1) !important;
+  color: var(--background) !important;
+}
+
+.btn-success {
+  background-color: var(--success) !important;
+  border: 1px solid var(--success) !important;
+  color: var(--background) !important;
+}
+
+.btn-outline-primary {
+  color: var(--accent2) !important;
+  border: 1px solid var(--accent2) !important;
+}
+
+.btn-outline-danger {
+  color: var(--error) !important;
+  border: 1px solid var(--error) !important;
+}
+
+.btn-outline-secondary {
+  color: var(--accent1) !important;
+  border: 1px solid var(--accent1) !important;
+}
+
+.btn-outline-success {
+  color: var(--success) !important;
+  border: 1px solid var(--success) !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--accent2) !important;
+  border: 1px solid var(--accent2) !important;
+  color: var(--background) !important;
+}
+
+.btn-outline-danger:hover {
+  background-color: var(--error) !important;
+  border: 1px solid var(--error) !important;
+  color: var(--text) !important;
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--accent1) !important;
+  border: 1px solid var(--accent1) !important;
+  color: var(--background) !important;
+}
+
+.btn-outline-success:hover {
+  background-color: var(--success) !important;
+  border: 1px solid var(--success) !important;
+  color: var(--background) !important;
+}
+
+img:not(.rounded-circle) {
+  max-width: 100% !important;
+}
+
+textarea,
+input {
+  background-color: rgba(0, 0, 0, 0) !important;
+  border: 0px solid var(--accent2) !important;
+  color: var(--text) !important;
+}
+
+::placeholder {
+  color: var(--text) !important;
+  opacity: 40% !important;
+}
+
+.bg-dark {
+  background-color: var(--background) !important;
+}
+.sticky-on-navbar {
+  position: sticky;
+  top: 56px; /* Adjust this value based on your navbar height */
+  z-index: 1020; /* Ensure it's above the navbar if necessary */
+}
+.bg-dark-glass {
+  /* From https://css.glass */
+  background: rgba(18, 18, 18, 0.49) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(7.4px) !important;
+  -webkit-backdrop-filter: blur(7.4px) !important;
+}
+.bg-dark2 {
+  background-color: var(--background2) !important;
+}
+.bg-dark3 {
+  background-color: var(--background3) !important;
+}
+
+html {
+  font-size: 100% !important;
+} /* 16px */
+
+h1 {
+  font-size: 5.652rem !important; /* 90.4px */
+}
+
+h2 {
+  font-size: 3.997rem !important; /* 64px */
+}
+
+h5 {
+  font-size: 1.414rem !important; /* 22.56px */
+}
+
+small {
+  font-size: 0.707rem !important; /* 11.36px */
+}

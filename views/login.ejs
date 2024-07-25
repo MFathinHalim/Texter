@@ -1,0 +1,40 @@
+<%- include("partials/header.ejs") %>
+<div class="container border-light rounded-lg p-3">
+  <h2 class="text-center">Login</h2>
+  <form action="/login" method="POST" enctype="application/json">
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input
+        type="text"
+        class="form-control border-light"
+        id="username"
+        name="username"
+        autocomplete="off"
+        placeholder="Username"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input
+        type="password"
+        class="form-control border-light"
+        id="password"
+        name="password"
+        placeholder="Your Password"
+        autocomplete="off"
+      />
+    </div>
+    <button type="submit" class="btn btn-success">Login</button>
+  </form>
+  <p class="mt-3">
+    Don't have an account?
+    <a class="text-info text-decoration-underline" href="/signup">Sign up</a>
+  </p>
+</div>
+<script>
+  // Mendapatkan data pengguna dari userProfile jika tersedia
+  if (localStorage.getItem("name")) {
+    window.location.href = "/";
+  }
+</script>
+<%- include("partials/footer.ejs") %>
