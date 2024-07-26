@@ -50,7 +50,7 @@
                 logout()
             } 
             document.getElementById("mypfp").src = check.user.pp;
-            document.getElementById("myname").innerText = check.user.username;
+            document.getElementById("myname").innerText = check.user.name;
             document.getElementById("myusername").innerText = `@${check.user.username}`;
             document.getElementById("mydesc").innerText = check.user.desc != undefined ? check.user.desc : "";
             document.getElementById("myfollowing").innerHTML = `<i class="fa-solid fa-user-group"></i> ${check.user.following.length} following`;
