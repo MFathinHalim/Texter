@@ -72,7 +72,7 @@ router
         // If a file is uploaded, process it
         //@ts-ignore: Unreachable code error
         const buffer = req.file.buffer;
-        const id: string = `${userData.title}-${userData.user.id}-${userData.time}`;
+        const id = `${userData.title}-${userData.id}-${userData.time}`;
         // Upload image to ImageKit
 
         await imagekit.upload(
