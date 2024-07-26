@@ -96,7 +96,7 @@
       class="btn btn-outline-danger rounded-pill"
       onclick="sendLikeRequest('<%= post.id %>', this)"
     >
-      <i class="fa-solid fa-heart"></i> <%= post.like.total %>
+      <i class="fa-solid fa-heart"></i> <%= post.like.users.length %>
     </button>
     <a
       href="#reply"
@@ -221,7 +221,7 @@
       class="btn btn-outline-danger rounded-pill"
       onclick="sendLikeRequest('<%= reply.id %>', this)"
     >
-      <i class="fa-solid fa-heart"></i> <%= reply.like.total %>
+      <i class="fa-solid fa-heart"></i> <%= reply.like.users.length %>
     </button>
     <a
       href="/?id=<%= reply.id %>"
