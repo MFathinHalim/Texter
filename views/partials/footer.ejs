@@ -92,15 +92,29 @@
         // Handle image upload
 
         // Send POST request using fetch
-        fetch('/', {
+        fetch('/post', {
             method: 'POST',
             body: formData,
-        }).then(() => {
-            // Redirect after successful POST request
-            return repostPost === undefined ? window.location.href = `/?id=${data.id}` : window.location.href = `/?id=${data.ogId}`;
-        }).catch(error => {
-            console.error('Error sending POST request:', error);
-        });
+        })
+            .then(response => {
+                // Periksa apakah responsnya sukses
+                if (!response.ok) {
+                    throw new Error('Network response was not ok.');
+                }
+                // Mengurai data JSON dari respons
+                return response.json();
+            })
+            .then(post => {
+                console.log(post); // Menampilkan data JSON dari respons
+                
+                // Redirect setelah POST request berhasil
+                const redirectId = repostPost === undefined ? post.id : post.ogId;
+                window.location.href = `/?id=${redirectId}`;
+            })
+            .catch(error => {
+                console.error('Error sending POST request:', error);
+            });
+
     }
       function previewImage(event) {
         var input = event.target;

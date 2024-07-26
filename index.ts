@@ -17,6 +17,25 @@ app.use(express.static(path.join(__dirname, "/public"))); //TODO buat frontendny
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const rateLimit = require("express-rate-limit");
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 15 menit
+  max: 5, // maksimal 1 request setiap 15 menit
+  message: "Try Again Later:D.",
+});
+const limiterSignup = rateLimit({
+  windowMs: 60 * 60 * 1000, // 15 menit
+  max: 1, // maksimal 1 request setiap 15 menit
+  message: "Try Again Later:D.",
+});
+app.use("/post", limiter);
+function postOnlyLimiter(req, res, next) {
+  if (req.method === "POST") {
+    return limiterSignup(req, res, next);
+  }
+  next();
+}
+app.use("/signup", postOnlyLimiter);
 
 //? Jalankan Routernya
 app.use("/", router); //* Router Posts

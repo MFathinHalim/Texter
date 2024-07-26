@@ -54,12 +54,12 @@ router
       console.error("Error fetching data:", error);
       return res.status(500).send("Failed to fetch data");
     }
-  })
+  });
+router
+  .route("/post")
   .post(upload.single("image"), async (req: Request, res: Response) => {
     try {
-      const checkToken: boolean = await userClass.checkAccessToken(
-        req.body.token
-      );
+      const checkToken = await userClass.checkAccessToken(req.body.token);
       if (!checkToken) {
         throw new Error("Invalid token");
       }
@@ -94,11 +94,8 @@ router
 
             // Post data to PostsClass
             await PostsClass.posting(userData, checkToken, img)
-              .then(() => {
-                const data: any = PostsClass.getData(req.body.id, 0, 0);
-                if (data) {
-                  res.redirect(`/?id=${req.body.id}`);
-                }
+              .then((post) => {
+                res.json(post);
               })
               .catch((error) => {
                 // Tangani error jika diperlukan
@@ -111,8 +108,8 @@ router
       } else {
         // Post data to PostsClass
         await PostsClass.posting(userData, checkToken, img)
-          .then(() => {
-            res.redirect(`/?id=${req.body.id}`);
+          .then((post) => {
+            res.json(post);
           })
           .catch((error) => {
             // Tangani error jika diperlukan
