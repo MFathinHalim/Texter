@@ -33,7 +33,7 @@
     localStorage.removeItem("id");
     const token = sessionStorage.getItem("myToken");
     function logout() {
-        sessionStorage.removeItem('token')
+        sessionStorage.removeItem('myToken')
         return window.location.href = "/login"
     }
 
