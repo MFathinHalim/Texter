@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import express from "express";
 import dotenv from "dotenv";
@@ -29,7 +29,7 @@ const limiterSignup = rateLimit({
   message: "Try Again Later:D.",
 });
 app.use("/post", limiter);
-function postOnlyLimiter(req, res, next) {
+function postOnlyLimiter(req: Request, res: Response, next: NextFunction) {
   if (req.method === "POST") {
     return limiterSignup(req, res, next);
   }
