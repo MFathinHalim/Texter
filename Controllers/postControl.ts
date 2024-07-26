@@ -189,11 +189,9 @@ class Posts {
         );
         if (!userAlreadyLike) {
           // User belum like, tambahkan like
-          post.like.total++;
           post.like.users.push(user._id);
         } else {
           // User sudah like, hapus like
-          post.like.total--;
           const index = post.like.users.findIndex(
             (entry: userType) => entry.username === user.username
           );
@@ -205,7 +203,7 @@ class Posts {
         // Simpan perubahan ke database
         await post.save();
 
-        return post.like.total;
+        return post.like.users.length;
       } else {
         return this.#notFound;
       }

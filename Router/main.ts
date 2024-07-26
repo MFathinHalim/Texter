@@ -150,14 +150,6 @@ router.route("/like/").post(async (req: Request, res: Response) => {
   });
 });
 
-router.route("/madeToken").post(async (req: Request, res: Response) => {
-  return !req.body.id
-    ? res.json({ token: "" })
-    : res.json({
-        token: await userClass.createAccessToken(req.body.id.toString()),
-      });
-});
-
 router
   .route("/user/details/:username")
   .get(async (req: Request, res: Response) => {
