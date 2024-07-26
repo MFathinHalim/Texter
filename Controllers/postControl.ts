@@ -164,6 +164,13 @@ class Posts {
         await this.#posts.findOne({ post });
       post.ogId = og?.id;
     }
+    if (post.reQuote) {
+      post.reQuote =
+        (await this.#posts
+          .findOne({ id: post.reQuote })
+          .populate("like.users", "-password")
+          .exec()) || undefined;
+    }
     (post.id = "txtr" + Math.random().toString(16).slice(2) + "tme:" + time),
       (post.time = time);
     post.user = user._id;

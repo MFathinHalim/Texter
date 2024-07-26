@@ -86,7 +86,7 @@
             replyTo: replyTo ? replyTo : "",
             ogId: ogId,
             repost: repost,
-            reQuote: reQuote ? JSON.parse(reQuote) : undefined
+            reQuote: reQuote ? reQuote : undefined
         };
 
         formData.append('data', JSON.stringify(data));
