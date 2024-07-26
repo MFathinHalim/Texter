@@ -239,31 +239,43 @@
 </div>
 <% }); %> <% } %> <%- include("partials/footer.ejs") %>
 <script>
-  const followBtn = document.getElementById("follow");
-  fetch(`/user/follow/<%= post.user.username %>?myname=${username}`)
-    .then((res) => res.json())
-    .then((check) => {
-      if (check.isFollowing) {
-        followBtn.innerText = "Remove";
-        followBtn.classList.remove("btn-outline-success");
-        followBtn.classList.add("btn-outline-danger");
-      }
-    });
+fetch(`/user/check?id=${token}`)
+  .then((res) => res.json())
+  .then((check) => {
+    if (check.check === true) {
+      logout();
+    }
+    name = check.user.name;
+    username = check.user.username;
 
-  if ("<%= post.user.username %>" === username) {
-    followBtn.remove();
-    // Membuat elemen <a> untuk tombol
-    let profileLink = document.createElement("a");
+    id = check.user.id;
+    const followBtn = document.getElementById("follow");
+    fetch(`/user/follow/<%= post.user.username %>?myname=${username}`)
+      .then((res) => res.json())
+      .then((check) => {
+        if (check.isFollowing) {
+          followBtn.innerText = "Remove";
+          followBtn.classList.remove("btn-outline-success");
+          followBtn.classList.add("btn-outline-danger");
+        }
+      });
 
-    // Menetapkan atribut href ke URL profil dengan username
-    profileLink.setAttribute("href", "/profile/" + username);
+    if ("<%= post.user.username %>" === username) {
+      followBtn.remove();
+      // Membuat elemen <a> untuk tombol
+      let profileLink = document.createElement("a");
 
-    // Menambahkan kelas Bootstrap untuk tampilan tombol
-    profileLink.classList.add("btn", "btn-outline-warning", "rounded-pill");
-    // Menambahkan teks atau konten di dalam tombol
-    profileLink.textContent = "Edit";
+      // Menetapkan atribut href ke URL profil dengan username
+      profileLink.setAttribute("href", "/profile/" + username);
 
-    // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
-    document.getElementById("top").appendChild(profileLink);
-  }
+      // Menambahkan kelas Bootstrap untuk tampilan tombol
+      profileLink.classList.add("btn", "btn-outline-warning", "rounded-pill");
+      // Menambahkan teks atau konten di dalam tombol
+      profileLink.textContent = "Edit";
+
+      // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
+      document.getElementById("top").appendChild(profileLink);
+    }
+  });
+
 </script>

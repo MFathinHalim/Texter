@@ -28,55 +28,44 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 <script>
-    const username = localStorage.getItem("username");
-    const name = localStorage.getItem("name");
-    const id = localStorage.getItem("id");
-
+    localStorage.removeItem("name");
+    localStorage.removeItem("username");
+    localStorage.removeItem("id");
+    const token = sessionStorage.getItem("myToken");
     function logout() {
-        localStorage.removeItem("name");
-        localStorage.removeItem("username");
-        localStorage.removeItem("id");
-
+        sessionStorage.removeItem('token')
         return window.location.href = "/login"
     }
 
+    let username;
+    let name;
+    let id;
+      
     if (!window.location.href.toString().includes("/login") && !window.location.href.toString().includes("/signup") ){
-        if(!username) {
+        if(!token) {
             window.location.href = "/login"
         }
-        fetch(`/user/check?id=${id}`).then(res => res.json()).then(check => {
-            if(check.check === true || check.user.username !== username || check.user.id !== id) {
+        fetch(`/user/check?id=${token}`).then(res => res.json()).then(check => {
+            if(check.check === true) {
                 logout()
             } 
             document.getElementById("mypfp").src = check.user.pp;
-            document.getElementById("myname").innerText = check.user.name;
+            document.getElementById("myname").innerText = check.user.username;
             document.getElementById("myusername").innerText = `@${check.user.username}`;
             document.getElementById("mydesc").innerText = check.user.desc != undefined ? check.user.desc : "";
             document.getElementById("myfollowing").innerHTML = `<i class="fa-solid fa-user-group"></i> ${check.user.following.length} following`;
             document.getElementById("myfollowers").innerHTML = `<i class="fa-solid fa-user-group"></i> ${check.user.followers.length} followers`;
-            return
         });
-        fetch('/madeToken', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id: id,
-                username: username,
-            }),
-        }).then(res => res.json()).then(data => {
-            sessionStorage.setItem('token', data.token); 
-        });
-
-
-    const token = sessionStorage.getItem('token');
+        
     // Send a fetch request to the server for posting
     function sendPostRequest(form, replyTo, reQuote, ogId, repostPost) {
         event.preventDefault(); // Prevent default form submission
+        const title = repostPost ? repostPost.title : form.querySelector("#title").value;
+        if(title === "" || title === undefined || title === null) {
+            return window.location.href="/"
+        }
         document.getElementById("loading-screen").classList.remove("d-none");
         repostPost = repostPost ? repostPost : undefined;
-        const time = new Date().toLocaleDateString();
         const repost = repostPost ? repostPost.user : undefined;
         const formData = new FormData(); 
         if(!repostPost) {
@@ -90,10 +79,7 @@
 
         // Append data to FormData
         const data = {
-            id: "txtr" + Math.random().toString(16).slice(2) + "tme:" + time,
-            title: repostPost ? repostPost.title : form.querySelector("#title").value,
-            time: time,
-            user: {username: username, name: name, id: id},
+            title: title,
             like: { total: 0, users: [] },
             replyTo: replyTo ? replyTo : "",
             ogId: ogId,
@@ -176,11 +162,6 @@
             },
             body: JSON.stringify({
             id: id,
-            user: {
-                id: id,
-                username: username,
-                name: name
-            },
             token: token
             }),
         })
@@ -208,7 +189,8 @@
         .then(() => {
             window.location.reload()
         })
+        }
     }
-    }
+
 </script>
 </html>

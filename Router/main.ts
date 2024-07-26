@@ -65,7 +65,6 @@ router
       }
 
       const userData = JSON.parse(req.body.data);
-      const user: any = await userClass.checkUserId(userData.user.id);
 
       let img: string = ""; // Initialize image URL
       //@ts-ignore: Unreachable code error
@@ -94,9 +93,12 @@ router
             img = result.url; // Save the uploaded image URL
 
             // Post data to PostsClass
-            await PostsClass.posting(userData, user, img)
+            await PostsClass.posting(userData, checkToken, img)
               .then(() => {
-                res.redirect(`/?id=${req.body.id}`);
+                const data: any = PostsClass.getData(req.body.id, 0, 0);
+                if (data) {
+                  res.redirect(`/?id=${req.body.id}`);
+                }
               })
               .catch((error) => {
                 // Tangani error jika diperlukan
@@ -108,7 +110,7 @@ router
         );
       } else {
         // Post data to PostsClass
-        await PostsClass.posting(userData, user, img)
+        await PostsClass.posting(userData, checkToken, img)
           .then(() => {
             res.redirect(`/?id=${req.body.id}`);
           })
@@ -141,10 +143,7 @@ router.route("/like/").post(async (req: Request, res: Response) => {
   const checkToken: boolean = await userClass.checkAccessToken(req.body.token);
   let likes: number | postType = 0;
   if (checkToken) {
-    const user: any = await userClass.checkUserUname(req.body.user.username);
-    if (user && req.body.user.username) {
-      likes = await PostsClass.liking(req.body.id, user);
-    }
+    likes = await PostsClass.liking(req.body.id, checkToken);
   }
   return res.json({
     likes: likes,
@@ -152,7 +151,7 @@ router.route("/like/").post(async (req: Request, res: Response) => {
 });
 
 router.route("/madeToken").post(async (req: Request, res: Response) => {
-  return req.body.id === null
+  return !req.body.id
     ? res.json({ token: "" })
     : res.json({
         token: await userClass.createAccessToken(req.body.id.toString()),
@@ -263,9 +262,8 @@ router
   });
 
 router.route("/user/check").get(async (req: Request, res: Response) => {
-  const checkUser = await userClass.checkIsUserBan(
-    req.query.id?.toString() || ""
-  );
+  const id = userClass.checkAccessToken(req.query.id?.toString() || "").id;
+  const checkUser = await userClass.checkIsUserBan(id);
   return res.json({
     check: checkUser.ban,
     user: checkUser,
@@ -291,7 +289,8 @@ router
         error: result,
       });
     }
-    return res.render("redirect", result); //kalau enggak langsung redirect
+    const token = await userClass.createAccessToken(result.id.toString());
+    return res.render("redirect", { token: token, name: result.name }); //kalau enggak langsung redirect
   });
 
 //? router signup

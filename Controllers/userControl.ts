@@ -131,11 +131,10 @@ class Users {
     }
   }
 
-  checkAccessToken(token: string): boolean {
+  checkAccessToken(token: string) {
     let jwtSecretKey: string = process.env.JWT_SECRET_KEY || "";
     const verified = jwt.verify(token, jwtSecretKey);
-    if (!verified) return false; // User not found
-    return true; // True if token is still within 15 minutes
+    return verified; // True if token is still within 15 minutes
   }
 
   async follow(
@@ -202,6 +201,11 @@ class Users {
     let following: boolean = false;
     const user: (Document<userType, any, any> & userType) | null =
       await this.#users.findOne({ username: username });
+    const userWithoutPassword = {
+      ...user?.toObject(),
+      password: undefined,
+    };
+
     if (myusername) {
       const mine: (Document<userType, any, any> & userType) | null =
         await this.#users.findOne({ username: myusername });
@@ -211,15 +215,16 @@ class Users {
           (f) => f.username === user.username
         );
         if (isFollowing) following = true;
+
         return {
-          user: user,
+          user: userWithoutPassword,
           following: following,
         };
       }
     }
     if (user) {
       return {
-        user: user,
+        user: userWithoutPassword,
       };
     }
     return {

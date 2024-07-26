@@ -156,14 +156,21 @@ class Posts {
   }
 
   async posting(post: postType, user: any, file: string): Promise<postType> {
+    const time = new Date().toLocaleDateString();
+
     if (!post.title || post.title === "") return this.#notFound;
     if (post.repost) {
       const og: (Document<postType, any, any> & postType) | null =
         await this.#posts.findOne({ post });
       post.ogId = og?.id;
     }
+    (post.id = "txtr" + Math.random().toString(16).slice(2) + "tme:" + time),
+      (post.time = time);
     post.user = user._id;
     post.title = htmlToText(post.title);
+    if (post.title === "" || post.title === undefined || post.title === null) {
+      return this.#notFound;
+    }
     post.img = file;
     await mainModel.create(post);
     return post;

@@ -33,7 +33,7 @@
 </div>
 <script>
   // Mendapatkan data pengguna dari userProfile jika tersedia
-  if (localStorage.getItem("name")) {
+  if (sessionStorage.getItem("myToken")) {
     window.location.href = "/";
   }
 </script>
