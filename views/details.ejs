@@ -129,6 +129,12 @@
       placeholder="What's Happening?!"
     ></textarea>
   </div>
+      <img
+      style="border-radius: 2% !important"
+      class="mb-3"
+      id="preview"
+      onerror="this.remove()"
+    />
   <div class="mb-3 d-flex justify-content-between">
     <input
       type="file"
@@ -153,12 +159,6 @@
     </button>
   </div>
 </form>
-    <img
-      style="border-radius: 2% !important"
-      class="mb-3"
-      id="preview"
-      onerror="this.remove()"
-    />
 <form
   class="bg-dark text-white post p-3 border-light rounded-0 pb-0"
   onsubmit="sendPostRequest(this, undefined, '<%= JSON.stringify({ id: post.id, user: post.user, time: post.time, title: post.title})%>', undefined, undefined)"
@@ -175,6 +175,12 @@
       placeholder="What's Happening?!"
     ></textarea>
   </div>
+      <img
+      style="border-radius: 2% !important"
+      class="mb-3"
+      id="preview"
+      onerror="this.remove()"
+    />
   <div class="mb-3 d-flex justify-content-between">
     <input
       type="file"
