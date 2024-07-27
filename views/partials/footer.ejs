@@ -27,6 +27,22 @@
         <a class="text-warning" href="https://saweria.co/mfathinhalim">Support This Web In Saweria^^</a>
       </div>
     </div>
+    <nav class="navbar navbar-dark bg-dark-glass navbar-expand d-md-none d-lg-none d-xl-none fixed-bottom">
+    <ul class="navbar-nav nav-justified w-100">
+      <li class="nav-item">
+        <a href="/" class="nav-link" style="font-size: x-large;"><i class="fa-solid fa-house"></i></a>
+      </li>
+      <li class="nav-item">
+        <a href="/" class="nav-link" style="font-size: x-large;"><i class="fa-solid fa-magnifying-glass"></i></a>
+      </li>
+      <li class="nav-item">
+        <a href="/" class="nav-link" style="font-size: x-large;"><i class="fa-solid fa-pen-to-square"></i></a>
+      </li>
+      <li class="nav-item">
+        <a href="#" id="myDetails" class="nav-link" style="font-size: x-large;"><i class="fa-solid fa-user"></i></a>
+      </li>
+    </ul>
+  </nav>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 <script>
@@ -51,6 +67,9 @@
             if(check.check === true) {
                 logout()
             } 
+            document.querySelectorAll("#myDetails").forEach((link) => {
+                link.href = `/user/details/${check.user.username}`
+            })
             document.getElementById("mypfp").src = check.user.pp;
             document.getElementById("myname").innerText = check.user.name;
             document.getElementById("myusername").innerText = `@${check.user.username}`;
@@ -60,15 +79,13 @@
         });
         
     // Send a fetch request to the server for posting
-    function sendPostRequest(form, replyTo, reQuote, ogId, repostPost) {
+    function sendPostRequest(form, replyTo, reQuote, ogId, repost) {
         event.preventDefault(); // Prevent default form submission
         const title = repostPost ? repostPost.title : form.querySelector("#title").value;
         if(title === "" || title === undefined || title === null) {
             return window.location.href="/"
         }
         document.getElementById("loading-screen").classList.remove("d-none");
-        repostPost = repostPost ? repostPost : undefined;
-        const repost = repostPost ? repostPost.user : undefined;
         const formData = new FormData(); 
         if(!repostPost) {
             form.querySelector("button").remove()
@@ -80,7 +97,7 @@
         }
 
         // Append data to FormData
-        const data = {
+        let data = {
             title: title,
             like: { total: 0, users: [] },
             replyTo: replyTo ? replyTo : "",

@@ -24,9 +24,6 @@
       <p style="margin-bottom: 5px" class="text-secondary">
         @<%= post.user.username.replace(/<[^>]+>/g, "") %>
       </p>
-      <p style="margin-bottom: 0">
-        <%= post.user.desc != "" ? post.user.desc.replace(/<[^>]+>/g, "") : "" %>
-      </p>
     </div>
 
     <button
@@ -38,6 +35,9 @@
       Follow
     </button>
   </div>
+  <p class="mt-2">
+    <%= post.user.desc != "" ? post.user.desc.replace(/<[^>]+>/g, "") : "" %>
+  </p>
   <div class="d-flex mt-3" style="padding-left: 5px">
     <p style="color: var(--accent1)">
       <i class="fa-solid fa-user-group"></i> <%= post.user.following.length %>
@@ -48,6 +48,7 @@
       followers
     </p>
   </div>
+  
 </div>
 <div class="card bg-dark text-white p-3 border-light post rounded-0">
   <a

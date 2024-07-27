@@ -11,7 +11,7 @@
       <img
         src="<%= posts.posts[0].user.pp %>"
         class="rounded-circle"
-        style="max-height: 100px; border: 2px solid var(--accent1)"
+        style="max-height: 70px; border: 2px solid var(--accent1)"
       />
       <div class="d-flex flex-column ms-2 me-auto">
         <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
@@ -20,9 +20,6 @@
         </h3>
         <p style="margin-bottom: 5px" class="text-secondary">
           @<%= posts.posts[0].user.username %>
-        </p>
-        <p style="margin-bottom: 0">
-          <%= posts.posts[0].user.desc != "" ? posts.posts[0].user.desc : "" %>
         </p>
       </div>
 
@@ -35,6 +32,9 @@
         Follow
       </button>
     </div>
+    <p class="mt-2">
+      <%= posts.posts[0].user.desc != "" ? posts.posts[0].user.desc : "" %>
+    </p>
     <div class="d-flex mt-3" style="padding-left: 5px">
       <p style="color: var(--accent1)">
         <i class="fa-solid fa-user-group"></i> <%=
@@ -120,31 +120,44 @@
 <%- include("partials/footer.ejs") %>
 
 <script>
-  const followBtn = document.getElementById("follow");
-  fetch(`/user/follow/<%= posts.posts[0].user.username %>?token=${username}`)
+  fetch(`/user/check?id=${token}`)
     .then((res) => res.json())
     .then((check) => {
-      if (check.isFollowing) {
-        followBtn.innerText = "Unfollow";
-        followBtn.classList.remove("btn-outline-success");
-        followBtn.classList.add("btn-outline-danger");
+      if (check.check === true) {
+        logout();
+      }
+      name = check.user.name;
+      username = check.user.username;
+
+      id = check.user.id;
+      const followBtn = document.getElementById("follow");
+      fetch(
+        `/user/follow/<%= posts.posts[0].user.username %>?myname=${username}`
+      )
+        .then((res) => res.json())
+        .then((check) => {
+          if (check.isFollowing) {
+            followBtn.innerText = "Remove";
+            followBtn.classList.remove("btn-outline-success");
+            followBtn.classList.add("btn-outline-danger");
+          }
+        });
+
+      if ("<%= posts.posts[0].user.username %>" === username) {
+        followBtn.remove();
+        // Membuat elemen <a> untuk tombol
+        let profileLink = document.createElement("a");
+
+        // Menetapkan atribut href ke URL profil dengan username
+        profileLink.setAttribute("href", "/profile/" + username);
+
+        // Menambahkan kelas Bootstrap untuk tampilan tombol
+        profileLink.classList.add("btn", "btn-outline-warning", "rounded-pill");
+        // Menambahkan teks atau konten di dalam tombol
+        profileLink.textContent = "Edit";
+
+        // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
+        document.getElementById("top").appendChild(profileLink);
       }
     });
-
-  if ("<%= posts.posts[0].user.username %>" === username) {
-    followBtn.remove();
-    // Membuat elemen <a> untuk tombol
-    let profileLink = document.createElement("a");
-
-    // Menetapkan atribut href ke URL profil dengan username
-    profileLink.setAttribute("href", "/profile/" + username);
-
-    // Menambahkan kelas Bootstrap untuk tampilan tombol
-    profileLink.classList.add("btn", "btn-outline-warning", "rounded-pill");
-    // Menambahkan teks atau konten di dalam tombol
-    profileLink.textContent = "Edit";
-
-    // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
-    document.getElementById("top").appendChild(profileLink);
-  }
 </script>
