@@ -268,7 +268,7 @@ router.route("/user/check").get(async (req: Request, res: Response) => {
 router
   .route("/login")
   .get((req: Request, res: Response) => {
-    return res.render("login");
+    return res.render("login", { searchTerm: "" });
   }) //untuk get login, ya di render aja
   .post(async (req: Request, res: Response) => {
     let result: any = await userClass.login(
@@ -281,17 +281,22 @@ router
       return res.render("error", {
         type: "user",
         error: result,
+        searchTerm: "",
       });
     }
     const token = await userClass.createAccessToken(result.id.toString());
-    return res.render("redirect", { token: token, name: result.name }); //kalau enggak langsung redirect
+    return res.render("redirect", {
+      token: token,
+      name: result.name,
+      searchTerm: "",
+    }); //kalau enggak langsung redirect
   });
 
 //? router signup
 router
   .route("/signup") //signup
   .get((req: Request, res: Response) => {
-    return res.render("signup"); //? ya render
+    return res.render("signup", { searchTerm: "" }); //? ya render
   })
   .post(async (req: Request, res: Response) => {
     await userClass.signUp(
