@@ -1,4 +1,11 @@
 <%- include("partials/header.ejs") %>
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="<%= posts.posts[0].user.pp" % />" />
+<meta property="og:type" content="On Texter" />
+<meta name="application-name" content="Texter" />
+<meta property="og:title" content="See <%= posts.posts[0].user.name %>" />
+<meta name="twitter:description" content="<%= posts.posts[0].user.desc != "" ?
+posts.posts[0].user.desc : "" %>" />
 <div id="loading-screen" class="d-none">
   <div class="spinner-border text-primary" role="status">
     <span class="visually-hidden">Loading...</span>

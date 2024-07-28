@@ -1,4 +1,9 @@
 <%- include("partials/header.ejs") %>
+     <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:type" content="On Texter" />
+    <meta name="application-name" content="Texter" />
+    <meta property="og:title" content="Texter" />
+    <meta name="twitter:description" content="Texter, Media Sosial Berbasis Text" />
 <div>
   <form
     class="card bg-dark text-light p-3 border-light rounded-0"
@@ -66,7 +71,6 @@
       const response = await fetch(`/get
 /posts?page=${page}&limit=${postsPerPage}&search=${search}`);
       const data = await response.json();
-      console.log(data)
       return data.posts.posts;
     } catch (error) {
       console.error("Error fetching posts:", error);

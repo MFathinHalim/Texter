@@ -36,7 +36,7 @@ router
             if (data) {
               // Render halaman yang sesuai dengan data
               return res.render(id ? "details" : "homepage", {
-                data: data,
+                ...data,
                 searchTerm: search,
               });
             } else {
