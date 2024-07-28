@@ -1,6 +1,11 @@
 </div>
- <div class="col-12 col-lg-3 h-100">
-      <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg">
+ <div class="col-12 col-lg-3 h-100 sticky-on-navbar">
+    <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg" style="max-width: 400px; ">
+        <div class="card-body">
+            <input type="text" autocomplete="off" value="<%= searchTerm %>" id="searchInput" class="form-control" placeholder="Search...">
+        </div>
+    </div>
+      <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg" style="margin: 20px auto;">
         <div class="card-body">
           <h3 class="card-title">RULES</h3>
           <p class="card-text">Rules for posting
@@ -40,7 +45,10 @@
         <a href="/" class="nav-link" style="font-size: x-large;"><i class="fa-solid fa-house"></i></a>
       </li>
       <li class="nav-item">
-        <a href="/" class="nav-link" style="font-size: x-large;"><i class="fa-solid fa-magnifying-glass"></i></a>
+        <a
+            data-toggle="modal"
+            data-target="#uploadModal" 
+            class="nav-link" style="font-size: x-large;"><i class="fa-solid fa-magnifying-glass"></i></a>
       </li>
       <li class="nav-item">
         <a href="/" class="nav-link" style="font-size: x-large;"><i class="fa-solid fa-pen-to-square"></i></a>
@@ -50,8 +58,21 @@
       </li>
     </ul>
   </nav>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</body>
+<script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script></body>
 <script>
     localStorage.removeItem("name");
     localStorage.removeItem("username");
@@ -65,7 +86,15 @@
     let username;
     let name;
     let id;
-      
+    document.querySelectorAll("#searchInput").forEach((inputSearch) => {
+        inputSearch.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const query = event.target.value;
+                window.location.href = `/?search=${encodeURIComponent(query)}`;
+            }
+        });
+    })
     if (!window.location.href.toString().includes("/login") && !window.location.href.toString().includes("/signup") ){
         if(!token) {
             window.location.href = "/login"

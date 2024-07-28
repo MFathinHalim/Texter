@@ -59,9 +59,14 @@
   const postsPerPage = 10; // Adjust as needed
   async function fetchPosts(page) {
     try {
+       const url = new URL(window.location.href);
+
+    // Ambil parameter pencarian dari query string
+    const search = url.searchParams.get('search') || '';
       const response = await fetch(`/get
-/posts?page=${page}&limit=${postsPerPage}`);
+/posts?page=${page}&limit=${postsPerPage}&search=${search}`);
       const data = await response.json();
+      console.log(data)
       return data.posts.posts;
     } catch (error) {
       console.error("Error fetching posts:", error);

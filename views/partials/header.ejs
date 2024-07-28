@@ -14,6 +14,43 @@
   <nav class="navbar navbar-dark sticky-top bg-dark-glass">
     <a class="mb-0 mx-auto h3 p-2" href="/">Texter</a>
   </nav>
+  <div
+  class="modal fade"
+  id="uploadModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="uploadModalLabel"
+  aria-describedby="uploadModalBody"
+>
+  <div
+    class="modal-dialog bg-transparent modal-xl"
+    style="border-radius: 12px 12px 0 0 !important"
+    role="document"
+  >
+    <div class="modal-content shadow bg-dark-glass">
+      <div class="modal-header" style="border-radius: 12px 12px 0 0 !important">
+        <button
+          type="button"
+          class="text-white btn rounded-circle btn-outline-danger"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          X
+        </button>
+        <h5 class="modal-title ms-3" id="uploadModalLabel">
+          Search
+        </h5>
+      </div>
+      <div
+        class="modal-body"
+        id="uploadModalBody"
+        style="border-radius: 0 0 12px 12px !important"
+      >
+          <input type="text" autocomplete="off" value="<%= searchTerm ? searchTerm : '' %>" id="searchInput" class="form-control" placeholder="Search...">
+      </div>
+    </div>
+  </div>
+</div>
   <div class="container">
   <div class="row">
     <div class="col-12 col-lg-3 h-100 sticky-on-navbar" id="col-lb-2">

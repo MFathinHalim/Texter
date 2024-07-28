@@ -52,7 +52,8 @@ class Posts {
     id: string,
     page: number,
     limit: number,
-    userId?: string
+    userId?: string,
+    search?: string
   ): Promise<
     { posts: postType[] } | { post: postType | null; replies?: postType[] }
   > {
@@ -68,7 +69,9 @@ class Posts {
         }
 
         // Query posts and shuffle the results
-        let posts = await this.#posts.find({}).exec();
+        let posts = await this.#posts
+          .find({ title: { $regex: search, $options: "i" } })
+          .exec();
         posts = shuffleArray(posts);
 
         // Take only the necessary portion of shuffled posts

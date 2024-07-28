@@ -29,15 +29,19 @@ router
     try {
       try {
         const id = req.query.id ? req.query.id.toString() : "";
+        const search = req.query.search ? req.query.search.toString() : "";
 
-        PostsClass.getData(id, 0, 0)
+        PostsClass.getData(id, 0, 0, search)
           .then((data) => {
             if (data) {
               // Render halaman yang sesuai dengan data
-              return res.render(id ? "details" : "homepage", data);
+              return res.render(id ? "details" : "homepage", {
+                data: data,
+                searchTerm: search,
+              });
             } else {
               // Handle case where data is not found or undefined
-              return res.render("homepage", {}); // Render homepage with empty data
+              return res.render("homepage", { searchTerm: search }); // Render homepage with empty data
             }
           })
           .catch((error) => {
@@ -127,9 +131,10 @@ router
 router.route("/get/posts").get(async (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string) || 1; // Get page from query
   const limit = parseInt(req.query.limit as string) || 10; // Get limit from query
+  const search: string = req.query.search?.toString() || "";
   try {
-    const posts = await PostsClass.getData("", page, limit); // Assuming getData now takes page and limit
-    return res.json({ posts }); // Send posts as JSON response
+    const posts = await PostsClass.getData("", page, limit, undefined, search); // Assuming getData now takes page and limit
+    return res.json({ posts: posts, searchTerm: search }); // Send posts as JSON response
   } catch (error) {
     console.error("Error fetching posts:", error);
     return res.status(500).json({ error: "Failed to fetch posts" });
