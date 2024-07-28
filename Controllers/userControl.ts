@@ -134,8 +134,11 @@ class Users {
 
   checkAccessToken(token: string) {
     let jwtSecretKey: string = process.env.JWT_SECRET_KEY || "";
-    const verified = jwt.verify(token, jwtSecretKey);
-    return verified; // True if token is still within 15 minutes
+    try {
+      return jwt.verify(token, jwtSecretKey);
+    } catch (error) {
+      return null;
+    }
   }
 
   async follow(
