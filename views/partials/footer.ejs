@@ -79,15 +79,15 @@
         });
         
     // Send a fetch request to the server for posting
-    function sendPostRequest(form, replyTo, reQuote, ogId, repost) {
+    function sendPostRequest(form, replyTo, reQuote, ogId, repost,repostTitle) {
         event.preventDefault(); // Prevent default form submission
-        const title = repostPost ? repostPost.title : form.querySelector("#title").value;
+        const title = repostTitle ? repostTitle : form.querySelector("#title").value;
         if(title === "" || title === undefined || title === null) {
             return window.location.href="/"
         }
         document.getElementById("loading-screen").classList.remove("d-none");
         const formData = new FormData(); 
-        if(!repostPost) {
+        if(!repost) {
             form.querySelector("button").remove()
             if (form.querySelector("#img").files[0]) {
                 formData.append('image', form.querySelector("#img").files[0]); 
@@ -127,7 +127,7 @@
                 console.log(post); // Menampilkan data JSON dari respons
                 
                 // Redirect setelah POST request berhasil
-                const redirectId = repostPost === undefined ? post.id : post.ogId;
+                const redirectId = post.id;
                 window.location.href = `/?id=${redirectId}`;
             })
             .catch(error => {

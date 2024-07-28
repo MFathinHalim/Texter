@@ -49,15 +49,20 @@
 
   <% posts.posts.forEach((post) => { %>
   <div class="card bg-dark text-white p-3 border-light post rounded-0">
+    <% if(post.repost) { %>
+    <p class="text-secondary mb-1 ms-1">
+      <i class="fa-solid fa-recycle"></i> <%= post.user.name %> was reposted
+    </p>
+    <% } %>
     <a href="/?id=<%= post.id %>">
       <article class="d-flex align-items-center">
-        <img src="<%= post.user.pp %>" class="pfp rounded-circle" />
+        <img
+          src="<%= post.repost ? post.repost.pp : post.user.pp %>"
+          class="pfp rounded-circle"
+        />
         <div class="d-flex flex-column ms-2 me-auto pt-2">
           <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
-          <h4>
-            <%= post.user.name %> <%= post.reQuote ? `is Requote to
-            ${post.reQuote.user.name}` : "" %>
-          </h4>
+          <h4><%= post.repost ? post.repost.name : post.user.name %></h4>
           <h4 class="text-secondary"><%= post.time %></h4>
         </div>
       </article>
@@ -108,7 +113,7 @@
         </a>
         <button
           class="btn btn-outline-success rounded-pill ms-2"
-          onclick="sendPostRequest(undefined, undefined, undefined, '<%= post.id %>', '<%= JSON.stringify(post) %>')"
+          onclick="sendPostRequest(undefined, undefined, undefined, '<%= post.id %>', '<%= JSON.stringify(post) %>', '<%= post.title %>')"
         >
           <i class="fa-solid fa-recycle"></i> Repost
         </button>

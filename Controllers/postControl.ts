@@ -87,6 +87,10 @@ class Posts {
             select: "-password",
           },
         });
+        await this.#posts.populate(posts, {
+          path: "repost",
+          select: "-password",
+        });
 
         return { posts };
       } catch (error) {
@@ -127,6 +131,10 @@ class Posts {
             select: "-password",
           },
         })
+        .populate({
+          path: "repost",
+          select: "-password",
+        })
         .exec();
       posts = posts.filter((post) => post.user?.id === userId);
       return { posts };
@@ -141,6 +149,10 @@ class Posts {
               path: "user",
               select: "-password",
             },
+          })
+          .populate({
+            path: "repost",
+            select: "-password",
           })
           .exec();
         const replies = await this.#posts

@@ -76,20 +76,20 @@
       const postElement = document.createElement("div");
       postElement.innerHTML = `
     <div class="card bg-dark text-white p-3 post rounded-0 border-light">
-      <a href="/?id=${post.repost ? post.ogId : post.id}">
+      <a href="/?id=${post.id}">
         <div>
+        ${ post.repost ? `<p class="text-secondary mb-1 ms-1">
+          <i class="fa-solid fa-recycle"></i> ${ post.user.name } was reposted
+        </p> ` : "" }
         <article class="d-flex pt-2">
+        <img class="pfp rounded-circle" src="${post.repost ? post.repost.pp : post.user.pp}" />
         ${
           post.repost
             ? `
-          <h4>${post.user.name.replace(/<[^>]+>/g, "")} was reposted</h4>
-          <img class="pfp rounded-circle" style="max-width: 150px; max-height: 150px;" src="${
-            post.user.pp
-          }" />
-          <h3>${post.repost.name.replace(/<[^>]+>/g, "")}</h3>
-        `
+             <div class="ms-2">
+              <h4>${post.user.name.replace(/<[^>]+>/g, "")}</h4>
+            `
             : `
-            <img class="pfp rounded-circle" src="${post.user.pp}" />
             <div class="ms-2">
               <h4>
                 ${post.user.name.replace(/<[^>]+>/g, "")} ${
@@ -157,18 +157,8 @@
         </a>
         <button class="btn btn-outline-success rounded-pill ms-2" onclick='sendPostRequest(undefined, undefined, undefined, "${
           post.id
-        }", ${JSON.stringify({
-        user: {
-          id: post.user.id,
-          name: post.user.name,
-          username: post.user.username,
-        },
-      })
-        .replace(/</g, "\\u003c")
-        .replace(
-          />/g,
-          "\\u003e"
-        )})'><i class="fa-solid fa-recycle"></i> Repost</button>
+        }", "${post.user._id}"
+        , "${post.title}")'><i class="fa-solid fa-recycle"></i> Repost</button>
       </div>
     </div>
     `;
