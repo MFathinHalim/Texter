@@ -15,7 +15,7 @@
 }
 
 .border-light {
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border: 1px solid #ffffff3a !important;
 }
 
 .card:hover {
@@ -23,7 +23,7 @@
 }
 
 .post.border-light {
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border: 1px solid #ffffff3a !important;
   border-top: none !important;
 }
 
