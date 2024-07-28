@@ -161,7 +161,7 @@ router
     );
     const post = await PostsClass.getData("", 0, 0, user.user.id);
     if (user && post) {
-      return res.render("user", { user: user, posts: post });
+      return res.render("user", { user: user, posts: post, searchTerm: "" });
     }
   });
 
