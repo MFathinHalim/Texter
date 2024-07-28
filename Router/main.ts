@@ -173,7 +173,7 @@ router
       req.query.myname?.toString() || ""
     );
     if (user) {
-      return res.render("edit-profile", user);
+      return res.render("edit-profile", { ...user, searchTerm: "" });
     }
   })
   .post(upload.single("image"), async (req: Request, res: Response) => {
