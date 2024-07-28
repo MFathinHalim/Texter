@@ -26,7 +26,7 @@ const limiter = rateLimit({
 const limiterSignup = rateLimit({
   windowMs: 60 * 60 * 1000, // 15 menit
   max: 1, // maksimal 1 request setiap 15 menit
-  message: "Try Again Later:D.",
+  message: "Coba lagi 15 menit.",
 });
 app.use("/post", limiter);
 function postOnlyLimiter(req: Request, res: Response, next: NextFunction) {

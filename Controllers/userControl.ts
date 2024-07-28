@@ -137,7 +137,7 @@ class Users {
     try {
       return jwt.verify(token, jwtSecretKey);
     } catch (error) {
-      return null;
+      return "not-found";
     }
   }
 

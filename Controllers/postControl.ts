@@ -197,42 +197,42 @@ class Posts {
     await mainModel.create(post);
     return post;
   }
+  liking(postId: string, user: any): Promise<number> {
+    return this.#posts
+      .findOne({ id: postId })
+      .populate("like.users", "-password")
+      .exec()
+      .then((post: any) => {
+        if (!post) {
+          throw new Error("Post not found");
+        }
 
-  async liking(postId: string, user: any): Promise<postType | number> {
-    try {
-      const post: (Document<postType, any, any> & postType) | any =
-        await this.#posts
-          .findOne({ id: postId })
-          .populate("like.users", "-password")
-          .exec();
-      if (post) {
         const userAlreadyLike: userType | undefined = post.like.users.find(
           (entry: userType) => entry.id.toString() === user.id
         );
+
         if (!userAlreadyLike) {
           // User belum like, tambahkan like
           post.like.users.push(user._id);
         } else {
           // User sudah like, hapus like
-          const index = post.like.users.findIndex(
-            (entry: userType) => entry.username === user.username
+          post.like.users = post.like.users.filter(
+            (entry: userType) => entry.id.toString() !== user.id
           );
-          // Remove the user if found
-          if (index > -1) {
-            post.like.users.splice(index, 1);
-          }
         }
-        // Simpan perubahan ke database
-        await post.save();
 
-        return post.like.users.length;
-      } else {
+        // Update post di database
+        return this.#posts
+          .updateOne(
+            { id: postId },
+            { $set: { "like.users": post.like.users } }
+          )
+          .then(() => post.like.users.length);
+      })
+      .catch((error: any) => {
+        console.error("Error in liking:", error);
         return this.#notFound;
-      }
-    } catch (error) {
-      console.error("Error in liking:", error);
-      return this.#notFound;
-    }
+      });
   }
 }
 export default Posts; //TODO Di Export supaya dipake di files lain :D
