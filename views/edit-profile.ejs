@@ -62,7 +62,16 @@
 </div>
 <%- include("partials/footer.ejs") %>
 <script>
-  if (username !== "<%= user.username %>") {
-    window.location.href = "/user/details/<%= user.username %>";
-  }
+  fetch(`/user/check?id=${token}`)
+    .then((res) => res.json())
+    .then((check) => {
+      if (check.check === true) {
+        logout();
+      }
+      username = check.user.username;
+
+      if (username !== "<%= user.username %>") {
+        window.location.href = "/user/details/<%= user.username %>";
+      }
+    });
 </script>
