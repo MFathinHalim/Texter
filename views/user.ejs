@@ -120,9 +120,15 @@ posts.posts[0].user.desc : "" %>" />
         </a>
         <button
           class="btn btn-outline-success rounded-pill ms-2"
-          onclick="sendPostRequest(undefined, undefined, undefined, '<%= post.id %>', '<%= JSON.stringify(post) %>', '<%= post.title %>')"
+          onclick="sendPostRequest(undefined, undefined, undefined, '<%= post.id %>', '<%= post.user._id %>', '<%= post.title %>')"
         >
           <i class="fa-solid fa-recycle"></i> Repost
+        </button>
+        <button
+          class="btn btn-outline-info rounded-pill ms-2"
+          onclick='share("/?id=$<%= post.id %>")'
+        >
+          <i class="fa-solid fa-share"></i>
         </button>
       </div>
     </a>

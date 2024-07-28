@@ -117,6 +117,8 @@
     >
       <i class="fa-solid fa-recycle"></i> Repost
     </button>
+    <button class="btn btn-outline-info rounded-pill ms-2" onclick='share("/?id=$<%= post.id %>")'><i class="fa-solid fa-share"></i></button>
+
   </div>
 </div>
 <form
@@ -223,7 +225,7 @@
     <img style="border-radius: 2% !important" src="<%= reply.img %>" />
     <% } %>
   </a>
-  <div class="d-flex mb-2">
+  < class="d-flex mb-2">
     <button
       class="btn btn-outline-danger rounded-pill"
       onclick="sendLikeRequest('<%= reply.id %>', this)"
@@ -242,6 +244,8 @@
     >
       <i class="fa-solid fa-recycle"></i> Repost
     </button>
+    <button class="btn btn-outline-info rounded-pill ms-2" onclick='share("/?id=$<%= reply.id %>")'><i class="fa-solid fa-share"></i></button>
+  
   </div>
 </div>
 <% }); %> <% } %> <%- include("partials/footer.ejs") %>

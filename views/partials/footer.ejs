@@ -114,6 +114,30 @@
             document.getElementById("myfollowers").innerHTML = `<i class="fa-solid fa-user-group"></i> ${check.user.followers.length} followers`;
         });
         
+        
+        function share(copyText) {
+        copyText = "https://texter-id.glitch.me" + copyText 
+        // Copy the text inside the text field
+        if (navigator.share) {
+          navigator.clipboard.writeText(copyText);
+
+          navigator
+            .share({
+              title: "Texter",
+              text: "Post Seru Nih",
+              url: copyText,
+            })
+            .then(() => console.log("Successful share"))
+            .catch((error) => console.log("Error sharing", error));
+        } else {
+          try {
+            window.AndroidShareHandler.share(copyText);
+          } catch {
+            navigator.clipboard.writeText(copyText);
+            alert("Sudah Di Salin Ya, silahkan Beri ke Temanmu ya ^_^");
+          }
+        }
+        }
     // Send a fetch request to the server for posting
     function sendPostRequest(form, replyTo, reQuote, ogId, repost,repostTitle) {
         event.preventDefault(); // Prevent default form submission
