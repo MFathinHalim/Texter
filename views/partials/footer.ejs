@@ -100,7 +100,7 @@
             window.location.href = "/login"
         }
         fetch(`/user/check?id=${token}`).then(res => res.json()).then(check => {
-            if(check.check === true) {
+            if(!check || check.user.username === "system" || check.check === true) {
                 logout()
             } 
             document.querySelectorAll("#myDetails").forEach((link) => {

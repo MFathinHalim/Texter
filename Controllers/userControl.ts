@@ -122,7 +122,8 @@ class Users {
       if (!user) return "";
       const newToken: string = jwt.sign(
         user.toObject(),
-        process.env.JWT_SECRET_KEY || ""
+        process.env.JWT_SECRET_KEY || "",
+        { expiresIn: "7d" }
       );
       return newToken;
     } catch (error) {
