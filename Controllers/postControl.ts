@@ -1,4 +1,4 @@
-import { type Model, type Document, Types } from "mongoose";
+import { type Model, type Document } from "mongoose";
 import mainModel from "../models/post";
 const { htmlToText } = require("html-to-text");
 import * as dotenv from "dotenv";
@@ -55,9 +55,10 @@ class Posts {
     userId?: string,
     search?: string
   ): Promise<
-    { posts: postType[] } | { post: postType | null; replies?: postType[] }
+    { posts: postType[] } | { post: postType | null; replies?: postType[] } // Type getData
   > {
     if (!id && userId === undefined) {
+      //? jika dia homepage saja
       try {
         const totalPosts = await this.#posts.countDocuments(); // Get total number of posts
         const skip = (page - 1) * limit;
@@ -82,7 +83,6 @@ class Posts {
           path: "user",
           select: "-password",
         });
-
         await this.#posts.populate(posts, {
           path: "reQuote",
           populate: {
@@ -101,7 +101,8 @@ class Posts {
         return { posts: [] };
       }
 
-      function shuffleArray(array: any) {
+      //function untuk shuffle array
+      function shuffleArray(array: any[]) {
         let currentIndex = array.length,
           temporaryValue,
           randomIndex;
@@ -121,6 +122,7 @@ class Posts {
         return array;
       }
     } else if (userId) {
+      //? Jika dia user details
       let posts = await this.#posts
         .find({})
         .populate({
@@ -139,9 +141,10 @@ class Posts {
           select: "-password",
         })
         .exec();
-      posts = posts.filter((post) => post.user?.id === userId);
+      posts = posts.filter((post) => post.user?.id === userId); //di filter yang sama dengan user
       return { posts };
     } else {
+      //? Jika detail post
       try {
         const post = await this.#posts
           .findOne({ id })
@@ -171,15 +174,16 @@ class Posts {
   }
 
   async posting(post: postType, user: any, file: string): Promise<postType> {
-    const time = new Date().toLocaleDateString();
+    const time = new Date().toLocaleDateString(); //dapatkan waktu saat ini
 
-    if (!post.title || post.title === "") return this.#notFound;
+    if (!post.title || post.title === "") return this.#notFound; // kalau gak ketemu
     if (post.repost) {
       const og: (Document<postType, any, any> & postType) | null =
-        await this.#posts.findOne({ post });
-      post.ogId = og?.id;
+        await this.#posts.findOne({ post }); // cari tahu original postnya jika dia merupakan repost
+      post.ogId = og?.id; // kasih ogId nya
     }
     if (post.reQuote) {
+      // Kalau dia merupakan requote
       post.reQuote =
         (await this.#posts
           .findOne({ id: post.reQuote })
@@ -187,20 +191,21 @@ class Posts {
           .exec()) || undefined;
     }
     (post.id = "txtr" + Math.random().toString(16).slice(2) + "tme:" + time),
-      (post.time = time);
-    post.user = user._id;
+      (post.time = time); //bikin idnya dulu :D
+    post.user = user._id; //set usernya sesuai id (0o0)
     post.title = htmlToText(post.title);
     if (post.title === "" || post.title === undefined || post.title === null) {
-      return this.#notFound;
+      return this.#notFound; //kalau kosong semuanya //!(parah sih isengnya :D)
     }
     post.img = file;
     await mainModel.create(post);
     return post;
   }
   liking(postId: string, user: any): Promise<number> {
+    //Fungsi ngelike
     return this.#posts
       .findOne({ id: postId })
-      .populate("like.users", "-password")
+      .populate("like.users", "-password") //intinya nyari dulu
       .exec()
       .then((post: any) => {
         if (!post) {
@@ -209,19 +214,19 @@ class Posts {
 
         const userAlreadyLike: userType | undefined = post.like.users.find(
           (entry: userType) => entry.id.toString() === user.id
-        );
+        ); //kalau usernya udah ngelike
 
         if (!userAlreadyLike) {
           // User belum like, tambahkan like
-          post.like.users.push(user._id);
+          post.like.users.push(user._id); //? bakal di push
         } else {
           // User sudah like, hapus like
           post.like.users = post.like.users.filter(
             (entry: userType) => entry.id.toString() !== user.id
-          );
+          ); //? di filter
         }
 
-        // Update post di database
+        //! Update post di database
         return this.#posts
           .updateOne(
             { id: postId },
