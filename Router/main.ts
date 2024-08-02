@@ -1,15 +1,14 @@
 import { Router } from "express";
 import type { Request, Response, Router as RouterTypes } from "express";
-
 import Posts from "../Controllers/postControl";
 import Users from "../Controllers/userControl";
 import * as dotenv from "dotenv";
-
+///////////////////////////////////////////////////////////////////////////
 const multer = require("multer");
-
+const ImageKit = require("imagekit");
+///////////////////////////////////////////////////////////////////////////
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-const ImageKit = require("imagekit");
 
 dotenv.config();
 
@@ -197,7 +196,6 @@ router
         const buffer = req.file.buffer;
         const id: string = userData.id;
         // Upload image to ImageKit
-
         await imagekit.upload(
           {
             file: buffer,
