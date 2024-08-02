@@ -1,12 +1,11 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const bcrypt = require("bcryptjs");
-
+////////////////////////////////////////////
 import type { Model } from "mongoose";
 import { userModel } from "../models/user";
-
 import type { Document } from "mongoose";
-
+///////////////////////////////////////////
 dotenv.config();
 class Users {
   static instances: Users;
@@ -57,15 +56,15 @@ class Users {
     password: string,
     desc: string
   ): Promise<userType> {
-    password = await bcrypt.hash(btoa(password), 10);
-    if (username === "") return this.#error[0];
+    password = await bcrypt.hash(btoa(password), 10); //bikin crypt buat passwordnya (biar gak diliat cihuyyy)
+    if (username === "") return this.#error[0]; //kalau usernamenya error yaaa
     //untuk signup
     const isNameTaken = await this.#users.findOne({
       $or: [{ username: username }],
-    });
+    }); //? Check dulu apakah usernamenyna udah ada atau belum
     if (isNameTaken) return this.#error[0];
-    const time = new Date().toLocaleDateString();
-
+    ////////////////////////////////////////////////
+    const time = new Date().toLocaleDateString(); //Bikin timenya
     const newUser: userType = {
       id:
         "txtr-usr" +
@@ -73,9 +72,9 @@ class Users {
         Math.random().toString(16).slice(2) +
         "tme:" +
         time,
-      name: name.replace(/<[^>]+>/g, ""),
-      username: username.replace(/<[^>]+>/g, ""),
-      desc: desc.replace(/<[^>]+>/g, ""),
+      name: name.replace(/<[^>]+>/g, ""), //! )
+      username: username.replace(/<[^>]+>/g, ""), //! )====> Bikin supaya gak nambahin html <></> dan kawan kawan<(0O0)/
+      desc: desc.replace(/<[^>]+>/g, ""), //! )
       password: password,
       pp: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
       ban: false,
@@ -102,7 +101,7 @@ class Users {
       const isPasswordValid = await bcrypt.compare(
         btoa(password),
         user.password
-      );
+      ); //? check apakah passwordnya sesuai
       if (!isPasswordValid) return this.#error[1]; // Invalid password
 
       return {
@@ -124,7 +123,7 @@ class Users {
         user.toObject(),
         process.env.JWT_SECRET_KEY || "",
         { expiresIn: "7d" }
-      );
+      ); //Bikin access token
       return newToken;
     } catch (error) {
       console.error("Error creating access token:", error);
@@ -135,7 +134,7 @@ class Users {
   checkAccessToken(token: string) {
     let jwtSecretKey: string = process.env.JWT_SECRET_KEY || "";
     try {
-      return jwt.verify(token, jwtSecretKey);
+      return jwt.verify(token, jwtSecretKey); //Check access token jwtnya sesuai atau kagak (?)
     } catch (error) {
       return "not-found";
     }
@@ -182,14 +181,17 @@ class Users {
     } else {
       return this.#error[1];
     }
-  }
+  } //sistem follow, sama kayak like :D
 
   async checkFollow(username: string, myusername: string): Promise<boolean> {
     const user: (Document<userType, any, any> & userType) | null =
       await this.#users.findOne({ username });
     const mine: (Document<userType, any, any> & userType) | null =
       await this.#users.findOne({ username: myusername });
-
+    /* 
+    ? check udah follow atau belum 
+    ! (keperluan frontend)
+    */
     if (user && mine) {
       // @ts-ignore: Unreachable code error
       const isFollowing = mine.following?.some((f) => f.equals(user._id));
@@ -208,7 +210,7 @@ class Users {
     const userWithoutPassword = {
       ...user?.toObject(),
       password: undefined,
-    };
+    }; //check user detail (gak ngasihi password)
 
     if (myusername) {
       const mine: (Document<userType, any, any> & userType) | null =
@@ -247,12 +249,13 @@ class Users {
     } else {
       return this.#error[1];
     }
-  }
+  } //cari usernya berdasarkan id
+
   async checkUserUname(
     username: string
   ): Promise<(Document<userType, any, any> & userType) | userType> {
     const user: (Document<userType, any, any> & userType) | null =
-      await this.#users.findOne({ username: username });
+      await this.#users.findOne({ username: username }); //cari berdasarkan username
     if (user) {
       return user;
     } else {
@@ -270,7 +273,7 @@ class Users {
     } else {
       return this.#error[1];
     }
-  }
+  } //! Check di ban atau kagak nihhhh
   async editProfile(
     userData: any,
     profilePicture: string
@@ -300,4 +303,4 @@ class Users {
   }
 }
 
-export default Users;
+export default Users; //TODO Export biar bisa dipake
