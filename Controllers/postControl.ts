@@ -61,7 +61,7 @@ class Posts {
       //? jika dia homepage saja
       try {
         const totalPosts = await this.#posts.countDocuments(); // Get total number of posts
-        const skip = (page - 1) * limit;
+        const skip = limit;
 
         // Adjust limit if on the last page to avoid fetching more than available
         let adjustedLimit = Math.min(limit, totalPosts - skip);
@@ -176,7 +176,7 @@ class Posts {
   async posting(post: postType, user: any, file: string): Promise<postType> {
     const time = new Date().toLocaleDateString(); //dapatkan waktu saat ini
 
-    if (!post.title || post.title === "") return this.#notFound; // kalau gak ketemu
+    if (!post.title || post.title.trim().length === 0) return this.#notFound; // kalau gak ketemu
     if (post.repost) {
       const og: (Document<postType, any, any> & postType) | null =
         await this.#posts.findOne({ post }); // cari tahu original postnya jika dia merupakan repost

@@ -57,7 +57,7 @@ class Users {
     desc: string
   ): Promise<userType> {
     password = await bcrypt.hash(btoa(password), 10); //bikin crypt buat passwordnya (biar gak diliat cihuyyy)
-    if (username === "") return this.#error[0]; //kalau usernamenya error yaaa
+    if (username.trim().length === 0) return this.#error[0]; //kalau usernamenya error yaaa
     //untuk signup
     const isNameTaken = await this.#users.findOne({
       $or: [{ username: username }],
@@ -280,7 +280,7 @@ class Users {
   ): Promise<userType | {}> {
     try {
       const user = await this.#users.findOne({ id: userData.id });
-      if (userData.username === "") return this.#error[0];
+      if (userData.username.trim().length === 0 || userData.name.trim().length === 0) return this.#error[0];
       if (!user) {
         return this.#error[1]; // User not found
       }
