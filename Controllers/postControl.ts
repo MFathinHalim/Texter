@@ -53,10 +53,59 @@ class Posts {
     page: number,
     limit: number,
     userId?: string,
-    search?: string
+    search?: string,
+    trend?: boolean
   ): Promise<
-    { posts: postType[] } | { post: postType | null; replies?: postType[] } // Type getData
+    | { posts: postType[] }
+    | { post: postType | null; replies?: postType[] }
+    | { posts: string[] } // Type getData
   > {
+    if (trend) {
+      // Ambil semua post dari database
+      let posts: any = await this.#posts.find().exec();
+
+      // Populate fields
+      await this.#posts.populate(posts, {
+        path: "user",
+        select: "-password",
+      });
+      await this.#posts.populate(posts, {
+        path: "reQuote",
+        populate: {
+          path: "user",
+          select: "-password",
+        },
+      });
+      await this.#posts.populate(posts, {
+        path: "repost",
+        select: "-password",
+      });
+
+      // Fungsi untuk mengekstrak hashtag dari teks
+      const extractHashtags = (text: string): string[] => {
+        const hashtagPattern = /#(\w+)/g;
+        const hashtags = new Set<string>();
+        let match: RegExpExecArray | null;
+        while ((match = hashtagPattern.exec(text)) !== null) {
+          hashtags.add(match[1]); // tambahkan hashtag ke dalam set
+        }
+        return Array.from(hashtags);
+      };
+
+      // Kumpulkan semua hashtag dari semua judul post
+      const allHashtags = new Set<string>();
+      posts.forEach((post: postType) => {
+        const hashtags = extractHashtags(post.title);
+        hashtags.forEach((tag) => allHashtags.add(tag));
+      });
+
+      // Konversi set hashtag ke dalam array
+      posts = Array.from(allHashtags);
+      console.log(posts);
+
+      return { posts };
+    }
+
     if (!id && userId === undefined) {
       //? jika dia homepage saja
       try {
@@ -70,13 +119,16 @@ class Posts {
         }
 
         // Query posts and shuffle the results
-        let posts = await this.#posts
-          .find({ title: { $regex: search, $options: "i" } })
-          .exec();
+        let posts = await this.#posts.find({}).exec();
         posts = shuffleArray(posts);
 
         // Take only the necessary portion of shuffled posts
-        posts = posts.slice(skip, skip + adjustedLimit);
+        posts = posts.filter((post) =>
+          post.title.toLowerCase().includes(search?.toLowerCase() || "")
+        );
+        if (!search) {
+          posts = posts.slice(skip, skip + adjustedLimit);
+        }
 
         // Populate user and reQuote after shuffling and slicing
         await this.#posts.populate(posts, {

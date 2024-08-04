@@ -116,7 +116,9 @@
             </div>
         </article>
       </div>
-        <h3 class="h4 mt-2">${post.title.replace(/<[^>]+>/g, "")}</h3>
+        <h3 class="h4 mt-2">
+          ${post.title.replace(/#(\w+)/g, '<a href="/?search=$1" class="text-info">$&</a>')}
+        </h3>
         ${
           post.img
             ? `<img

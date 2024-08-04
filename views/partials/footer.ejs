@@ -5,7 +5,32 @@
             <input type="text" autocomplete="off" value="<%= searchTerm %>" id="searchInput" class="form-control" placeholder="Search...">
         </div>
     </div>
-      <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg" style="margin: 20px auto;">
+    
+        <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg mt-3">
+          <div class="card-body">
+            <h3 class="card-title">TRENDS</h3>
+            <hr
+                  style="
+                    opacity: 100%;
+                    border-top: 1px solid var(--accent1) !important;
+                  "
+              />
+            <div id="trendingPostsList">
+            </div>
+          </div>
+        </div>
+      <div class="card bg-dark text-white d-none d-lg-flex border-light p-3 rounded-lg mt-3">
+        <h5>Made By Fathin</h5>
+        <p class="mb-0">made by <a href="https://www.fathin.my.id" class="text-info">M.Fathin Halim</a></p>
+        <hr
+            style="
+              opacity: 100%;
+              border-top: 1px solid var(--success) !important;
+            "
+        />
+        <a class="text-warning" href="https://saweria.co/mfathinhalim">Support This Web In Saweria^^</a>
+      </div>
+        <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg" style="margin: 20px auto;">
         <div class="card-body">
           <h3 class="card-title">RULES</h3>
           <p class="card-text">Rules for posting
@@ -19,17 +44,6 @@
             </ul>
           </p>
         </div>
-      </div>
-      <div class="card bg-dark text-white d-none d-lg-flex border-light p-3 rounded-lg mt-3">
-        <h5>Made By Fathin</h5>
-        <p class="mb-0">made by <a href="https://www.fathin.my.id" class="text-info">M.Fathin Halim</a></p>
-        <hr
-            style="
-              opacity: 100%;
-              border-top: 1px solid var(--success) !important;
-            "
-        />
-        <a class="text-warning" href="https://saweria.co/mfathinhalim">Support This Web In Saweria^^</a>
       </div>
     </div>
     <div class="navbar navbar-dark bg-dark-glass navbar-expand d-lg-none d-xl-none" style="opacity: 0; width: 1px">
@@ -113,7 +127,53 @@
             document.getElementById("myfollowing").innerHTML = `<i class="fa-solid fa-user-group"></i> ${check.user.following.length} following`;
             document.getElementById("myfollowers").innerHTML = `<i class="fa-solid fa-user-group"></i> ${check.user.followers.length} followers`;
         });
-        
+        async function getTrendingPosts() {
+          try {
+            const response = await fetch('/get/trends'); // Assuming your trend endpoint
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            return data.posts.posts;
+          } catch (error) {
+            console.error('Error fetching trending posts:', error);
+            return []; // Return empty array on error
+          }
+        }
+
+        async function displayTrendingPosts() {
+          const trendingPosts = await getTrendingPosts();
+
+          const trendingPostsList = document.getElementById('trendingPostsList');
+          trendingPostsList.innerHTML = ''; // Clear existing content
+
+          if (trendingPosts.length === 0) {
+            trendingPostsList.innerHTML = '<div>No trending posts yet!</div>';
+          } else {
+           const maxItemsToShow = 6;
+
+            // Ambil hanya 6 item dari array trendingPosts
+            const limitedPosts = trendingPosts.slice(0, maxItemsToShow);
+
+            limitedPosts.forEach(post => {
+              const listItem = document.createElement('div');
+              listItem.classList.add('mt-3');
+
+              // Link to post details page (replace with your logic)
+              const postLink = document.createElement('a');
+              postLink.href = `/?search=${post}`;
+              postLink.classList.add('text-white', 'text-decoration-none', 'h4');
+              postLink.textContent = "#" + post;
+              listItem.appendChild(postLink);
+
+              trendingPostsList.appendChild(listItem);
+            });
+
+        }
+      }
+        // Call the displayTrendingPosts function on page load or after successful login
+        displayTrendingPosts();
+
         
         function share(copyText) {
         copyText = "https://texter-id.glitch.me" + copyText 
