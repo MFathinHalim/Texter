@@ -45,6 +45,9 @@ app.use("/", router);
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(404).render("notfound", { searchTerm: "" });
 });
+app.get("*", (req: Request, res: Response) => {
+  res.status(404).render("notfound", { searchTerm: ""});
+});
 //Run app nya sesuai port
 mongoose.set("strict", false);
 mongoose.connect(process.env.MONGODBURI || "").then(() => {
