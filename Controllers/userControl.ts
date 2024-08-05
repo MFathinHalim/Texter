@@ -274,13 +274,49 @@ class Users {
       return this.#error[1];
     }
   } //! Check di ban atau kagak nihhhh
+  async getTopUsersByFollowers(limit: number = 5): Promise<userType[]> {
+    try {
+      // Ambil semua pengguna yang tidak dibanned
+      const users: (Document<userType, any, any> & userType)[] =
+        await this.#users.find({
+          ban: false,
+        });
+
+      // Urutkan pengguna berdasarkan jumlah followers secara menurun
+      const sortedUsers = users.sort(
+        (a, b) => b.followers.length - a.followers.length
+      );
+
+      // Ambil 5 pengguna teratas dari hasil urutan
+      const topUsers = sortedUsers.slice(0, limit);
+
+      // Hilangkan password dari data pengguna yang dikembalikan
+      const result = topUsers.map((user) => ({
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        pp: user.pp,
+        desc: user.desc,
+        followersCount: user.followers.length,
+      }));
+
+      return result;
+    } catch (error) {
+      console.error("Error getting top users by followers:", error);
+      return []; // Kembalikan array kosong jika terjadi kesalahan
+    }
+  }
   async editProfile(
     userData: any,
     profilePicture: string
   ): Promise<userType | {}> {
     try {
       const user = await this.#users.findOne({ id: userData.id });
-      if (userData.username.trim().length === 0 || userData.name.trim().length === 0) return this.#error[0];
+      if (
+        userData.username.trim().length === 0 ||
+        userData.name.trim().length === 0
+      )
+        return this.#error[0];
       if (!user) {
         return this.#error[1]; // User not found
       }

@@ -75,13 +75,17 @@
   <%- post.title.replace(/#(\w+)/g, '<a href="/?search=$1" class="text-info">$&</a>') %>
 </h3>
   <% if(post.img) { %>
-  <img
-    style="border-radius: 2% !important"
-    class="mb-3"
-    src="<%= post.img %>"
-    onerror="this.remove()"
-  />
-  <% } %> <% if(post.reQuote) { %>
+    <% if(post.img.includes(".mp4") || post.img.includes(".ogg")) { %>
+      <video height="450" class="mb-3 border-light" loop style="border-radius: 2% !important" controls>
+        <source src="<%= post.img %>" type="video/mp4">
+      </video>
+      <% }else { %>
+      <img
+        style="border-radius: 2% !important"
+        class="mb-3 border-light"
+        src="<%= post.img %>"
+      />
+  <% }} %> <% if(post.reQuote) { %>
   <div class="card bg-dark text-white p-3 pt-2 mb-2 mt-2 border-1 border-light">
     <a href="/?id=<%= post.reQuote.id %>">
       <article class="d-flex pt-2">
@@ -95,8 +99,17 @@
         <%= post.reQuote.title.replace(/<[^>]+>/g, "") %>
       </h3>
       <% if(post.reQuote.img) { %>
-      <img style="border-radius: 2% !important" src="<%= post.reQuote.img %>" />
-      <% } %>
+    <% if(post.reQuote.img.includes(".mp4") || post.reQuote.img.includes(".ogg")) { %>
+      <video height="450" class="border-light" loop style="border-radius: 2% !important; width: 100%;" controls>
+        <source src="<%= post.reQuote.img %>" type="video/mp4">
+      </video>
+      <% }else { %>
+      <img
+      class="border-light"
+        style="border-radius: 2% !important"
+        src="<%= post.reQuote.img %>"
+      />
+  <% }} %> 
     </a>
   </div>
   <% } %>

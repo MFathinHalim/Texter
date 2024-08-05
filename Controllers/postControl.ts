@@ -4,7 +4,26 @@ const { htmlToText } = require("html-to-text");
 import * as dotenv from "dotenv";
 
 dotenv.config();
+//function untuk shuffle array
+function shuffleArray(array: any[]) {
+  let currentIndex = array.length,
+    temporaryValue,
+    randomIndex;
 
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
 //? Kelas untuk postingan
 class Posts {
   static instance: Posts; //Instance
@@ -101,8 +120,7 @@ class Posts {
 
       // Konversi set hashtag ke dalam array
       posts = Array.from(allHashtags);
-      console.log(posts);
-
+      posts = shuffleArray(posts);
       return { posts };
     }
 
@@ -126,7 +144,7 @@ class Posts {
         posts = posts.filter((post) =>
           post.title.toLowerCase().includes(search?.toLowerCase() || "")
         );
-        if (!search) {
+        if (search?.trim().length === 0) {
           posts = posts.slice(skip, skip + adjustedLimit);
         }
 
@@ -151,27 +169,6 @@ class Posts {
       } catch (error) {
         console.error("Error fetching posts:", error);
         return { posts: [] };
-      }
-
-      //function untuk shuffle array
-      function shuffleArray(array: any[]) {
-        let currentIndex = array.length,
-          temporaryValue,
-          randomIndex;
-
-        // While there remain elements to shuffle...
-        while (0 !== currentIndex) {
-          // Pick a remaining element...
-          randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex -= 1;
-
-          // And swap it with the current element.
-          temporaryValue = array[currentIndex];
-          array[currentIndex] = array[randomIndex];
-          array[randomIndex] = temporaryValue;
-        }
-
-        return array;
       }
     } else if (userId) {
       //? Jika dia user details

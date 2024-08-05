@@ -26,7 +26,6 @@
         class="form-control d-none"
         id="img"
         name="image"
-        accept="image/*"
       />
       <label
         for="img"
@@ -121,13 +120,16 @@
         </h3>
         ${
           post.img
-            ? `<img
+            ? post.img.includes(".mp4") || post.img.includes(".ogg") ? `
+            <video height="450" class="mb-3 border-light" loop style="border-radius: 2% !important; width: 100%;" controls>
+              <source src="${post.img}" type="video/mp4">
+            </video>`
+            : `<img
                 style="border-radius: 2% !important"
                 class="mb-3"
                 src="${post.img}"
                 onerror="this.remove()"
-              />`
-            : ""
+              />` :""
         }
       </a>
       ${
@@ -149,7 +151,19 @@
               /<[^>]+>/g,
               ""
             )}</h3>
-            ${post.reQuote.img ? `<img src="${post.reQuote.img}" />` : ""}
+            ${
+          post.reQuote.img
+            ? post.reQuote.img.includes(".mp4") || post.reQuote.img.includes(".ogg") ? `
+            <video height="450" class="border-light" loop style="border-radius: 2% !important; width: 100%;" controls>
+              <source src="${post.reQuote.img}" type="video/mp4">
+            </video>`
+            : `<img
+                style="border-radius: 2% !important"
+                class="mb-3"
+                src="${post.reQuote.img}"
+                onerror="this.remove()"
+              />` :""
+        }
           </a>
         </div>
       `

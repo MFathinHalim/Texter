@@ -1,12 +1,6 @@
 </div>
- <div class="col-12 col-lg-3 h-100 sticky-on-navbar">
-    <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg" style="max-width: 400px; ">
-        <div class="card-body">
-            <input type="text" autocomplete="off" value="<%= searchTerm %>" id="searchInput" class="form-control" placeholder="Search...">
-        </div>
-    </div>
-    
-        <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg mt-3">
+ <div class="col-12 col-lg-3 h-100">
+        <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg">
           <div class="card-body">
             <h3 class="card-title">TRENDS</h3>
             <hr
@@ -19,32 +13,19 @@
             </div>
           </div>
         </div>
-      <div class="card bg-dark text-white d-none d-lg-flex border-light p-3 rounded-lg mt-3">
-        <h5>Made By Fathin</h5>
-        <p class="mb-0">made by <a href="https://www.fathin.my.id" class="text-info">M.Fathin Halim</a></p>
-        <hr
-            style="
-              opacity: 100%;
-              border-top: 1px solid var(--success) !important;
-            "
-        />
-        <a class="text-warning" href="https://saweria.co/mfathinhalim">Support This Web In Saweria^^</a>
-      </div>
-        <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg" style="margin: 20px auto;">
-        <div class="card-body">
-          <h3 class="card-title">RULES</h3>
-          <p class="card-text">Rules for posting
-            <ul>
-                <li>No Toxic</li>
-                <li>No NSFW (Not Safe For Work)</li>
-                <li>No Cyberbulying</li>
-                <li>No Spam</li>
-                <li>5 posts at 5 minutes</li>
-                <li>Just Have Fun :D</li>
-            </ul>
-          </p>
-        </div>
-      </div>
+           <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg mt-3">
+          <div class="card-body">
+            <h3 class="card-title">TOP USERS</h3>
+            <hr
+              style="
+                    opacity: 100%;
+                    border-top: 1px solid var(--accent1) !important;
+                  "
+              />
+            <div id="topList">
+            </div>
+          </div>
+      
     </div>
     <div class="navbar navbar-dark bg-dark-glass navbar-expand d-lg-none d-xl-none" style="opacity: 0; width: 1px">
     <ul class="navbar-nav nav-justified w-100">
@@ -60,8 +41,7 @@
       </li>
       <li class="nav-item">
         <a
-            data-toggle="modal"
-            data-target="#uploadModal" 
+            href="/search"
             class="nav-link" style="font-size: x-large;"><i class="fa-solid fa-magnifying-glass"></i></a>
       </li>
       <li class="nav-item">
@@ -127,6 +107,71 @@
             document.getElementById("myfollowing").innerHTML = `<i class="fa-solid fa-user-group"></i> ${check.user.following.length} following`;
             document.getElementById("myfollowers").innerHTML = `<i class="fa-solid fa-user-group"></i> ${check.user.followers.length} followers`;
         });
+
+        async function getTopUsers() {
+          try {
+            const response = await fetch('/get/top'); // Assuming your top users endpoint
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            return data.users; // Assuming the API response structure is { users: [...] }
+          } catch (error) {
+            console.error('Error fetching top users:', error);
+            return []; // Return empty array on error
+          }
+        }
+
+        async function displayTopUsers() {
+          const topUsers = await getTopUsers();
+
+          document.querySelectorAll("#topList").forEach((topList) => {
+       
+          topList.innerHTML = ''; // Clear existing content
+
+          if (topUsers.length === 0) {
+            topList.innerHTML = '<div>No top users available!</div>';
+          } else {
+            topUsers.forEach(user => {
+              const listItem = document.createElement('div');
+              listItem.classList.add('d-flex', 'align-items-center', 'mb-3'); // Use Flexbox for layout
+
+              // User profile picture
+              const profilePic = document.createElement('img');
+              profilePic.src = user.pp || 'https://via.placeholder.com/50'; // Default placeholder image
+              profilePic.alt = user.username;
+              profilePic.classList.add('pfp', 'rounded-circle');
+              profilePic.style.width = '50px'; // Set the width of the profile picture
+              profilePic.style.height = '50px'; // Set the height of the profile picture
+              profilePic.style.marginRight = '10px'; // Margin between profile picture and text
+              listItem.appendChild(profilePic);
+
+              // User info
+              const userInfo = document.createElement('div');
+              userInfo.classList.add('d-flex', 'flex-column');
+
+              const dName = document.createElement('a');
+              dName.href = `/?user=${user.username}`; // Link to user profile page
+              dName.classList.add('text-white', 'text-decoration-none', 'h5');
+              dName.textContent = user.name;
+              userInfo.appendChild(dName);
+
+              const userFollowers = document.createElement('p');
+              userFollowers.classList.add('text-secondary', 'mb-0');
+              userFollowers.textContent = `${user.followersCount} followers`;
+              userInfo.appendChild(userFollowers);
+
+              listItem.appendChild(userInfo);
+              topList.appendChild(listItem);
+            });
+          }
+        });
+      }
+
+        // Call the displayTopUsers function on page load or after successful login
+        displayTopUsers();
+
+
         async function getTrendingPosts() {
           try {
             const response = await fetch('/get/trends'); // Assuming your trend endpoint
@@ -144,7 +189,7 @@
         async function displayTrendingPosts() {
           const trendingPosts = await getTrendingPosts();
 
-          const trendingPostsList = document.getElementById('trendingPostsList');
+            document.querySelectorAll("#trendingPostsList").forEach((trendingPostsList) => {
           trendingPostsList.innerHTML = ''; // Clear existing content
 
           if (trendingPosts.length === 0) {
@@ -161,6 +206,10 @@
 
               // Link to post details page (replace with your logic)
               const postLink = document.createElement('a');
+              const trendingtext = document.createElement('p');
+              trendingtext.classList.add('text-secondary', 'mt-1', 'mb-1')
+              trendingtext.textContent = "Trending"
+              listItem.appendChild(trendingtext);
               postLink.href = `/?search=${post}`;
               postLink.classList.add('text-white', 'text-decoration-none', 'h4');
               postLink.textContent = "#" + post;
@@ -170,6 +219,7 @@
             });
 
         }
+      });
       }
         // Call the displayTrendingPosts function on page load or after successful login
         displayTrendingPosts();

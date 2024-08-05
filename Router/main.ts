@@ -6,6 +6,8 @@ import * as dotenv from "dotenv";
 ///////////////////////////////////////////////////////////////////////////
 const multer = require("multer");
 const ImageKit = require("imagekit");
+const path = require("path");
+
 ///////////////////////////////////////////////////////////////////////////
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -79,11 +81,13 @@ router
 
         const id = `${userData.title}-texter-${time}`;
         // Upload image to ImageKit
-
+        //@ts-ignore: Unreachable code error
+        const originalFileName = req.file.originalname;
+        const ext = path.extname(originalFileName).toLowerCase();
         await imagekit.upload(
           {
             file: buffer,
-            fileName: `image-${id}.jpg`,
+            fileName: `image-${id}${ext}`,
             useUniqueFileName: false,
             folder: "Txtr",
           },
@@ -130,8 +134,8 @@ router
   });
 
 router.route("/get/posts").get(async (req: Request, res: Response) => {
-  const page = parseInt(req.query.page as string) || 1; // Get page from query
-  const limit = parseInt(req.query.limit as string) || 10; // Get limit from query
+  const page = 1; // Get page from query
+  const limit = 5; // Get limit from query
   const search: string = req.query.search?.toString() || "";
   try {
     const posts = await PostsClass.getData("", page, limit, undefined, search); // Assuming getData now takes page and limit
@@ -160,7 +164,15 @@ router.route("/get/trends").get(async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Failed to fetch posts" });
   }
 });
-
+router.route("/get/top").get(async (req: Request, res: Response) => {
+  try {
+    const users = await userClass.getTopUsersByFollowers(); // Assuming getData now takes page and limit
+    return res.json({ users: users }); // Send posts as JSON response
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    return res.status(500).json({ error: "Failed to fetch posts" });
+  }
+});
 router.route("/like/").post(async (req: Request, res: Response) => {
   const checkToken: boolean = await userClass.checkAccessToken(req.body.token);
   let likes: number | postType = 0;
@@ -184,7 +196,9 @@ router
       return res.render("user", { user: user, posts: post, searchTerm: "" });
     }
   });
-
+router.route("/search").get(async (req: Request, res: Response) => {
+  return res.render("search", { searchTerm: "" });
+});
 router
   .route("/profile/:username")
   .get(async (req: Request, res: Response) => {
