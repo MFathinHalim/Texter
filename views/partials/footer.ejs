@@ -306,19 +306,42 @@
 
     }
       function previewImage(event) {
-        var input = event.target;
+          var input = event.target;
+  
+  // Ensure that a file is selected
+  if (input.files && input.files[0]) {
+    var file = input.files[0];
+    var reader = new FileReader();
 
-        // Ensure that file is selected
-        if (input.files && input.files[0]) {
-        var reader = new FileReader();
+    // Handle image preview
+    if (file.type.startsWith('image/')) {
+      reader.onload = function (e) {
+        var preview = document.getElementById("preview");
+        preview.src = e.target.result;
+        preview.classList.remove('d-none')
+        document.getElementById("videoPreview").classList.add('d-none'); // Hide video preview
+      };
+      reader.readAsDataURL(file); // Read the uploaded file as a URL
+    }
 
-        reader.onload = function (e) {
-            var preview = document.getElementById("preview");
-            preview.src = e.target.result;
-        };
+    // Handle video preview
+    else if (file.type.startsWith('video/')) {
+      var videoPreview = document.getElementById("videoPreview");
+      var videoParent = document.getElementById('videoParent')
+      videoParent.classList.remove("d-none");
+      videoPreview.src = URL.createObjectURL(file);
+      videoParent.load()
+      videoPreview.style.display = 'block'; // Show video preview
+      document.getElementById("preview").style.display = 'none'; // Hide image preview
+    }
 
-        reader.readAsDataURL(input.files[0]); // Read the uploaded file as a URL
-        }
+    // Clean up the object URL after video is loaded
+    if (file.type.startsWith('video/')) {
+      videoPreview.addEventListener('loadeddata', function () {
+        URL.revokeObjectURL(videoPreview.src); // Clean up object URL
+      });
+    }
+  }
     }  
     var inputFile = document.getElementById("img");
     inputFile.addEventListener("change", previewImage);
