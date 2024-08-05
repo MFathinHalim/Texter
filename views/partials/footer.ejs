@@ -4,442 +4,454 @@
     <div class="card-body">
       <h3 class="card-title">TRENDS</h3>
       <hr
-        style="
-          opacity: 100%;
-          border-top: 1px solid var(--accent1) !important;
-        "
+        style="opacity: 100%; border-top: 1px solid var(--accent1) !important"
       />
-      <div id="trendingPostsList">
-      </div>
+      <div id="trendingPostsList"></div>
     </div>
   </div>
-  <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg mt-3">
+  <div
+    class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg mt-3"
+  >
     <div class="card-body">
       <h3 class="card-title">TOP USERS</h3>
       <hr
-        style="
-          opacity: 100%;
-          border-top: 1px solid var(--accent1) !important;
-        "
+        style="opacity: 100%; border-top: 1px solid var(--accent1) !important"
       />
-      <div id="topList">
-      </div>
+      <div id="topList"></div>
     </div>
   </div>
 </div>
-
-    <div class="navbar navbar-dark bg-dark-glass navbar-expand d-lg-none d-xl-none" style="opacity: 0; width: 1px">
-    <ul class="navbar-nav nav-justified w-100">
-      <li class="nav-item">
-        <a href="/" class="nav-link" style="font-size: x-large;"><i class="fa-solid fa-house"></i></a>
-      </li>
-    </ul>
-  </div>
-    <nav class="navbar navbar-dark bg-dark-glass navbar-expand d-lg-none d-xl-none fixed-bottom">
-    <ul class="navbar-nav nav-justified w-100">
-      <li class="nav-item">
-        <a href="/" class="nav-link" style="font-size: x-large;"><i class="fa-solid fa-house"></i></a>
-      </li>
-      <li class="nav-item">
-        <a
-            href="/search"
-            class="nav-link" style="font-size: x-large;"><i class="fa-solid fa-magnifying-glass"></i></a>
-      </li>
-      <li class="nav-item">
-        <a href="/" class="nav-link" style="font-size: x-large;"><i class="fa-solid fa-pen-to-square"></i></a>
-      </li>
-      <li class="nav-item">
-        <a href="#" id="myDetails" class="nav-link" style="font-size: x-large;"><i class="fa-solid fa-user"></i></a>
-      </li>
-    </ul>
-  </nav>
+<div
+  class="navbar navbar-dark bg-dark-glass navbar-expand d-lg-none d-xl-none"
+  style="opacity: 0; width: 1px"
+>
+  <ul class="navbar-nav nav-justified w-100">
+    <li class="nav-item">
+      <a href="/" class="nav-link" style="font-size: x-large"
+        ><i class="fa-solid fa-house"></i
+      ></a>
+    </li>
+  </ul>
+</div>
+<nav
+  class="navbar navbar-dark bg-dark-glass navbar-expand d-lg-none d-xl-none fixed-bottom"
+>
+  <ul class="navbar-nav nav-justified w-100">
+    <li class="nav-item">
+      <a href="/" class="nav-link" style="font-size: x-large"
+        ><i class="fa-solid fa-house"></i
+      ></a>
+    </li>
+    <li class="nav-item">
+      <a href="/search" class="nav-link" style="font-size: x-large"
+        ><i class="fa-solid fa-magnifying-glass"></i
+      ></a>
+    </li>
+    <li class="nav-item">
+      <a href="/" class="nav-link" style="font-size: x-large"
+        ><i class="fa-solid fa-pen-to-square"></i
+      ></a>
+    </li>
+    <li class="nav-item">
+      <a href="#" id="myDetails" class="nav-link" style="font-size: x-large"
+        ><i class="fa-solid fa-user"></i
+      ></a>
+    </li>
+  </ul>
+</nav>
 <script
-      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-      crossorigin="anonymous"
-    ></script></body>
+  src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+</body>
 <script>
-    localStorage.removeItem("name");
-    localStorage.removeItem("username");
-    localStorage.removeItem("id");
-    const token = sessionStorage.getItem("myToken");
-    function logout() {
-        sessionStorage.removeItem('myToken')
-        return window.location.href = "/login"
+localStorage.removeItem("name");
+localStorage.removeItem("username");
+localStorage.removeItem("id");
+const token = sessionStorage.getItem("myToken");
+function logout() {
+  sessionStorage.removeItem("myToken");
+  return (window.location.href = "/login");
+}
+
+let username;
+let name;
+let id;
+document.querySelectorAll("#searchInput").forEach((inputSearch) => {
+  inputSearch.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      const query = event.target.value;
+      window.location.href = `/?search=${encodeURIComponent(query)}`;
     }
-
-    let username;
-    let name;
-    let id;
-    document.querySelectorAll("#searchInput").forEach((inputSearch) => {
-        inputSearch.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                const query = event.target.value;
-                window.location.href = `/?search=${encodeURIComponent(query)}`;
-            }
-        });
-    })
-    if (!window.location.href.toString().includes("/login") && !window.location.href.toString().includes("/signup") ){
-        if(!token) {
-            window.location.href = "/login"
-        }
-        fetch(`/user/check?id=${token}`).then(res => res.json()).then(check => {
-            if(!check || check.user.username === "system" || check.check === true) {
-                logout()
-            } 
-            document.querySelectorAll("#myDetails").forEach((link) => {
-                link.href = `/user/details/${check.user.username}`
-            })
-            document.getElementById("mypfp").src = check.user.pp;
-            document.getElementById("myname").innerText = check.user.name;
-            document.getElementById("myusername").innerText = `@${check.user.username}`;
-            document.getElementById("mydesc").innerText = check.user.desc != undefined ? check.user.desc : "";
-            document.getElementById("myfollowing").innerHTML = `<i class="fa-solid fa-user-group"></i> ${check.user.following.length} following`;
-            document.getElementById("myfollowers").innerHTML = `<i class="fa-solid fa-user-group"></i> ${check.user.followers.length} followers`;
-        });
-
-        async function getTopUsers() {
-          try {
-            const response = await fetch('/get/top'); // Assuming your top users endpoint
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            return data.users; // Assuming the API response structure is { users: [...] }
-          } catch (error) {
-            console.error('Error fetching top users:', error);
-            return []; // Return empty array on error
-          }
-        }
-
-        async function displayTopUsers() {
-          const topUsers = await getTopUsers();
-
-          document.querySelectorAll("#topList").forEach((topList) => {
-       
-          topList.innerHTML = ''; // Clear existing content
-
-          if (topUsers.length === 0) {
-            topList.innerHTML = '<div>No top users available!</div>';
-          } else {
-            topUsers.forEach(user => {
-              const listItem = document.createElement('div');
-              listItem.classList.add('d-flex', 'align-items-center', 'mb-3'); // Use Flexbox for layout
-
-              // User profile picture
-              const profilePic = document.createElement('img');
-              profilePic.src = user.pp || 'https://via.placeholder.com/50'; // Default placeholder image
-              profilePic.alt = user.username;
-              profilePic.classList.add('pfp', 'rounded-circle');
-              profilePic.style.width = '50px'; // Set the width of the profile picture
-              profilePic.style.height = '50px'; // Set the height of the profile picture
-              profilePic.style.marginRight = '10px'; // Margin between profile picture and text
-              listItem.appendChild(profilePic);
-
-              // User info
-              const userInfo = document.createElement('div');
-              userInfo.classList.add('d-flex', 'flex-column');
-
-              const dName = document.createElement('a');
-              dName.href = `/?user=${user.username}`; // Link to user profile page
-              dName.classList.add('text-white', 'text-decoration-none', 'h5');
-              dName.textContent = user.name;
-              userInfo.appendChild(dName);
-
-              const userFollowers = document.createElement('p');
-              userFollowers.classList.add('text-secondary', 'mb-0');
-              userFollowers.textContent = `${user.followersCount} followers`;
-              userInfo.appendChild(userFollowers);
-
-              listItem.appendChild(userInfo);
-              topList.appendChild(listItem);
-            });
-          }
-        });
+  });
+});
+if (
+  !window.location.href.toString().includes("/login") &&
+  !window.location.href.toString().includes("/signup")
+) {
+  if (!token) {
+    window.location.href = "/login";
+  }
+  fetch(`/user/check?id=${token}`)
+    .then((res) => res.json())
+    .then((check) => {
+      if (!check || check.user.username === "system" || check.check === true) {
+        logout();
       }
+      document.querySelectorAll("#myDetails").forEach((link) => {
+        link.href = `/user/details/${check.user.username}`;
+      });
+      document.getElementById("mypfp").src = check.user.pp;
+      document.getElementById("myname").innerText = check.user.name;
+      document.getElementById("myusername").innerText =
+        `@${check.user.username}`;
+      document.getElementById("mydesc").innerText =
+        check.user.desc != undefined ? check.user.desc : "";
+      document.getElementById("myfollowing").innerHTML =
+        `<i class="fa-solid fa-user-group"></i> ${check.user.following.length} following`;
+      document.getElementById("myfollowers").innerHTML =
+        `<i class="fa-solid fa-user-group"></i> ${check.user.followers.length} followers`;
+    });
 
-        // Call the displayTopUsers function on page load or after successful login
-        displayTopUsers();
-document.addEventListener('DOMContentLoaded', function () {
-  var stickyElements = document.querySelectorAll('.sticky-element');
-  
-  function handleScroll() {
-    stickyElements.forEach(function(el) {
-      var rect = el.getBoundingClientRect();
-      var viewportHeight = window.innerHeight;
-      
-      if (rect.bottom < viewportHeight) {
-        el.classList.add('sticky');
+  async function getTopUsers() {
+    try {
+      const response = await fetch("/get/top"); // Assuming your top users endpoint
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      return data.users; // Assuming the API response structure is { users: [...] }
+    } catch (error) {
+      console.error("Error fetching top users:", error);
+      return []; // Return empty array on error
+    }
+  }
+
+  async function displayTopUsers() {
+    const topUsers = await getTopUsers();
+
+    document.querySelectorAll("#topList").forEach((topList) => {
+      topList.innerHTML = ""; // Clear existing content
+
+      if (topUsers.length === 0) {
+        topList.innerHTML = "<div>No top users available!</div>";
       } else {
-        el.classList.remove('sticky');
+        topUsers.forEach((user) => {
+          const listItem = document.createElement("div");
+          listItem.classList.add("d-flex", "align-items-center", "mb-3"); // Use Flexbox for layout
+
+          // User profile picture
+          const profilePic = document.createElement("img");
+          profilePic.src = user.pp || "https://via.placeholder.com/50"; // Default placeholder image
+          profilePic.alt = user.username;
+          profilePic.classList.add("pfp", "rounded-circle");
+          profilePic.style.width = "50px"; // Set the width of the profile picture
+          profilePic.style.height = "50px"; // Set the height of the profile picture
+          profilePic.style.marginRight = "10px"; // Margin between profile picture and text
+          listItem.appendChild(profilePic);
+
+          // User info
+          const userInfo = document.createElement("div");
+          userInfo.classList.add("d-flex", "flex-column");
+
+          const dName = document.createElement("a");
+          dName.href = `/?user=${user.username}`; // Link to user profile page
+          dName.classList.add("text-white", "text-decoration-none", "h5");
+          dName.textContent = user.name;
+          userInfo.appendChild(dName);
+
+          const userFollowers = document.createElement("p");
+          userFollowers.classList.add("text-secondary", "mb-0");
+          userFollowers.textContent = `${user.followersCount} followers`;
+          userInfo.appendChild(userFollowers);
+
+          listItem.appendChild(userInfo);
+          topList.appendChild(listItem);
+        });
       }
     });
   }
 
-  // Add event listener for scroll events
-  window.addEventListener('scroll', handleScroll);
-  
-  // Initial check
-  handleScroll();
-});
+  // Call the displayTopUsers function on page load or after successful login
+  displayTopUsers();
+  document.addEventListener("DOMContentLoaded", function () {
+    var stickyElements = document.querySelectorAll(".sticky-element");
 
+    function handleScroll() {
+      stickyElements.forEach(function (el) {
+        var rect = el.getBoundingClientRect();
+        var viewportHeight = window.innerHeight;
 
-        async function getTrendingPosts() {
-          try {
-            const response = await fetch('/get/trends'); // Assuming your trend endpoint
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            return data.posts.posts;
-          } catch (error) {
-            console.error('Error fetching trending posts:', error);
-            return []; // Return empty array on error
-          }
-        }
-
-        async function displayTrendingPosts() {
-          const trendingPosts = await getTrendingPosts();
-
-            document.querySelectorAll("#trendingPostsList").forEach((trendingPostsList) => {
-          trendingPostsList.innerHTML = ''; // Clear existing content
-
-          if (trendingPosts.length === 0) {
-            trendingPostsList.innerHTML = '<div>No trending posts yet!</div>';
-          } else {
-           const maxItemsToShow = 6;
-
-            // Ambil hanya 6 item dari array trendingPosts
-            const limitedPosts = trendingPosts.slice(0, maxItemsToShow);
-
-            limitedPosts.forEach(post => {
-              const listItem = document.createElement('div');
-              listItem.classList.add('mt-3');
-
-              // Link to post details page (replace with your logic)
-              const postLink = document.createElement('a');
-              const trendingtext = document.createElement('p');
-              trendingtext.classList.add('text-secondary', 'mt-1', 'mb-1')
-              trendingtext.textContent = "Trending"
-              listItem.appendChild(trendingtext);
-              postLink.href = `/?search=${post}`;
-              postLink.classList.add('text-white', 'text-decoration-none', 'h4');
-              postLink.textContent = "#" + post;
-              listItem.appendChild(postLink);
-
-              trendingPostsList.appendChild(listItem);
-            });
-
-        }
-      });
-      }
-        // Call the displayTrendingPosts function on page load or after successful login
-        displayTrendingPosts();
-
-        
-        function share(copyText) {
-        copyText = "https://texter-id.glitch.me" + copyText 
-        // Copy the text inside the text field
-        if (navigator.share) {
-          navigator.clipboard.writeText(copyText);
-
-          navigator
-            .share({
-              title: "Texter",
-              text: "Post Seru Nih",
-              url: copyText,
-            })
-            .then(() => console.log("Successful share"))
-            .catch((error) => console.log("Error sharing", error));
+        if (rect.bottom < viewportHeight) {
+          el.classList.add("sticky");
         } else {
-          try {
-            window.AndroidShareHandler.share(copyText);
-          } catch {
-            navigator.clipboard.writeText(copyText);
-            alert("Sudah Di Salin Ya, silahkan Beri ke Temanmu ya ^_^");
-          }
+          el.classList.remove("sticky");
         }
-        }
-    // Send a fetch request to the server for posting
-    function sendPostRequest(form, replyTo, reQuote, ogId, repost,repostTitle) {
-        event.preventDefault(); // Prevent default form submission
-        const title = repostTitle ? repostTitle : form.querySelector("#title").value;
-        if(title === "" || title === undefined || title === null) {
-            return window.location.href="/"
-        }
-        document.getElementById("loading-screen").classList.remove("d-none");
-        const formData = new FormData(); 
-        if(!repost) {
-            form.querySelector("button").remove()
-            if (form.querySelector("#img").files[0]) {
-                formData.append('image', form.querySelector("#img").files[0]); 
-            } else {
-                formData.append('image', ''); // Empty string if no image selected
-            }
-        }
-
-        // Append data to FormData
-        let data = {
-            title: title,
-            like: { total: 0, users: [] },
-            replyTo: replyTo ? replyTo : "",
-            ogId: ogId,
-            repost: repost,
-            reQuote: reQuote ? reQuote : undefined
-        };
-
-        formData.append('data', JSON.stringify(data));
-        formData.append('token', token); // Assuming you have 'token' available
-        // Handle image upload
-
-        // Send POST request using fetch
-        fetch('/post', {
-            method: 'POST',
-            body: formData,
-        })
-            .then(response => {
-                // Periksa apakah responsnya sukses
-                if (!response.ok) {
-                    throw new Error('Network response was not ok.');
-                }
-                // Mengurai data JSON dari respons
-                return response.json();
-            })
-            .then(post => {
-                console.log(post); // Menampilkan data JSON dari respons
-                
-                // Redirect setelah POST request berhasil
-                const redirectId = post.id;
-                window.location.href = `/?id=${redirectId}`;
-            })
-            .catch(error => {
-                console.error('Error sending POST request:', error);
-            });
-
-    }
-      function previewImage(event) {
-          var input = event.target;
-  
-  // Ensure that a file is selected
-  if (input.files && input.files[0]) {
-    var file = input.files[0];
-    var reader = new FileReader();
-
-    // Handle image preview
-    if (file.type.startsWith('image/')) {
-      reader.onload = function (e) {
-        var preview = document.getElementById("preview");
-        preview.src = e.target.result;
-        preview.classList.remove('d-none')
-        document.getElementById("videoPreview").classList.add('d-none'); // Hide video preview
-      };
-      reader.readAsDataURL(file); // Read the uploaded file as a URL
-    }
-
-    // Handle video preview
-    else if (file.type.startsWith('video/')) {
-      var videoPreview = document.getElementById("videoPreview");
-      var videoParent = document.getElementById('videoParent')
-      videoParent.classList.remove("d-none");
-      videoPreview.src = URL.createObjectURL(file);
-      videoParent.load()
-      videoPreview.style.display = 'block'; // Show video preview
-      document.getElementById("preview").style.display = 'none'; // Hide image preview
-    }
-
-    // Clean up the object URL after video is loaded
-    if (file.type.startsWith('video/')) {
-      videoPreview.addEventListener('loadeddata', function () {
-        URL.revokeObjectURL(videoPreview.src); // Clean up object URL
       });
+    }
+
+    // Add event listener for scroll events
+    window.addEventListener("scroll", handleScroll);
+
+    // Initial check
+    handleScroll();
+  });
+
+  async function getTrendingPosts() {
+    try {
+      const response = await fetch("/get/trends"); // Assuming your trend endpoint
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      return data.posts.posts;
+    } catch (error) {
+      console.error("Error fetching trending posts:", error);
+      return []; // Return empty array on error
     }
   }
-    }  
-    var inputFile = document.getElementById("img");
-    inputFile.addEventListener("change", previewImage);
 
+  async function displayTrendingPosts() {
+    const trendingPosts = await getTrendingPosts();
 
-    function sendEditProfile(myForm, id) {
-        event.preventDefault(); // Prevent default form submission
-        const formData = new FormData(); 
-        const name = document.getElementById("displayName").value;
-        const username = document.getElementById("username").innerText;
-        const desc = document.getElementById("desc").value;
-        // Append data to FormData
-        const data = {
-            id: id,
-            username: username,
-            name: name,
-            pp: "",
-            desc: desc
-        };
+    document
+      .querySelectorAll("#trendingPostsList")
+      .forEach((trendingPostsList) => {
+        trendingPostsList.innerHTML = ""; // Clear existing content
 
-        formData.append('data', JSON.stringify(data));
-        formData.append('token', token); // Assuming you have 'token' available
-        // Handle image upload
-        if (myForm.querySelector("#img").files[0]) {
-            formData.append('image', myForm.querySelector("#img").files[0]); 
+        if (trendingPosts.length === 0) {
+          trendingPostsList.innerHTML = "<div>No trending posts yet!</div>";
         } else {
-            formData.append('image', ''); // Empty string if no image selected
-        }
+          const maxItemsToShow = 6;
 
-        // Send POST request using fetch
-        fetch(`/profile/${username}`, {
-            method: 'POST',
-            body: formData,
-        }).then(() => {
-            window.location.href = "/user/details/" + username
+          // Ambil hanya 6 item dari array trendingPosts
+          const limitedPosts = trendingPosts.slice(0, maxItemsToShow);
+
+          limitedPosts.forEach((post) => {
+            const listItem = document.createElement("div");
+            listItem.classList.add("mt-3");
+
+            // Link to post details page (replace with your logic)
+            const postLink = document.createElement("a");
+            const trendingtext = document.createElement("p");
+            trendingtext.classList.add("text-secondary", "mt-1", "mb-1");
+            trendingtext.textContent = "Trending";
+            listItem.appendChild(trendingtext);
+            postLink.href = `/?search=${post}`;
+            postLink.classList.add("text-white", "text-decoration-none", "h4");
+            postLink.textContent = "#" + post;
+            listItem.appendChild(postLink);
+
+            trendingPostsList.appendChild(listItem);
+          });
+        }
+      });
+  }
+  // Call the displayTrendingPosts function on page load or after successful login
+  displayTrendingPosts();
+
+  function share(copyText) {
+    copyText = "https://texter-id.glitch.me" + copyText;
+    // Copy the text inside the text field
+    if (navigator.share) {
+      navigator.clipboard.writeText(copyText);
+
+      navigator
+        .share({
+          title: "Texter",
+          text: "Post Seru Nih",
+          url: copyText,
         })
+        .then(() => console.log("Successful share"))
+        .catch((error) => console.log("Error sharing", error));
+    } else {
+      try {
+        window.AndroidShareHandler.share(copyText);
+      } catch {
+        navigator.clipboard.writeText(copyText);
+        alert("Sudah Di Salin Ya, silahkan Beri ke Temanmu ya ^_^");
+      }
+    }
+  }
+  // Send a fetch request to the server for posting
+  function sendPostRequest(form, replyTo, reQuote, ogId, repost, repostTitle) {
+    event.preventDefault(); // Prevent default form submission
+    const title = repostTitle
+      ? repostTitle
+      : form.querySelector("#title").value;
+    if (title === "" || title === undefined || title === null) {
+      return (window.location.href = "/");
+    }
+    document.getElementById("loading-screen").classList.remove("d-none");
+    const formData = new FormData();
+    if (!repost) {
+      form.querySelector("button").remove();
+      if (form.querySelector("#img").files[0]) {
+        formData.append("image", form.querySelector("#img").files[0]);
+      } else {
+        formData.append("image", ""); // Empty string if no image selected
+      }
     }
 
-    function sendLikeRequest(id, button) {
-        fetch(`/like/`, {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-            id: id,
-            token: token
-            }),
-        })
-        .then(res => res.json()) // Parse the JSON response
-        .then(data => { 
-            button.innerHTML = '<i class="fa-solid fa-heart"></i> ' + data.likes; // Update the button text with the new like count
-        })
-        .catch(error => {
-            console.error("Error sending like request:", error); 
-            // Handle errors, e.g., display an error message to the user
+    // Append data to FormData
+    let data = {
+      title: title,
+      like: { total: 0, users: [] },
+      replyTo: replyTo ? replyTo : "",
+      ogId: ogId,
+      repost: repost,
+      reQuote: reQuote ? reQuote : undefined,
+    };
+
+    formData.append("data", JSON.stringify(data));
+    formData.append("token", token); // Assuming you have 'token' available
+    // Handle image upload
+
+    // Send POST request using fetch
+    fetch("/post", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => {
+        // Periksa apakah responsnya sukses
+        if (!response.ok) {
+          throw new Error("Network response was not ok.");
+        }
+        // Mengurai data JSON dari respons
+        return response.json();
+      })
+      .then((post) => {
+        console.log(post); // Menampilkan data JSON dari respons
+
+        // Redirect setelah POST request berhasil
+        const redirectId = post.id;
+        window.location.href = `/?id=${redirectId}`;
+      })
+      .catch((error) => {
+        console.error("Error sending POST request:", error);
+      });
+  }
+  function previewImage(event) {
+    var input = event.target;
+
+    // Ensure that a file is selected
+    if (input.files && input.files[0]) {
+      var file = input.files[0];
+      var reader = new FileReader();
+
+      // Handle image preview
+      if (file.type.startsWith("image/")) {
+        reader.onload = function (e) {
+          var preview = document.getElementById("preview");
+          preview.src = e.target.result;
+          preview.classList.remove("d-none");
+          document.getElementById("videoPreview").classList.add("d-none"); // Hide video preview
+        };
+        reader.readAsDataURL(file); // Read the uploaded file as a URL
+      }
+
+      // Handle video preview
+      else if (file.type.startsWith("video/")) {
+        var videoPreview = document.getElementById("videoPreview");
+        var videoParent = document.getElementById("videoParent");
+        videoParent.classList.remove("d-none");
+        videoPreview.src = URL.createObjectURL(file);
+        videoParent.load();
+        videoPreview.style.display = "block"; // Show video preview
+        document.getElementById("preview").style.display = "none"; // Hide image preview
+      }
+
+      // Clean up the object URL after video is loaded
+      if (file.type.startsWith("video/")) {
+        videoPreview.addEventListener("loadeddata", function () {
+          URL.revokeObjectURL(videoPreview.src); // Clean up object URL
         });
+      }
+    }
+  }
+  var inputFile = document.getElementById("img");
+  inputFile.addEventListener("change", previewImage);
+
+  function sendEditProfile(myForm, id) {
+    event.preventDefault(); // Prevent default form submission
+    const formData = new FormData();
+    const name = document.getElementById("displayName").value;
+    const username = document.getElementById("username").innerText;
+    const desc = document.getElementById("desc").value;
+    // Append data to FormData
+    const data = {
+      id: id,
+      username: username,
+      name: name,
+      pp: "",
+      desc: desc,
+    };
+
+    formData.append("data", JSON.stringify(data));
+    formData.append("token", token); // Assuming you have 'token' available
+    // Handle image upload
+    if (myForm.querySelector("#img").files[0]) {
+      formData.append("image", myForm.querySelector("#img").files[0]);
+    } else {
+      formData.append("image", ""); // Empty string if no image selected
     }
 
-    function followPost(target) {
-        fetch(`/user/follow/${target}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                token: token,
-                myname: username
-            }),
-        })
-        .then(() => {
-            window.location.reload()
-        })
-        }
-    }
+    // Send POST request using fetch
+    fetch(`/profile/${username}`, {
+      method: "POST",
+      body: formData,
+    }).then(() => {
+      window.location.href = "/user/details/" + username;
+    });
+  }
 
+  function sendLikeRequest(id, button) {
+    fetch(`/like/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        token: token,
+      }),
+    })
+      .then((res) => res.json()) // Parse the JSON response
+      .then((data) => {
+        button.innerHTML = '<i class="fa-solid fa-heart"></i> ' + data.likes; // Update the button text with the new like count
+      })
+      .catch((error) => {
+        console.error("Error sending like request:", error);
+        // Handle errors, e.g., display an error message to the user
+      });
+  }
+
+  function followPost(target) {
+    fetch(`/user/follow/${target}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: token,
+        myname: username,
+      }),
+    }).then(() => {
+      window.location.reload();
+    });
+  }
+}
 </script>
 </html>
