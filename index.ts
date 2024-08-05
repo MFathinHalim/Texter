@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import express from "express";
 import dotenv from "dotenv";
 import path from "path";
-
+const cookieParser = require("cookie-parser");
 //import routernya
 import router from "./Router/main";
 //? dotenv config
@@ -14,9 +14,9 @@ const port: number | string = process.env.PORT || 3000; //TODO bikin port :D
 
 app.set("view engine", "ejs"); //? set view enginenya jadi ejs
 app.use(express.static(path.join(__dirname, "/public"))); //TODO buat frontendnya, css js image di taruh di public
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 //Rate Limit
 const rateLimit = require("express-rate-limit");

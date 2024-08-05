@@ -79,15 +79,59 @@
 localStorage.removeItem("name");
 localStorage.removeItem("username");
 localStorage.removeItem("id");
-const token = sessionStorage.getItem("myToken");
-function logout() {
-  sessionStorage.removeItem("myToken");
-  return (window.location.href = "/login");
+async function logout() {
+  try {
+    const response = await fetch('/logout', {
+      method: 'POST',
+      credentials: 'include' // Untuk memastikan cookies dikirim
+    });
+
+    if (response.ok) {
+      // Menghapus token dari sessionStorage
+      sessionStorage.removeItem('myToken');
+      
+      // Redirect ke halaman login atau halaman lain
+      window.location.href = '/login'; // Sesuaikan dengan URL login Anda
+    } else {
+      console.error('Failed to logout');
+    }
+  } catch (error) {
+    console.error('Error during logout:', error);
+  }
 }
 
 let username;
 let name;
 let id;
+    async function refreshAccessToken() {
+      try {
+        if(sessionStorage.getItem('myToken')) {
+          return sessionStorage.getItem('myToken')
+        }
+        const response = await fetch('/refresh', {
+          method: 'POST',
+          credentials: 'include' // This ensures cookies are sent
+        });
+        const data = await response.json();
+        if (response.ok) {
+          sessionStorage.setItem('myToken', data.accessToken);
+          return data.accessToken;
+        } else {
+          console.error('Failed to refresh token');
+          window.location.href = "/login"
+        }
+      } catch (error) {
+        console.error('Error refreshing access token:', error);
+      }
+    }
+    let token;
+    async function getToken() {
+      token = await refreshAccessToken();
+      if(!token) {
+        window.location.href = "/login"
+      }
+    }
+
 document.querySelectorAll("#searchInput").forEach((inputSearch) => {
   inputSearch.addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
@@ -101,15 +145,11 @@ if (
   !window.location.href.toString().includes("/login") &&
   !window.location.href.toString().includes("/signup")
 ) {
-  if (!token) {
-    window.location.href = "/login";
-  }
+getToken().then(() => {
   fetch(`/user/check?id=${token}`)
     .then((res) => res.json())
     .then((check) => {
-      if (!check || check.user.username === "system" || check.check === true) {
-        logout();
-      }
+
       document.querySelectorAll("#myDetails").forEach((link) => {
         link.href = `/user/details/${check.user.username}`;
       });
@@ -124,7 +164,9 @@ if (
       document.getElementById("myfollowers").innerHTML =
         `<i class="fa-solid fa-user-group"></i> ${check.user.followers.length} followers`;
     });
-
+}).catch(error => {
+  console.error('Error getting token:', error);
+});
   async function getTopUsers() {
     try {
       const response = await fetch("/get/top"); // Assuming your top users endpoint
@@ -316,13 +358,13 @@ if (
     };
 
     formData.append("data", JSON.stringify(data));
-    formData.append("token", token); // Assuming you have 'token' available
     // Handle image upload
 
     // Send POST request using fetch
     fetch("/post", {
       method: "POST",
       body: formData,
+      headers: { 'Authorization': `Bearer ${token}` }
     })
       .then((response) => {
         // Periksa apakah responsnya sukses
@@ -422,10 +464,10 @@ if (
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
         id: id,
-        token: token,
       }),
     })
       .then((res) => res.json()) // Parse the JSON response
@@ -443,9 +485,9 @@ if (
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
-        token: token,
         myname: username,
       }),
     }).then(() => {

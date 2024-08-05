@@ -60,11 +60,15 @@ router
       return res.status(500).send("Failed to fetch data");
     }
   });
+
 router
   .route("/post")
   .post(upload.single("image"), async (req: Request, res: Response) => {
     try {
-      const checkToken = await userClass.checkAccessToken(req.body.token);
+      const authHeader = req.headers["authorization"];
+      const token = authHeader && authHeader.split(" ")[1];
+      if (token == null) return res.sendStatus(401);
+      const checkToken = await userClass.checkAccessToken(token);
       if (!checkToken) {
         throw new Error("Invalid token");
       }
@@ -174,7 +178,10 @@ router.route("/get/top").get(async (req: Request, res: Response) => {
   }
 });
 router.route("/like/").post(async (req: Request, res: Response) => {
-  const checkToken: boolean = await userClass.checkAccessToken(req.body.token);
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.sendStatus(401);
+  const checkToken = await userClass.checkAccessToken(token);
   let likes: number | postType = 0;
   if (checkToken) {
     likes = await PostsClass.liking(req.body.id, checkToken);
@@ -212,9 +219,10 @@ router
   })
   .post(upload.single("image"), async (req: Request, res: Response) => {
     try {
-      const checkToken: boolean = await userClass.checkAccessToken(
-        req.body.token
-      );
+      const authHeader = req.headers["authorization"];
+      const token = authHeader && authHeader.split(" ")[1];
+      if (token == null) return res.sendStatus(401);
+      const checkToken = await userClass.checkAccessToken(token);
       if (!checkToken) {
         throw new Error("Invalid token");
       }
@@ -280,9 +288,10 @@ router
     return res.json({ isFollowing });
   })
   .post(async (req: Request, res: Response) => {
-    const checkToken: boolean = await userClass.checkAccessToken(
-      req.body.token
-    );
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (token == null) return res.sendStatus(401);
+    const checkToken = await userClass.checkAccessToken(token);
     if (checkToken)
       await userClass.follow(req.params.username, req.body.myname);
     res.send(200);
@@ -290,6 +299,9 @@ router
 
 router.route("/user/check").get(async (req: Request, res: Response) => {
   const id = userClass.checkAccessToken(req.query.id?.toString() || "").id;
+  if (!id || id === "System") {
+    return res.status(401);
+  }
   const checkUser = await userClass.checkIsUserBan(id);
   return res.json({
     check: checkUser.ban,
@@ -317,14 +329,31 @@ router
         searchTerm: "",
       });
     }
-    const token = await userClass.createAccessToken(result.id.toString());
+    const tokenFunction = await userClass.createAccessToken(
+      result.id.toString()
+    );
+    const token = tokenFunction.newToken;
+    res.cookie("refreshtoken", tokenFunction.refreshToken, {
+      path: "/refresh",
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
+    });
     return res.render("redirect", {
       token: token,
       name: result.name,
       searchTerm: "",
     }); //kalau enggak langsung redirect
   });
-
+router.route("/refresh").post(async (req: Request, res: Response) => {
+  const { refreshtoken } = req.cookies;
+  if (refreshtoken == null) return res.sendStatus(401);
+  const accessToken: string = await userClass.createRefreshToken(refreshtoken);
+  res.json({ accessToken });
+});
+router.route("/logout").post((req, res) => {
+  res.clearCookie("refreshtoken", { path: "/refresh" });
+  res.status(200).json({ message: "Logout successful" });
+});
 //? router signup
 router
   .route("/signup") //signup

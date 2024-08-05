@@ -115,20 +115,44 @@ class Users {
     }
   }
 
-  async createAccessToken(id: string): Promise<string> {
+  async createAccessToken(
+    id: string
+  ): Promise<{ newToken: string; refreshToken: string }> {
     try {
       const user = await this.#users.findOne({ id });
-      if (!user) return "";
+      if (!user) return { newToken: "", refreshToken: "" };
       const newToken: string = jwt.sign(
         user.toObject(),
         process.env.JWT_SECRET_KEY || "",
-        { expiresIn: "7d" }
+        { expiresIn: "1d" }
       ); //Bikin access token
-      return newToken;
+      const refreshToken = jwt.sign(
+        { id: user.id },
+        process.env.JWT_SECRET_KEY,
+        {
+          expiresIn: "7d",
+        }
+      );
+
+      return { newToken, refreshToken };
     } catch (error) {
       console.error("Error creating access token:", error);
-      return "";
+      return { newToken: "", refreshToken: "" };
     }
+  }
+
+  createRefreshToken(refresh: string): Promise<string> {
+    return jwt.verify(
+      refresh,
+      process.env.JWT_SECRET_KEY,
+      async (err: Error, user: any) => {
+        if (err) return "error";
+        const createAccessToken = await this.createAccessToken(user.id);
+        const accessToken: string = createAccessToken.newToken;
+
+        return accessToken;
+      }
+    );
   }
 
   checkAccessToken(token: string) {
@@ -136,7 +160,7 @@ class Users {
     try {
       return jwt.verify(token, jwtSecretKey); //Check access token jwtnya sesuai atau kagak (?)
     } catch (error) {
-      return "not-found";
+      return this.#error[0];
     }
   }
 
