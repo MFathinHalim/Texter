@@ -118,7 +118,7 @@ let id;
           return data.accessToken;
         } else {
           console.error('Failed to refresh token');
-          window.location.href = "/login"
+          logout()
         }
       } catch (error) {
         console.error('Error refreshing access token:', error);
@@ -128,7 +128,7 @@ let id;
     async function getToken() {
       token = await refreshAccessToken();
       if(!token) {
-        window.location.href = "/login"
+        logout()
       }
     }
 
