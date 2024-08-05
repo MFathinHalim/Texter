@@ -1,32 +1,33 @@
 </div>
- <div class="col-12 col-lg-3 h-100">
-        <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg">
-          <div class="card-body">
-            <h3 class="card-title">TRENDS</h3>
-            <hr
-                  style="
-                    opacity: 100%;
-                    border-top: 1px solid var(--accent1) !important;
-                  "
-              />
-            <div id="trendingPostsList">
-            </div>
-          </div>
-        </div>
-           <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg mt-3">
-          <div class="card-body">
-            <h3 class="card-title">TOP USERS</h3>
-            <hr
-              style="
-                    opacity: 100%;
-                    border-top: 1px solid var(--accent1) !important;
-                  "
-              />
-            <div id="topList">
-            </div>
-          </div>
-      
+<div class="col-12 col-lg-3 h-100 sticky-element">
+  <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg">
+    <div class="card-body">
+      <h3 class="card-title">TRENDS</h3>
+      <hr
+        style="
+          opacity: 100%;
+          border-top: 1px solid var(--accent1) !important;
+        "
+      />
+      <div id="trendingPostsList">
+      </div>
     </div>
+  </div>
+  <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg mt-3">
+    <div class="card-body">
+      <h3 class="card-title">TOP USERS</h3>
+      <hr
+        style="
+          opacity: 100%;
+          border-top: 1px solid var(--accent1) !important;
+        "
+      />
+      <div id="topList">
+      </div>
+    </div>
+  </div>
+</div>
+
     <div class="navbar navbar-dark bg-dark-glass navbar-expand d-lg-none d-xl-none" style="opacity: 0; width: 1px">
     <ul class="navbar-nav nav-justified w-100">
       <li class="nav-item">
@@ -170,6 +171,28 @@
 
         // Call the displayTopUsers function on page load or after successful login
         displayTopUsers();
+document.addEventListener('DOMContentLoaded', function () {
+  var stickyElements = document.querySelectorAll('.sticky-element');
+  
+  function handleScroll() {
+    stickyElements.forEach(function(el) {
+      var rect = el.getBoundingClientRect();
+      var viewportHeight = window.innerHeight;
+      
+      if (rect.bottom < viewportHeight) {
+        el.classList.add('sticky');
+      } else {
+        el.classList.remove('sticky');
+      }
+    });
+  }
+
+  // Add event listener for scroll events
+  window.addEventListener('scroll', handleScroll);
+  
+  // Initial check
+  handleScroll();
+});
 
 
         async function getTrendingPosts() {

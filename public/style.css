@@ -26,6 +26,17 @@
   border: 1px solid #ffffff3a !important;
   border-top: none !important;
 }
+/* Container to make sure the sticky container is within bounds */
+.sticky-container {
+  position: relative;
+}
+
+/* Sticky element styles */
+.sticky-element {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
 
 img {
   object-fit: cover !important;
