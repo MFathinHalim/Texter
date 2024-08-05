@@ -74,11 +74,7 @@ posts.posts[0].user.desc : "" %>" />
         </div>
       </article>
       <h3 class="h4 mt-2">
-        <%- post.title.replace(/#(\w+)/g, '<a
-          href="/?search=$1"
-          class="text-info"
-          >$&</a
-        >') %>
+        <%- post.title.replace(/#(\w+)/g, '<a href="/?search=$1" class="text-info">$&</a>') %>
       </h3>
       <% if(post.img) { %>
       <img

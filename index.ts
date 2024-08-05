@@ -42,11 +42,12 @@ app.use("/signup", postOnlyLimiter);
 
 //? Jalankan Routernya
 app.use("/", router);
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.get("*", (req: Request, res: Response) => {
   res.status(404).render("notfound", { searchTerm: "" });
 });
-app.get("*", (req: Request, res: Response) => {
-  res.status(404).render("notfound", { searchTerm: ""});
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error(err);
+  res.status(404).render("notfound", { searchTerm: "" });
 });
 //Run app nya sesuai port
 mongoose.set("strict", false);
