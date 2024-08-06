@@ -164,6 +164,91 @@ class Users {
     }
   }
 
+  async checkIsAdmin(id: string): Promise<boolean | userType> {
+    try {
+      // Find the user by their ID
+      const user: (Document<userType, any, any> & userType) | null =
+        await this.#users.findOne({ id });
+
+      // If user is not found, return the error message
+      if (!user) {
+        return this.#error[1];
+      }
+      // Check if the user is an admin
+      if (user.isAdmin) {
+        return true; // User is an admin
+      } else {
+        return false; // User is not an admin
+      }
+    } catch (error) {
+      console.error("Error checking if user is admin:", error);
+      return this.#error[1]; // Handle potential errors
+    }
+  }
+  async makeAdmin(userId: string): Promise<boolean | string> {
+    try {
+      // Find the user by their ID
+      const user: (Document<userType, any, any> & userType) | null =
+        await this.#users.findOne({ id: userId });
+
+      // If user is not found, return an error message
+      if (!user) {
+        return "User not found"; // Adjust the error message as needed
+      }
+
+      // Update the user's admin status
+      user.isAdmin = true;
+      await user.save();
+
+      return true; // Successfully updated to admin
+    } catch (error) {
+      console.error("Error making user an admin:", error);
+      return "Error updating admin status"; // Handle potential errors
+    }
+  }
+  async banUser(userId: string): Promise<boolean | string> {
+    try {
+      // Find the user by their ID
+      const user: (Document<userType, any, any> & userType) | null =
+        await this.#users.findOne({ id: userId });
+
+      // If user is not found, return an error message
+      if (!user) {
+        return "User not found"; // Adjust the error message as needed
+      }
+
+      // Update the user's ban status
+      user.ban = true;
+      await user.save();
+
+      return true; // Successfully banned the user
+    } catch (error) {
+      console.error("Error banning user:", error);
+      return "Error updating ban status"; // Handle potential errors
+    }
+  }
+  async removeAdmin(userId: string): Promise<boolean | string> {
+    try {
+      // Find the user by their ID
+      const user: (Document<userType, any, any> & userType) | null =
+        await this.#users.findOne({ id: userId });
+
+      // If user is not found, return an error message
+      if (!user) {
+        return "User not found"; // Adjust the error message as needed
+      }
+
+      // Update the user's admin status
+      user.isAdmin = false;
+      await user.save();
+
+      return true; // Successfully removed admin status
+    } catch (error) {
+      console.error("Error removing admin status:", error);
+      return "Error updating admin status"; // Handle potential errors
+    }
+  }
+
   async follow(
     username: string,
     myusername: string
@@ -359,6 +444,26 @@ class Users {
     } catch (error) {
       console.error("Error editing profile:", error);
       return this.#error[1];
+    }
+  }
+  async getAllUsers(): Promise<
+    (userType & { password?: never; following?: never; followers?: never })[]
+  > {
+    try {
+      const users: (Document<userType, any, any> & userType)[] =
+        await this.#users.find();
+      return users.map((user) => ({
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        pp: user.pp,
+        desc: user.desc,
+        ban: user.ban,
+        isAdmin: user.isAdmin,
+      }));
+    } catch (error) {
+      console.error("Error getting all users:", error);
+      return [];
     }
   }
 }

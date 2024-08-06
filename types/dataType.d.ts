@@ -6,6 +6,7 @@ declare type userType = {
   password?: string;
   pp?: string;
   ban?: boolean;
+  isAdmin?: boolean;
   accessToken?: {
     accessNow: string;
     timeBefore: string;

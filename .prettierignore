@@ -1,3 +1,4 @@
 views/partials/*.ejs
 views/homepage.ejs
 views/user.ejs
+views/dashboard.ejs

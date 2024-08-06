@@ -188,6 +188,11 @@
         }", "${post.user._id}"
         , "${post.title}")'><i class="fa-solid fa-recycle"></i></button>
         <button class="btn btn-outline-info rounded-pill ms-2" onclick='share("/?id=${post.id}")'><i class="fa-solid fa-share"></i></button>
+        <button class="btn btn-outline-danger rounded-pill ms-2" onclick="report('${
+          post._id
+        }', this)">
+        <i class="fa-solid fa-flag"></i>
+        </button>
       </div>
     </div>
     `;

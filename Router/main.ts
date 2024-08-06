@@ -277,7 +277,100 @@ router
     );
     return res.json({ user: user });
   });
+router.route("/post/report/").post(async (req: Request, res: Response) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.sendStatus(401);
+  const checkToken = await userClass.checkAccessToken(token);
+  if (checkToken) PostsClass.report(req.query.id?.toString() || "");
+  res.sendStatus(200);
+});
+router.route("/user/ban/").post(async (req: Request, res: Response) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.sendStatus(401);
+  const checkToken = await userClass.checkAccessToken(token);
+  const isUserAdmin = await userClass.checkIsAdmin(checkToken.id);
 
+  if (checkToken && isUserAdmin) {
+    userClass.banUser(req.query.id?.toString() || "");
+    return res.sendStatus(200);
+  }
+  return res.sendStatus(401);
+});
+router
+  .route("/user/admin")
+  .get(async (req: Request, res: Response) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (token == null) return res.sendStatus(401);
+    const user = await userClass.checkAccessToken(token);
+    const isUserAdmin = await userClass.checkIsAdmin(user.id);
+    if (isUserAdmin) {
+      return res.sendStatus(200);
+    }
+    return res.sendStatus(401);
+  })
+  .post(async (req: Request, res: Response) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (token == null) return res.sendStatus(401);
+    const user = await userClass.checkAccessToken(token);
+    const isUserAdmin = await userClass.checkIsAdmin(user.id);
+    if (isUserAdmin) {
+      await userClass.makeAdmin(req.query.id?.toString() || "");
+      return res.sendStatus(200);
+    }
+  })
+  .delete(async (req: Request, res: Response) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (token == null) return res.sendStatus(401);
+    const user = await userClass.checkAccessToken(token);
+    const isUserAdmin = await userClass.checkIsAdmin(user.id);
+    if (isUserAdmin) {
+      await userClass.removeAdmin(req.query.id?.toString() || "");
+      res.sendStatus(200);
+    }
+    res.sendStatus(401);
+  });
+router
+  .route("/dashboard/admin")
+  .get(async (req: Request, res: Response) => {
+    const isDashboardUser: boolean = req.query.user?.toString() === "true";
+    console.log(isDashboardUser);
+    const data = isDashboardUser
+      ? await userClass.getAllUsers()
+      : await PostsClass.getReportData();
+    return res.render(isDashboardUser ? "dashboardUser" : "dashboard", {
+      data: data,
+      searchTerm: "",
+    });
+  })
+  .post(async (req: Request, res: Response) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (token == null) return res.sendStatus(401);
+    const user = await userClass.checkAccessToken(token);
+    const isUserAdmin = await userClass.checkIsAdmin(user.id);
+    if (isUserAdmin) {
+      PostsClass.deleteReport(req.query.id?.toString() || "");
+      res.sendStatus(200);
+    }
+    return res.sendStatus(401);
+  })
+  .delete(async (req: Request, res: Response) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (token == null) return res.sendStatus(401);
+    const user = await userClass.checkAccessToken(token);
+    const isUserAdmin = await userClass.checkIsAdmin(user.id);
+    if (isUserAdmin) {
+      PostsClass.deletePost(req.query.id?.toString() || "");
+      res.sendStatus(200);
+    }
+    return res.sendStatus(401);
+  });
 router
   .route("/user/follow/:username")
   .get(async (req: Request, res: Response) => {

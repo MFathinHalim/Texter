@@ -1,5 +1,5 @@
 import { type Model, type Document } from "mongoose";
-import mainModel from "../models/post";
+import { mainModel, reportModel } from "../models/post";
 const { htmlToText } = require("html-to-text");
 import * as dotenv from "dotenv";
 
@@ -30,11 +30,13 @@ class Posts {
 
   //TODO Siapin variabel yang kita perlukan
   #posts: Model<postType>;
+  #reports: Model<postType>;
   #notFound: postType;
 
   //* Constructor, semacam __init__ di python :3
   constructor() {
     this.#posts = mainModel; //Postnya untuk kelas
+    this.#reports = reportModel;
     this.#notFound = {
       id: "not-found",
       title: "data not found",
@@ -250,6 +252,97 @@ class Posts {
     await mainModel.create(post);
     return post;
   }
+
+  async getReportData(): Promise<postType[] | { reports: string }> {
+    try {
+      // Fetch reported posts from the reportModel
+      const reportedPosts = await this.#reports
+        .find({})
+        .populate("user", "-password") // Populate user field if needed
+        .populate("reQuote.user", "-password") // Populate reQuote user field if needed
+        .populate("repost", "-password") // Populate repost field if needed
+        .exec();
+
+      if (reportedPosts.length === 0) {
+        return { reports: "No reports found" };
+      }
+      return reportedPosts;
+    } catch (error) {
+      console.error("Error fetching report data:", error);
+      return { reports: "Error fetching report data" };
+    }
+  }
+  async report(postId: string): Promise<boolean> {
+    // Validate input
+    if (!postId) {
+      throw new Error("Invalid input");
+    }
+
+    // Find the post by _id
+    const post = await mainModel.findById(postId);
+    if (!post) {
+      throw new Error("Post not found");
+    }
+    const reportData = {
+      _id: post._id,
+      id: post.id,
+      title: post.title,
+      img: post.img,
+      time: post.time,
+      user: post.user,
+      likes: post.like,
+      reQuote: post.reQuote,
+      replyTo: post.replyTo,
+    };
+    // Save the post data to the reportModel
+    try {
+      await reportModel.create(reportData);
+      return true;
+    } catch (error) {
+      console.error("Error reporting post:", error);
+      return false;
+    }
+  }
+
+  async deletePost(postId: string): Promise<boolean> {
+    // Validate inputs
+    if (!postId) {
+      throw new Error("Invalid input: postId is required");
+    }
+
+    try {
+      // Find and delete the post by _id
+      await reportModel.findByIdAndDelete(postId);
+      await mainModel.findByIdAndDelete(postId);
+
+      return true;
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      return false;
+    }
+  }
+  async deleteReport(postId: string): Promise<boolean> {
+    // Validate inputs
+    if (!postId) {
+      throw new Error("Invalid input: postId is required");
+    }
+
+    try {
+      // Find and delete the post by _id
+      const result = await reportModel.findByIdAndDelete(postId);
+
+      // Check if the post was found and deleted
+      if (!result) {
+        console.log("Post not found");
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      return false;
+    }
+  }
+
   liking(postId: string, user: any): Promise<number> {
     //Fungsi ngelike
     return this.#posts

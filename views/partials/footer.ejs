@@ -479,6 +479,28 @@ getToken().then(() => {
         // Handle errors, e.g., display an error message to the user
       });
   }
+  function report(postId) {
+    try {
+      const response = fetch(`/post/report?id=${postId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include' // Ensure cookies are included with the request
+      });
+
+      if (response.ok) {
+        alert('Post reported successfully!');
+      } else {
+        alert('Failed to report post: ' + response.statusText);
+      }
+    } catch (error) {
+      console.error('Error reporting post:', error);
+      alert('An error occurred while reporting the post.');
+    }
+  }
+
 
   function followPost(target) {
     fetch(`/user/follow/${target}`, {

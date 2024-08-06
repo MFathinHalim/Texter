@@ -1,0 +1,106 @@
+<%- include("partials/header.ejs") %>
+
+<div id="loading-screen" class="d-none">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <p>Loading...</p>
+</div>
+<% if (data && data.length > 0) { %>
+  <% data.forEach(post => { %>
+      <div class="card bg-dark text-white p-3 border-light post rounded-0">
+        <% if(post.repost) { %> <p class="text-secondary mb-1 ms-1"><i class="fa-solid fa-recycle"></i> <%= post.user.name %> was reposted</p> <% } %>
+        <a href="/user/details/<%= post.user %>" class="d-flex align-items-center">
+          <img src="<%= post.repost ? post.repost.pp : post.user.pp %>" class="pfp rounded-circle" />
+          <div class="d-flex flex-column ms-2 me-auto pt-2">
+            <h4><%= post.repost ? post.repost.name : post.user.name %></h4>
+            <h4 class="text-secondary"><%= post.time %></h4>
+          </div>
+        </a>
+        <h3 class="h4 mt-2"><%= post.title.replace(/#(\w+)/g, '<a href="/?search=$1" class="text-info">$&</a>') %></h3>
+        <% if(post.img) { %>
+          <% if(post.img.includes(".mp4") || post.img.includes(".ogg")) { %>
+            <video height="450" class="mb-3 border-light" loop style="border-radius: 2% !important" controls>
+              <source src="<%= post.img %>" type="video/mp4">
+            </video>
+          <% } else { %>
+            <img style="border-radius: 2% !important" class="mb-3 border-light" src="<%= post.img %>" />
+          <% } %>
+        <% } %>
+        <% if(post.reQuote) { %>
+          <div class="card bg-dark text-white p-3 pt-2 mb-2 mt-2 border-1 border-light">
+            <a href="/?id=<%= post.reQuote.id %>">
+              <article class="d-flex pt-2">
+                <img class="pfp rounded-circle" src="<%= post.reQuote.user.pp %>" />
+                <div class="ms-2">
+                  <h4 class="mb-1"><%= post.reQuote.user.name.replace(/<[^>]+>/g, "") %></h4>
+                  <h5 class="text-secondary"><%= post.reQuote.time %></h5>
+                </div>
+              </article>
+              <h3 class="ms-2 h4 mt-2"><%= post.reQuote.title.replace(/<[^>]+>/g, "") %></h3>
+              <% if(post.reQuote.img) { %>
+                <% if(post.reQuote.img.includes(".mp4") || post.reQuote.img.includes(".ogg")) { %>
+                  <video height="450" class="border-light" loop style="border-radius: 2% !important; width: 100%;" controls>
+                    <source src="<%= post.reQuote.img %>" type="video/mp4">
+                  </video>
+                <% } else { %>
+                  <img class="border-light" style="border-radius: 2% !important" src="<%= post.reQuote.img %>" />
+                <% } %>
+              <% } %>
+            </a>
+          </div>
+        <% } %>
+
+        <div class="d-flex mb-2">
+          <button class="btn btn-outline-warning rounded-pill ms-2" onclick="adminAction('<%= post._id %>', 'POSTS')">It's Fine</button>
+          <button class="btn btn-outline-danger rounded-pill ms-2" onclick="adminAction('<%= post._id %>', 'DELETE')">Delete</button>
+        </div>
+    </div>
+  <% }); %>
+<% } %>
+
+<%- include("partials/footer.ejs") %>
+
+<script>
+
+    // Function to check admin access
+    fetch('/user/admin', {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(res => {
+    if (res.ok) {
+        // Admin functionalities are already included in the EJS template
+        // No need to handle anything specific here
+    } else if (res.status === 401) {
+        //window.location.href = '/';
+        console.log(token)
+    }
+    })
+    .catch(err => {
+    console.error('Error checking admin access:', err.message);
+    });
+
+
+  function adminAction(postId, action) {
+    fetch(`/dashboard/admin?id=${postId}`, {
+      method: action,
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ postId })
+    })
+    .then(res => {
+      if (res.ok) {
+        alert('Action successful!');
+        location.reload(); // Reload the page to reflect changes
+      } else {
+        alert('Action failed: ' + res.statusText);
+      }
+    })
+    .catch(err => {
+      alert('Error: ' + err.message);
+    });
+  }
+
+</script>

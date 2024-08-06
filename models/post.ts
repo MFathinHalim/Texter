@@ -17,4 +17,6 @@ const postSchema = new Schema<postType>({
 });
 
 const mainModel: Model<postType> = model<postType>("posts", postSchema);
-export default mainModel;
+const reportModel: Model<postType> = model<postType>("reportPost", postSchema);
+
+export { mainModel, reportModel };
