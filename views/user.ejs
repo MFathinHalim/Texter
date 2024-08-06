@@ -140,6 +140,9 @@ posts.posts[0].user.desc : "" %>" />
         >
           <i class="fa-solid fa-share"></i>
         </button>
+        <button class="btn btn-outline-danger rounded-pill ms-2" onclick="report('<%= post._id %>', this)">
+            <i class="fa-solid fa-flag"></i>
+        </button>
       </div>
     </a>
   </div>
