@@ -455,6 +455,9 @@ getToken().then(() => {
 
     // Send POST request using fetch
     fetch(`/profile/${username}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
       method: "POST",
       body: formData,
     }).then(() => {
