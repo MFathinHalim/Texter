@@ -149,6 +149,9 @@ getToken().then(() => {
   fetch(`/user/check?id=${token}`)
     .then((res) => res.json())
     .then((check) => {
+      if(check.check) {
+        logout()
+      }
 
       document.querySelectorAll("#myDetails").forEach((link) => {
         link.href = `/user/details/${check.user.username}`;

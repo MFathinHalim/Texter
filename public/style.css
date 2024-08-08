@@ -13,7 +13,14 @@
   --success: #71d474;
   --error: #e88c8c;
 }
-
+.table-dark-custom {
+  background-color: var(--background2);
+  color: var(--background2);
+}
+.table-dark-custom th,
+.table-dark-custom td {
+  border-color: var(--secondary);
+}
 .border-light {
   border: 1px solid #ffffff3a !important;
 }

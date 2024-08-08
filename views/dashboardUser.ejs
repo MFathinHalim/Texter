@@ -1,0 +1,95 @@
+<%- include("partials/header.ejs") %>
+
+<div class="container mt-4">
+  <h3 class="mb-4">User Dashboard</h3>
+
+  <!-- Table to display user data -->
+  <table class="table table-dark table-striped table-dark-custom">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Username</th>
+        <th>Display Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% data.forEach((user, index) => { %> <% if (!user.ban) { %>
+      <tr>
+        <td>
+          <img
+            src="<%= user.pp %>"
+            class="rounded-circle"
+            style="height: 50px; width: 50px; border: 2px solid var(--accent1)"
+          />
+        </td>
+        <td><%= user.username %></td>
+        <td><%= user.name %></td>
+        <td>
+          <% if (!user.isAdmin) { %>
+          <button
+            class="btn btn-danger btn-sm"
+            onclick="banUser('<%= user.id %>')"
+          >
+            Ban User
+          </button>
+          <button
+            class="btn btn-primary btn-sm ml-2"
+            onclick="makeAdmin('<%= user.id %>')"
+          >
+            Make Admin
+          </button>
+          <% } %>
+        </td>
+      </tr>
+      <% } %> <% }) %>
+    </tbody>
+  </table>
+</div>
+<script>
+  // Function to ban a user
+  function banUser(userId) {
+    fetch(`/user/ban?id=${userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          alert("User banned successfully!");
+          location.reload(); // Reload the page to see the changes
+        } else {
+          alert("Failed to ban user.");
+        }
+      })
+      .catch((err) => {
+        console.error("Error banning user:", err.message);
+      });
+  }
+
+  // Function to make a user admin
+  function makeAdmin(userId) {
+    fetch(`/user/admin?id=${userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          alert("User promoted to admin successfully!");
+          location.reload(); // Reload the page to see the changes
+        } else {
+          alert("Failed to promote user.");
+        }
+      })
+      .catch((err) => {
+        console.error("Error promoting user:", err.message);
+      });
+  }
+</script>
+
+<%- include("partials/footer.ejs") %>

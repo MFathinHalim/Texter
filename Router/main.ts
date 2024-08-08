@@ -338,7 +338,6 @@ router
   .route("/dashboard/admin")
   .get(async (req: Request, res: Response) => {
     const isDashboardUser: boolean = req.query.user?.toString() === "true";
-    console.log(isDashboardUser);
     const data = isDashboardUser
       ? await userClass.getAllUsers()
       : await PostsClass.getReportData();
