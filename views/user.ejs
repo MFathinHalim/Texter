@@ -54,7 +54,7 @@ posts.posts[0].user.desc : "" %>" />
     </div>
   </div>
 
-  <% posts.posts.forEach((post) => { %>
+<% posts.posts.slice().reverse().forEach((post) => { %>
   <div class="card bg-dark text-white p-3 border-light post rounded-0">
     <% if(post.repost) { %>
     <p class="text-secondary mb-1 ms-1">
