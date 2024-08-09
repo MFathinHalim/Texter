@@ -13,6 +13,7 @@ declare type userType = {
   };
   followers?: any;
   following?: any;
+  bookmark?: any;
 };
 
 declare type postType = {

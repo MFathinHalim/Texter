@@ -1,0 +1,161 @@
+<%- include("partials/header.ejs") %>
+<div id="loading-screen" class="d-none">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <p>Loading...</p>
+</div>
+<div class="p-3 border-light rounded-0">
+  <h3><i class="fa-solid fa-bookmark"></i> Bookmarks</h3>
+</div>
+
+<div>
+  <% posts.posts.forEach((post) => { %>
+  <div class="card bg-dark text-white p-3 border-light post rounded-0">
+    <% if (post.repost) { %>
+    <p class="text-secondary mb-1 ms-1">
+      <i class="fa-solid fa-recycle"></i> <%= post.user.name %> reposted
+    </p>
+    <% } %>
+    <a href="/?id=<%= post.id %>">
+      <article class="d-flex align-items-center">
+        <img
+          src="<%= post.repost ? post.repost.pp : post.user.pp %>"
+          class="pfp rounded-circle"
+        />
+        <div class="d-flex flex-column ms-2 me-auto pt-2">
+          <h4><%= post.repost ? post.repost.name : post.user.name %></h4>
+          <h4 class="text-secondary"><%= post.time %></h4>
+        </div>
+      </article>
+      <h3 class="h4 mt-2">
+        <%- post.title.replace(/#(\w+)/g, '<a href="/?search=$1" class="text-info">$&</a>') %>
+      </h3>
+      <% if (post.img) { %>
+        <% if (post.img.includes(".mp4") || post.img.includes(".ogg")) { %>
+        <video
+          height="450"
+          class="mb-3 border-light"
+          loop
+          style="border-radius: 2% !important; width: 100%"
+          controls
+        >
+          <source src="<%= post.img %>" type="video/mp4" />
+        </video>
+        <% } else { %>
+        <img
+          style="border-radius: 2% !important"
+          class="mb-3 border-light"
+          src="<%= post.img %>"
+        />
+        <% } %>
+      <% } %>
+      <% if (post.reQuote) { %>
+      <div class="card bg-dark text-white p-3 pt-2 mb-2 mt-2 border-1 border-light">
+        <a href="/?id=<%= post.reQuote.id %>">
+          <article class="d-flex pt-2">
+            <img class="pfp rounded-circle" src="<%= post.reQuote.user.pp %>" />
+            <div class="ms-2">
+              <h4 class="mb-1">
+                <%= post.reQuote.user.name.replace(/<[^>]+>/g, "") %>
+              </h4>
+              <h5 class="text-secondary"><%= post.reQuote.time %></h5>
+            </div>
+          </article>
+          <h3 class="ms-2 h4 mt-2">
+            <%= post.reQuote.title.replace(/<[^>]+>/g, "") %>
+          </h3>
+          <% if (post.reQuote.img) { %>
+            <% if (post.reQuote.img.includes(".mp4") || post.reQuote.img.includes(".ogg")) { %>
+            <video
+              height="450"
+              class="border-light"
+              loop
+              style="border-radius: 2% !important; width: 100%"
+              controls
+            >
+              <source src="<%= post.reQuote.img %>" type="video/mp4" />
+            </video>
+            <% } else { %>
+            <img
+              class="border-light"
+              style="border-radius: 2% !important"
+              src="<%= post.reQuote.img %>"
+            />
+            <% } %>
+          <% } %>
+        </a>
+      </div>
+      <% } %>
+      <div class="d-flex mb-2">
+        <button
+          class="btn btn-outline-danger rounded-pill"
+          onclick="sendLikeRequest('<%= JSON.stringify(post) %>', this)"
+        >
+          <i class="fa-solid fa-heart"></i> <%= post.like.users.length %>
+        </button>
+        <a
+          href="#reply"
+          class="btn btn-outline-secondary rounded-pill text-black ms-2"
+        >
+          <i class="fa-solid fa-comment"></i> Reply
+        </a>
+        <button
+          class="btn btn-outline-success rounded-pill ms-2"
+          onclick="sendPostRequest(undefined, undefined, undefined, '<%= post.id %>', '<%= post.user._id %>', '<%= post.title %>')"
+        >
+          <i class="fa-solid fa-recycle"></i>
+        </button>
+        <button
+          class="btn btn-outline-info rounded-pill ms-2"
+          onclick='share("/?id=<%= post.id %>")'
+        >
+          <i class="fa-solid fa-share"></i>
+        </button>
+        <button
+          class="btn btn-outline-secondary rounded-pill ms-2"
+          onclick="createBookmark('<%= post._id %>')"
+        >
+          <i class="fa-regular fa-bookmark"></i>
+        </button>
+        <button
+          class="btn btn-outline-danger rounded-pill ms-2"
+          onclick="report('<%= post._id %>', this)"
+        >
+          <i class="fa-solid fa-flag"></i>
+        </button>
+      </div>
+    </a>
+  </div>
+  <% }); %>
+</div>
+<%- include("partials/footer.ejs") %>
+
+<script>
+    function createBookmark(id) {
+    fetch(`/bookmark/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        id: id,
+      }),
+    }).then(() => {
+      window.location.reload()
+    })
+  }
+  fetch(`/user/check?id=${token}`)
+    .then((res) => res.json())
+    .then((check) => {
+      if (check.check === true) {
+        logout();
+      }
+      name = check.user.name;
+      username = check.user.username;
+      if (username !== "<%= user.user.username %>") {
+        window.location.href = "/";
+      }
+    });
+</script>

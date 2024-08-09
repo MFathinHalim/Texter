@@ -11,6 +11,7 @@ const userSchema: Schema<userType> = new Schema<userType>({
   isAdmin: Boolean,
   followers: [{ type: Types.ObjectId, ref: "user" }],
   following: [{ type: Types.ObjectId, ref: "user" }],
+  bookmark: [{ type: Types.ObjectId, ref: "posts" }],
 });
 
 const userModel: Model<userType> = model("user", userSchema);

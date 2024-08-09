@@ -485,6 +485,18 @@ getToken().then(() => {
         // Handle errors, e.g., display an error message to the user
       });
   }
+  function createBookmark(id) {
+    fetch(`/bookmark/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        id: id,
+      }),
+    })
+  }
   function report(postId) {
     try {
       const response = fetch(`/post/report?id=${postId}`, {

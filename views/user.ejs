@@ -140,6 +140,12 @@ posts.posts[0].user.desc : "" %>" />
         >
           <i class="fa-solid fa-share"></i>
         </button>
+        <button
+          class="btn btn-outline-secondary rounded-pill ms-2"
+          onclick="createBookmark('<%= post._id %>')"
+        >
+          <i class="fa-solid fa-bookmark"></i>
+        </button>
         <button class="btn btn-outline-danger rounded-pill ms-2" onclick="report('<%= post._id %>', this)">
             <i class="fa-solid fa-flag"></i>
         </button>
@@ -189,6 +195,18 @@ posts.posts[0].user.desc : "" %>" />
 
         // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
         document.getElementById("top").appendChild(profileLink);
+        let bookmarkLink = document.createElement("a");
+
+        // Menetapkan atribut href ke URL profil dengan username
+        bookmarkLink.setAttribute("href", "/bookmark?username=" + username);
+
+        // Menambahkan kelas Bootstrap untuk tampilan tombol
+        bookmarkLink.classList.add("btn", "btn-outline-secondary", "rounded-pill", "ms-1");
+        // Menambahkan teks atau konten di dalam tombol
+        bookmarkLink.innerHTML = '<i class="fa-solid fa-bookmark"></i>';
+
+        // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
+        document.getElementById("top").appendChild(bookmarkLink);
       }
     });
 </script>

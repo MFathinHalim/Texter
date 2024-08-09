@@ -155,6 +155,45 @@ class Users {
     );
   }
 
+  async createBookmark(id: string, postId: string) {
+    const user: (Document<userType, any, any> & userType) | null =
+      await this.#users.findOne({ id });
+    if (!user) {
+      return this.#error[1];
+    }
+    const userAlreadyBookmark: userType | undefined = user.bookmark.find(
+      (entry: any) => entry._id.toString() === postId
+    );
+    if (userAlreadyBookmark) {
+      user.bookmark = user.bookmark.filter(
+        (entry: any) => entry._id.toString() !== postId
+      );
+    } else {
+      user.bookmark.push(postId);
+    }
+    return this.#users
+      .updateOne({ id: id }, { $set: { bookmark: user.bookmark } })
+      .then(() => 200);
+  }
+  async getBookmarks(id: string): Promise<{ posts?: any[] } | userType> {
+    try {
+      const user = await this.#users.findOne({ id }).populate({
+        path: "bookmark",
+        populate: {
+          path: "user",
+          select: "-password",
+        },
+      }); // Populasi jika bookmark merujuk ke postModel
+      if (!user) {
+        return this.#error[1];
+      }
+      return { posts: user.bookmark }; // Return the populated bookmarks
+    } catch (error) {
+      console.error("Error fetching bookmarks:", error);
+      return this.#error[1];
+    }
+  }
+
   checkAccessToken(token: string) {
     let jwtSecretKey: string = process.env.JWT_SECRET_KEY || "";
     try {

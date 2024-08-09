@@ -190,6 +190,31 @@ router.route("/like/").post(async (req: Request, res: Response) => {
     likes: likes,
   });
 });
+router
+  .route("/bookmark/")
+  .get(async (req: Request, res: Response) => {
+    const user = await userClass.checkUserDetails(
+      req.query.username?.toString() || ""
+    );
+    const post = await userClass.getBookmarks(user.user.id);
+    if (user && post) {
+      return res.render("bookmark", {
+        user: user,
+        posts: post,
+        searchTerm: "",
+      });
+    }
+  })
+  .post(async (req: Request, res: Response) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (token == null) return res.sendStatus(401);
+    const checkToken = await userClass.checkAccessToken(token);
+    if (checkToken) {
+      await userClass.createBookmark(checkToken.id, req.body.id);
+    }
+    return res.sendStatus(200);
+  });
 
 router
   .route("/user/details/:username")
