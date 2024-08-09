@@ -309,6 +309,18 @@ fetch(`/user/check?id=${token}`)
 
       // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
       document.getElementById("top").appendChild(profileLink);
+        let bookmarkLink = document.createElement("a");
+
+        // Menetapkan atribut href ke URL profil dengan username
+        bookmarkLink.setAttribute("href", "/bookmark?username=" + username);
+
+        // Menambahkan kelas Bootstrap untuk tampilan tombol
+        bookmarkLink.classList.add("btn", "btn-outline-secondary", "rounded-pill", "ms-1");
+        // Menambahkan teks atau konten di dalam tombol
+        bookmarkLink.innerHTML = '<i class="fa-solid fa-bookmark"></i>';
+
+        // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
+        document.getElementById("top").appendChild(bookmarkLink);
     }
   });
 
