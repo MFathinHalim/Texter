@@ -212,7 +212,7 @@ getToken().then(() => {
           userInfo.classList.add("d-flex", "flex-column");
 
           const dName = document.createElement("a");
-          dName.href = `/?user=${user.username}`; // Link to user profile page
+          dName.href = `/user/details=${user.username}`; // Link to user profile page
           dName.classList.add("text-white", "text-decoration-none", "h5");
           dName.textContent = user.name;
           userInfo.appendChild(dName);
