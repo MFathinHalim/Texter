@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:description" content="
   <% if (typeof post !== 'undefined' && post) { %>
-    <%= post.desc ? post.desc : 'Texter, Media Sosial Berbasis Text' %>
+    <%= post.title ? post.title : 'Texter, Media Sosial Berbasis Text' %>
   <% } else if (typeof posts !== 'undefined' && posts && Array.isArray(posts.posts) && posts.posts.length > 0) { %>
     <%= posts.posts[0].user.desc !== '' ? posts.posts[0].user.desc : 'Texter, Media Sosial Berbasis Text' %>
   <% } else { %>
@@ -46,7 +46,7 @@
 <meta property="og:type" content="website" />
 <meta property="og:title" content="
   <% if (typeof post !== 'undefined' && post) { %>
-    <%= post.title %>
+    <%= post.user.name %> on Texter
   <% } else if (typeof posts !== 'undefined' && posts && Array.isArray(posts.posts) && posts.posts.length > 0) { %>
     See <%= posts.posts[0].user.name %>
   <% } else { %>
@@ -55,7 +55,7 @@
 " />
 <meta property="og:description" content="
   <% if (typeof post !== 'undefined' && post) { %>
-    <%= post.desc ? post.desc : 'Texter, Media Sosial Berbasis Text' %>
+    <%= post.title ? post.title : 'Texter, Media Sosial Berbasis Text' %>
   <% } else if (typeof posts !== 'undefined' && posts && Array.isArray(posts.posts) && posts.posts.length > 0) { %>
     <%= posts.posts[0].user.desc !== '' ? posts.posts[0].user.desc : 'Texter, Media Sosial Berbasis Text' %>
   <% } else { %>
