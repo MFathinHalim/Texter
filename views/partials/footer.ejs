@@ -392,11 +392,17 @@ getToken().then(() => {
     if (!repost) {
       // Iterate over all file input elements with ID 'img'
        form.querySelector("button").remove();
-      if (form.querySelector("#img").files[0]) {
-        formData.append("image", form.querySelector("#img").files[0]);
-      } else {
-        formData.append("image", ""); // Empty string if no image selected
-      }
+      const imgInput = form.querySelector("#img");
+      const imgFormInput = form.querySelector("#imgReply");
+      
+      // Pilih file dari imgInput atau imgFormInput jika ada
+      const selectedFile = (imgInput && imgInput.files.length > 0) 
+        ? imgInput.files[0] 
+        : (imgFormInput && imgFormInput.files.length > 0) 
+        ? imgFormInput.files[0] 
+        : null;
+      
+      formData.append("image", selectedFile ? selectedFile : ""); 
     }
 
     // Append data to FormData
