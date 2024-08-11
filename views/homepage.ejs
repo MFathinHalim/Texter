@@ -5,22 +5,65 @@
     <meta property="og:title" content="Texter" />
     <meta name="twitter:description" content="Texter, Media Sosial Berbasis Text" />
 <div>
+  <div id="followingfollowers" class="bg-dark-glass text-light border-0 rounded-0 sticky-on-navbar">
+  <div class="d-flex">
+      <a class="bg-0 text-light p-3 rounded-0 flex-fill text-center active" href="/">Home</a>
+      <a class="bg-0 text-light p-3 rounded-0 flex-fill text-center disabled" href="/following" class="disabled">Following</a>
+  </div>
+  </div>
   <form
     class="card bg-dark text-light p-3 border-light rounded-0"
     enctype="multipart/form-data"
     onsubmit="sendPostRequest(this, undefined, undefined, undefined, undefined)"
   >
-    <div class="mb-3">
+  <div class="mb-3">
+    <div class="d-flex justify-content-between mb-2">
+       <article class="d-flex">
+      <img
+      class="rounded-circle"
+      style="
+      width: 100%;
+      height: 100%;
+      max-width: 70px;
+      max-height: 70px;
+      border: 2px solid var(--accent1);
+      "
+      id="mypfp"
+      src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+      alt="Card image"
+      />
+      <div class="ms-2 mt-0">
+        <h4 class="card-title" id="myname"></h4>
+      <h4 class="text-secondary" id="currentTime"></h4>
+      </div></article>
+                <button
+                  class="btn btn-outline-danger rounded-pill ms-2"
+                  onclick="logout()"
+                  style="font-size: larger; border: none !important;"
+                >
+                  <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+    </div>
       <textarea
-        style="height: 120px"
+        style="height: 70px; font-size:larger;"
         type="text"
-        class="form-control border-light"
+        class="form-control border-0"
+      
         id="title"
         name="title"
         placeholder="What's Happening?!"
       ></textarea>
     </div>
-    <div class="mb-3 d-flex justify-content-between">
+        <img
+      style="border-radius: 2% !important"
+      class="mb-3 d-none"
+      id="preview"
+      onerror="this.remove()"
+    />
+      <video id="videoParent" height="450" class="mb-3 border-light d-none" loop style="border-radius: 2% !important" onerror="this.remove()" controls>
+        <source id="videoPreview" type="video/mp4">
+      </video>
+    <div class="d-flex justify-content-between">
       <input
         type="file"
         class="form-control d-none"
@@ -42,15 +85,6 @@
         Post
       </button>
     </div>
-    <img
-      style="border-radius: 2% !important"
-      class="mb-3 d-none"
-      id="preview"
-      onerror="this.remove()"
-    />
-      <video id="videoParent" height="450" class="mb-3 border-light d-none" loop style="border-radius: 2% !important" onerror="this.remove()" controls>
-        <source id="videoPreview" type="video/mp4">
-      </video>
     <div id="loading-screen" class="d-none">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
@@ -61,6 +95,19 @@
   <div id="post-container"></div>
 </div>
 <script>
+  function updateCurrentTime() {
+    const now = new Date();
+    const day = now.getDate();
+    const month = now.getMonth() + 1; // Bulan dimulai dari 0
+    const year = now.getFullYear();
+    const formattedDate = `${month}/${day}/${year}`;
+    
+    document.getElementById('currentTime').textContent = formattedDate;
+  }
+
+  // Panggil fungsi untuk menampilkan waktu saat halaman dimuat
+  updateCurrentTime();
+
   const postContainer = document.getElementById("post-container");
   let currentPage = 1;
   const postsPerPage = 10; // Adjust as needed
@@ -90,9 +137,11 @@
       <a href="/?id=${post.id}">
         <div>
         ${ post.repost ? `<p class="text-secondary mb-1 ms-1">
-          <i class="fa-solid fa-recycle"></i> ${ post.user.name } was reposted
+          <i class="fa-solid fa-recycle"></i> ${ post.user.name } reposted
         </p> ` : "" }
-        <article class="d-flex pt-2">
+        <article class="d-flex pt-2 justify-content-between">
+                  <article class="d-flex">
+
         <img class="pfp rounded-circle" src="${post.repost ? post.repost.pp : post.user.pp}" />
         ${
           post.repost
@@ -105,7 +154,7 @@
               <h4>
                 ${post.user.name.replace(/<[^>]+>/g, "")} ${
                 post.reQuote
-                  ? `is Requote to ${post.reQuote.user.name.replace(
+                  ? `Requoted ${post.reQuote.user.name.replace(
                       /<[^>]+>/g,
                       ""
                     )}`
@@ -116,6 +165,12 @@
         }
               <h4 class="text-secondary">${post.time}</h4>
             </div>
+          </article>
+        <button class="btn btn-outline-light border-none rounded-pill ms-2" style=" border: 0px !important" onclick="report('${
+          post._id
+        }', this)">
+        <i class="fa-solid fa-flag"></i>
+        </button>
         </article>
       </div>
         <h3 class="h4 mt-2">
@@ -193,11 +248,6 @@
           onclick="createBookmark('${post._id}')"
         >
           <i class="fa-solid fa-bookmark"></i>
-        </button>
-        <button class="btn btn-outline-danger rounded-pill ms-2" onclick="report('${
-          post._id
-        }', this)">
-        <i class="fa-solid fa-flag"></i>
         </button>
       </div>
     </div>

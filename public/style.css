@@ -13,6 +13,50 @@
   --success: #71d474;
   --error: #e88c8c;
 }
+
+/* Style for the active state */
+a.active {
+  border-bottom: 2px solid var(--success); /* Adjust color as needed */
+}
+/* Initial state of the navbar */
+div,
+nav {
+  transition: transform 0.2s ease-in-out; /* Smooth transition for sliding effect */
+}
+
+/* Class to hide the navbar when scrolling down */
+@media (max-width: 767px) {
+  .row.no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .col-auto {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  .container {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .navbar.hide {
+    transform: translateY(-100%); /* Move the navbar up */
+  }
+  .navbar.fixed-bottom.hide {
+    transform: translateY(200%); /* Move the navbar down */
+  }
+  .sticky-on-navbar.hide {
+    transform: translateY(-200%); /* Move the navbar up */
+  }
+}
+
+/* Style for the disabled state */
+a.disabled {
+  pointer-events: none; /* Prevent clicks */
+  opacity: 0.5; /* Dim the link to indicate it's disabled */
+  cursor: not-allowed; /* Change cursor to indicate disabled state */
+}
+
 .table-dark-custom {
   background-color: var(--background2);
   color: var(--background2);

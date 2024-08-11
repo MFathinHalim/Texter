@@ -57,11 +57,12 @@
   
 </div>
 <div class="card bg-dark text-white p-3 border-light post rounded-0">
-  <% if(post.repost) { %> <p class="text-secondary mb-1 ms-1"><i class="fa-solid fa-recycle"></i> <%= post.user.name %> was reposted</p> <% } %>
+  <% if(post.repost) { %> <p class="text-secondary mb-1 ms-1"><i class="fa-solid fa-recycle"></i> <%= post.user.name %> reposted</p> <% } %>
   <a
     href="/user/details/<%= post.user.username %>"
-    class="d-flex align-items-center"
+    class="d-flex justify-content-between mb-2"
   >
+    <article class="d-flex">
     <img src="<%= post.repost ? post.repost.pp : post.user.pp %>" class="pfp rounded-circle" />
     <div class="d-flex flex-column ms-2 me-auto pt-2">
       <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
@@ -70,6 +71,11 @@
       </h4>
       <h4 class="text-secondary"><%= post.time %></h4>
     </div>
+    </article>
+    <button class="btn btn-outline-light rounded-pill ms-2" onclick="report('<%= post._id %>', this)" 
+      style=" border: none !important;">
+        <i class="fa-solid fa-flag"></i>
+    </button>
   </a>
 <h3 class="h4 mt-2">
   <%- post.title.replace(/#(\w+)/g, '<a href="/?search=$1" class="text-info">$&</a>') %>
@@ -139,9 +145,7 @@
     >
       <i class="fa-solid fa-bookmark"></i>
     </button>
-    <button class="btn btn-outline-danger rounded-pill ms-2" onclick="report('<%= post._id %>', this)">
-        <i class="fa-solid fa-flag"></i>
-    </button>
+
   </div>
 </div>
 <form

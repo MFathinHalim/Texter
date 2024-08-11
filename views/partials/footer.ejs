@@ -49,8 +49,8 @@
     </li>
     <li class="nav-item">
       <a href="/" class="nav-link" style="font-size: x-large"
-        ><i class="fa-solid fa-pen-to-square"></i
-      ></a>
+        ><i class="fa-solid fa-plus" style="font-size: xx-large"></i>
+      </a>
     </li>
     <li class="nav-item">
       <a href="#" id="myDetails" class="nav-link" style="font-size: x-large"
@@ -141,6 +141,31 @@ document.querySelectorAll("#searchInput").forEach((inputSearch) => {
     }
   });
 });
+let lastScrollTop = 0;
+const navbar = document.querySelector('.navbar');
+const navbar2 = document.querySelector('.navbar.fixed-bottom');
+
+const followingfollowers = document.querySelector('#followingfollowers');
+
+
+window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+    if (currentScroll > lastScrollTop) {
+        // Scrolling down
+        navbar.classList.add('hide');
+        navbar2.classList.add('hide');
+        followingfollowers.classList.add('hide');
+    } else {
+        // Scrolling up
+        navbar.classList.remove('hide');
+        navbar2.classList.remove('hide');
+        followingfollowers.classList.remove('hide');
+    }
+
+    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // For Mobile or negative scrolling
+});
+
 if (
   !window.location.href.toString().includes("/login") &&
   !window.location.href.toString().includes("/signup")
@@ -156,8 +181,18 @@ getToken().then(() => {
       document.querySelectorAll("#myDetails").forEach((link) => {
         link.href = `/user/details/${check.user.username}`;
       });
-      document.getElementById("mypfp").src = check.user.pp;
-      document.getElementById("myname").innerText = check.user.name;
+      const elements = document.querySelectorAll("#mypfp");
+
+      // Perbarui atribut src untuk setiap elemen
+      elements.forEach(element => {
+        element.src = check.user.pp;
+      });
+            const elements2 = document.querySelectorAll("#myname");
+
+      // Perbarui atribut src untuk setiap elemen
+      elements2.forEach(element => {
+        element.innerText = check.user.name
+      });
       document.getElementById("myusername").innerText =
         `@${check.user.username}`;
       document.getElementById("mydesc").innerText =

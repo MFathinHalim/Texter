@@ -1,5 +1,7 @@
 <%- include("partials/header.ejs") %>
-<h3 class="border-light p-3">Welcome <%= name %>! We'll be redirect you...</h3>
+<h3 class="border-light p-3">
+  Welcome, <%= name %>! You will be redirected to the main page shortly...
+</h3>
 <script>
   sessionStorage.setItem("myToken", "<%= token %>");
   window.location.href = "/";
