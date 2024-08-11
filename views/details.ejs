@@ -1,10 +1,4 @@
-<%- include("partials/header.ejs") %>
-     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="<%= post && post.img ? post.img : "" %>" />
-    <meta property="og:type" content="On Texter" />
-    <meta name="application-name" content="Texter" />
-    <meta property="og:title" content="<%= post && post.title ? post.title : "Texter" %>" />
-    <meta name="twitter:description" content="<%= post && post.desc ? post.desc : "Texter, Media Sosial Berbasis Text" %>" />
+<%- include("partials/header.ejs") %>   
 <div id="loading-screen" class="d-none">
   <div class="spinner-border text-primary" role="status">
     <span class="visually-hidden">Loading...</span>
