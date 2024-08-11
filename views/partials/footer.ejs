@@ -438,44 +438,55 @@ getToken().then(() => {
         console.error("Error sending POST request:", error);
       });
   }
-  function previewImage(event) {
-    var input = event.target;
+function previewImage(event) {
+  var input = event.target;
 
-    // Ensure that a file is selected
-    if (input.files && input.files[0]) {
-      var file = input.files[0];
-      var reader = new FileReader();
+  // Ensure that a file is selected
+  if (input.files && input.files[0]) {
+    var file = input.files[0];
+    var reader = new FileReader();
 
-      // Handle image preview
-      if (file.type.startsWith("image/")) {
-        reader.onload = function (e) {
-          var preview = document.getElementById("preview");
+    // Handle image preview
+    if (file.type.startsWith("image/")) {
+      reader.onload = function (e) {
+        // Iterate over all image previews and update the first one found
+        document.querySelectorAll('#preview').forEach((preview) => {
           preview.src = e.target.result;
           preview.classList.remove("d-none");
-          document.getElementById("videoPreview").classList.add("d-none"); // Hide video preview
-        };
-        reader.readAsDataURL(file); // Read the uploaded file as a URL
-      }
+        });
+        
+        // Hide all video previews
+        document.querySelectorAll('#video-preview').forEach(video => {
+          video.classList.add("d-none");
+        });
+      };
+      reader.readAsDataURL(file); // Read the uploaded file as a URL
+    }
 
-      // Handle video preview
-      else if (file.type.startsWith("video/")) {
-        var videoPreview = document.getElementById("videoPreview");
-        var videoParent = document.getElementById("videoParent");
+    // Handle video preview
+    else if (file.type.startsWith("video/")) {
+      document.querySelectorAll('#video-preview').forEach((videoParent) => {
         videoParent.classList.remove("d-none");
-        videoPreview.src = URL.createObjectURL(file);
+        videoParent.querySelector('source').src = URL.createObjectURL(file);
         videoParent.load();
-        videoPreview.style.display = "block"; // Show video preview
-        document.getElementById("preview").style.display = "none"; // Hide image preview
-      }
+        // Hide other video previews if necessary
+      });
+      
+      // Hide all image previews
+      document.querySelectorAll('#preview').forEach(preview => {
+        preview.classList.add("d-none");
+      });
 
       // Clean up the object URL after video is loaded
-      if (file.type.startsWith("video/")) {
-        videoPreview.addEventListener("loadeddata", function () {
-          URL.revokeObjectURL(videoPreview.src); // Clean up object URL
+      document.querySelectorAll('#video-preview').forEach(videoParent => {
+        videoParent.querySelector('source').addEventListener("loadeddata", function () {
+          URL.revokeObjectURL(this.src); // Clean up object URL
         });
-      }
+      });
     }
   }
+}
+
   var inputFile = document.getElementById("img");
   inputFile.addEventListener("change", previewImage);
 
