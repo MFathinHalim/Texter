@@ -111,7 +111,6 @@ img {
 }
 
 .pfp {
-  border: 2px solid var(--accent1);
   width: 70px;
   height: 70px;
   object-fit: cover;
