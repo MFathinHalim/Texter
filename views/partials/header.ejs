@@ -6,8 +6,8 @@
 <title>
   <% if (typeof post !== 'undefined' && post) { %>
     <%= post.user.name %> on Texter: "<%= post.title %>"
-  <% } else if (typeof posts !== 'undefined' && posts) { %>
-    See <%= posts.posts[0].user.name  %> on Texter
+  <% } else if (typeof posts !== 'undefined' && posts && Array.isArray(posts.posts) && posts.posts.length > 0) { %>
+    See <%= posts.posts[0].user.name %> on Texter
   <% } else { %>
     Texter
   <% } %>
@@ -21,16 +21,16 @@
     />
   <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:description" content="<%= post && post.desc ? post.desc : 'Texter, Media Sosial Berbasis Text' %>" />
-<meta name="twitter:image" content="<%= post && post.img ? post.img : 'https://ik.imagekit.io/9hpbqscxd/SG/image-61.jpg?updatedAt=1705798245623' %>" />
+<meta name="twitter:description" content="<%= typeof post !== 'undefined' && post && post.desc ? post.desc : 'Texter, Media Sosial Berbasis Text' %>" />
+<meta name="twitter:image" content="<%= typeof post !== 'undefined' && post && post.img ? post.img : 'https://ik.imagekit.io/9hpbqscxd/SG/image-61.jpg?updatedAt=1705798245623' %>" />
 
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
 <meta property="og:title" content="
   <% if (typeof post !== 'undefined' && post) { %>
     <%= post.title %>
-  <% } else if (typeof posts !== 'undefined' && posts && posts.length > 0) { %>
-    See <%= posts[0].user.name %>
+  <% } else if (typeof posts !== 'undefined' && posts && posts.posts.length > 0) { %>
+    See <%= posts.posts[0].user.name %>
   <% } else { %>
     Texter
   <% } %>
@@ -38,8 +38,8 @@
 <meta property="og:description" content="
   <% if (typeof post !== 'undefined' && post) { %>
     <%= post.desc ? post.desc : 'Texter, Media Sosial Berbasis Text' %>
-  <% } else if (typeof posts !== 'undefined' && posts && posts.length > 0) { %>
-    <%= posts[0].user.desc !== '' ? posts[0].user.desc : '' %>
+  <% } else if (typeof posts !== 'undefined' && posts && posts.posts.length > 0) { %>
+    <%= posts.posts[0].user.desc !== '' ? posts.posts[0].user.desc : '' %>
   <% } else { %>
     Texter, Media Sosial Berbasis Text
   <% } %>
@@ -47,8 +47,8 @@
 <meta property="og:image" content="
   <% if (typeof post !== 'undefined' && post && post.img) { %>
     <%= post.img %>
-  <% } else if (typeof posts !== 'undefined' && posts && posts.length > 0) { %>
-    <%= posts[0].user.pp %>
+  <% } else if (typeof posts !== 'undefined' && posts && posts.posts.length > 0) { %>
+    <%= posts.posts[0].user.pp %>
   <% } else { %>
     https://ik.imagekit.io/9hpbqscxd/SG/image-61.jpg?updatedAt=1705798245623
   <% } %>
