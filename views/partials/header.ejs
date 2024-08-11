@@ -46,7 +46,7 @@
 <meta property="og:type" content="website" />
 <meta property="og:title" content="
   <% if (typeof post !== 'undefined' && post) { %>
-    <%= post.user.name %> on Texter
+    <%= post.user.name %> (@<%= post.user.username %>) on Texter
   <% } else if (typeof posts !== 'undefined' && posts && Array.isArray(posts.posts) && posts.posts.length > 0) { %>
     See <%= posts.posts[0].user.name %>
   <% } else { %>
