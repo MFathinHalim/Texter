@@ -31,13 +31,14 @@ nav {
     margin-left: 0;
   }
 
-  .col-auto {
+  .col-12 {
     padding-right: 0;
     padding-left: 0;
   }
   .container {
     padding: 0 !important;
     margin: 0 !important;
+    overflow-x: hidden;
   }
   .navbar.hide {
     transform: translateY(-100%); /* Move the navbar up */
@@ -49,7 +50,47 @@ nav {
     transform: translateY(-200%); /* Move the navbar up */
   }
 }
-
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  transition: opacity 0.3s ease;
+}
+.popup-content {
+  padding: 5px;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 100%;
+  position: relative;
+}
+.popup.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.popup .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 999999;
+}
+.popup .close-btn i {
+  color: #000;
+}
 /* Style for the disabled state */
 a.disabled {
   pointer-events: none; /* Prevent clicks */

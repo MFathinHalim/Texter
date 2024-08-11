@@ -15,7 +15,7 @@
       <img
         src="<%= post.user.pp %>"
         class="rounded-circle"
-        style="height: 80px; width:80px; border: 2px solid var(--accent1)"
+        style="height: 80px; width:80px;"
       />
     </a>
     <div class="d-flex flex-column ms-2 me-auto">
@@ -58,7 +58,7 @@
   >
     <article class="d-flex">
     <img src="<%= post.repost ? post.repost.pp : post.user.pp %>" class="pfp rounded-circle" />
-    <div class="d-flex flex-column ms-2 me-auto pt-2">
+    <div class="d-flex flex-column ms-2 me-auto">
       <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
       <h4>
         <%= post.repost ? post.repost.name : post.user.name %>

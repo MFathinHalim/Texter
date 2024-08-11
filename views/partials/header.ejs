@@ -85,10 +85,103 @@
   </head>
   <body>
     <nav class="navbar navbar-dark sticky-top bg-dark-glass">
-      <a class="navbar-brand mx-auto" href="/">
+      <a class="navbar-brand ms-3 pb-0" href="/">
         <img src="https://ik.imagekit.io/9hpbqscxd/SG/image-61.jpg?updatedAt=1705798245623" width="30" height="30" alt="">
       </a>
+        <div id="followingfollowers" class="text-light border-0 pb-0 rounded-0 mx-auto">
+        <div class="d-flex">
+            <a class="bg-0 text-light rounded-0 flex-fill text-center <%= typeof post !== 'undefined' && post || typeof posts !== 'undefined' && posts && Array.isArray(posts.posts) && posts.posts.length > 0 ? '' : 'active'%>" href="/">For you</a>
+            <a class="bg-0 text-light ms-3 rounded-0 flex-fill text-center disabled" href="/following" class="disabled">Following</a>
+        </div>
+  </div>
+  <button
+                  class="btn btn-outline-danger rounded-pill m-2 mt-0 mb-0 ms-0"
+                  onclick="logout()"
+                  style="font-size: larger; border: none !important;"
+                >
+                  <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
     </nav>
+    <div id="popup" class="popup d-none" onclick="togglePopup()">
+      <div class="popup-content" onclick="event.stopPropagation()">
+         <form
+    class="card bg-dark-glass text-light p-3 border-light rounded-0"
+    enctype="multipart/form-data"
+    onsubmit="sendPostRequest(this, undefined, undefined, undefined, undefined)"
+  >
+    <button class="close-btn" onclick="togglePopup()" type="button">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+  <div class="mb-3">
+    <div class="d-flex mb-2">
+      <img
+      class="rounded-circle"
+      style="
+      width: 100%;
+      height: 100%;
+      max-width: 70px;
+      max-height: 70px;
+      "
+      id="mypfp"
+      src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+      alt="Card image"
+      />
+      <div class="ms-2 mt-0">
+        <h4 class="card-title" id="myname"></h4>
+      <h4 class="text-secondary" id="currentTime"></h4>
+      </div>
+                
+    </div>
+      <textarea
+        style="height: 70px; font-size:larger;"
+        type="text"
+        class="form-control border-0"
+      
+        id="title"
+        name="title"
+        placeholder="What's Happening?!"
+      ></textarea>
+    </div>
+        <img
+      style="border-radius: 2% !important"
+      class="mb-3 d-none"
+      id="preview"
+      onerror="this.remove()"
+    />
+      <video id="videoParent" height="450" class="mb-3 border-light d-none" loop style="border-radius: 2% !important" onerror="this.remove()" controls>
+        <source id="videoPreview" type="video/mp4">
+      </video>
+    <div class="d-flex justify-content-between">
+      <input
+        type="file"
+        class="form-control d-none"
+        id="img"
+        name="image"
+      />
+      <label
+        for="img"
+        class="btn btn-outline-secondary rounded-pill p-3 pt-2 pb-2"
+        style="font-size: larger"
+      >
+        <i class="fa-solid fa-file"></i>
+      </label>
+      <button
+        type="submit"
+        class="btn btn-primary rounded-pill p-4 pt-2 pb-2"
+        style="font-size: larger"
+      >
+        Post
+      </button>
+    </div>
+    <div id="loading-screen" class="d-none">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p>Loading...</p>
+    </div>
+  </form>
+    </div>
+</div>
     <div class="container">
       <div class="row no-gutters">
         <div class="col-12 col-lg-3 h-100 sticky-on-navbar" id="col-lb-2">
@@ -119,7 +212,6 @@
                   height: 100%;
                   max-width: 150px;
                   max-height: 150px;
-                  border: 2px solid var(--accent1);
                 "
                 id="mypfp"
                 src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
@@ -158,11 +250,11 @@
                 <i class="fa-solid fa-user-group"></i> followers
               </p>
               <div class="text-center">
-                <a
-                  href="/"
+                <button
+                  onclick="togglePopup()"
                   class="btn btn-primary rounded-pill ms-3"
                   style="width: 70%; font-size: x-large"
-                  >Post</a
+                  >Post</
                 >
               </div>
             </div>
@@ -188,4 +280,4 @@
             >
           </div>
         </div>
-      <div class="col-lg-6 col-auto">
+      <div class="col-lg-6 col-12">

@@ -1,19 +1,12 @@
 <%- include("partials/header.ejs") %>
 <div>
-  <div id="followingfollowers" class="bg-dark-glass text-light border-0 rounded-0 sticky-on-navbar">
-  <div class="d-flex">
-      <a class="bg-0 text-light p-3 rounded-0 flex-fill text-center active" href="/">Home</a>
-      <a class="bg-0 text-light p-3 rounded-0 flex-fill text-center disabled" href="/following" class="disabled">Following</a>
-  </div>
-  </div>
   <form
     class="card bg-dark text-light p-3 border-light rounded-0"
     enctype="multipart/form-data"
     onsubmit="sendPostRequest(this, undefined, undefined, undefined, undefined)"
   >
   <div class="mb-3">
-    <div class="d-flex justify-content-between mb-2">
-       <article class="d-flex">
+    <div class="d-flex mb-2">
       <img
       class="rounded-circle"
       style="
@@ -21,7 +14,6 @@
       height: 100%;
       max-width: 70px;
       max-height: 70px;
-      border: 2px solid var(--accent1);
       "
       id="mypfp"
       src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
@@ -30,14 +22,8 @@
       <div class="ms-2 mt-0">
         <h4 class="card-title" id="myname"></h4>
       <h4 class="text-secondary" id="currentTime"></h4>
-      </div></article>
-                <button
-                  class="btn btn-outline-danger rounded-pill ms-2"
-                  onclick="logout()"
-                  style="font-size: larger; border: none !important;"
-                >
-                  <i class="fa-solid fa-right-from-bracket"></i>
-                </button>
+      </div>
+                
     </div>
       <textarea
         style="height: 70px; font-size:larger;"
@@ -97,7 +83,9 @@
     const year = now.getFullYear();
     const formattedDate = `${month}/${day}/${year}`;
     
-    document.getElementById('currentTime').textContent = formattedDate;
+    document.querySelectorAll('#currentTime').forEach(element => {
+      element.textContent = formattedDate;
+    });
   }
 
   // Panggil fungsi untuk menampilkan waktu saat halaman dimuat
