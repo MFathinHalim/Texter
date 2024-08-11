@@ -343,7 +343,7 @@ getToken().then(() => {
   displayTrendingPosts();
 
   function share(copyText) {
-    copyText = "https://texter-id.glitch.me" + copyText;
+    copyText = "https://texter-id.glitch.me" + copyText.replace("$", "");
     // Copy the text inside the text field
     if (navigator.share) {
       navigator.clipboard.writeText(copyText);
