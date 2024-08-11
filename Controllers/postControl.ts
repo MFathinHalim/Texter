@@ -225,14 +225,27 @@ class Posts {
   }
 
   async posting(post: postType, user: any, file: string): Promise<postType> {
-    const time = new Date().toLocaleDateString(); //dapatkan waktu saat ini
+    const time = new Date().toLocaleDateString(); // Dapatkan waktu saat ini
 
-    if (!post.title || post.title.trim().length === 0) return this.#notFound; // kalau gak ketemu
+    // Trim the file (assuming file is a string) and check if it's empty
+    const trimmedFile = file.trim();
+
+    // Periksa apakah title dan file kosong
+    const isTitleEmpty = !post.title || post.title.trim().length === 0;
+    const isFileEmpty = trimmedFile.length === 0;
+
+    // Jika title dan file kosong, kembalikan this.#notFound
+    if (isTitleEmpty && isFileEmpty) {
+      return this.#notFound;
+    }
+
+    // Proses repost dan requote jika diperlukan
     if (post.repost) {
       const og: (Document<postType, any, any> & postType) | null =
-        await this.#posts.findOne({ post }); // cari tahu original postnya jika dia merupakan repost
-      post.ogId = og?.id; // kasih ogId nya
+        await this.#posts.findOne({ post }); // Cari tahu original postnya jika dia merupakan repost
+      post.ogId = og?.id; // Kasih ogId nya
     }
+
     if (post.reQuote) {
       // Kalau dia merupakan requote
       post.reQuote =
@@ -241,14 +254,18 @@ class Posts {
           .populate("like.users", "-password")
           .exec()) || undefined;
     }
-    (post.id = "txtr" + Math.random().toString(16).slice(2) + "tme:" + time),
-      (post.time = time); //bikin idnya dulu :D
-    post.user = user._id; //set usernya sesuai id (0o0)
+
+    // Buat ID dan waktu post
+    post.id = "txtr" + Math.random().toString(16).slice(2) + "tme:" + time;
+    post.time = time; // Buat ID nya dulu :D
+    post.user = user._id; // Set user nya sesuai id (0o0)
     post.title = htmlToText(post.title);
-    if (post.title === "" || post.title === undefined || post.title === null) {
-      return this.#notFound; //kalau kosong semuanya //!(parah sih isengnya :D)
-    }
-    post.img = file;
+    post.img = trimmedFile; // Set file
+
+    // Cek jika post tidak ditemukan
+    // (Anda bisa menambahkan logika pengecekan lebih lanjut di sini jika diperlukan)
+
+    // Simpan post ke database
     await mainModel.create(post);
     return post;
   }

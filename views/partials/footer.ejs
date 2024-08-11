@@ -386,13 +386,12 @@ getToken().then(() => {
     const title = repostTitle
       ? repostTitle
       : form.querySelector("#title").value;
-    if (title === "" || title === undefined || title === null) {
-      return (window.location.href = "/");
-    }
+
     document.getElementById("loading-screen").classList.remove("d-none");
     const formData = new FormData();
     if (!repost) {
-      form.querySelector("button").remove();
+      // Iterate over all file input elements with ID 'img'
+       form.querySelector("button").remove();
       if (form.querySelector("#img").files[0]) {
         formData.append("image", form.querySelector("#img").files[0]);
       } else {
