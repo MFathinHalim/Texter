@@ -1,35 +1,55 @@
 <%- include("partials/header.ejs") %>
-<div
-  class="card bg-dark text-white border-light d-flex rounded-lg"
-  style="max-width: 400px"
->
-  <div class="card-body">
-    <input
-      type="text"
-      autocomplete="off"
-      value="<%= searchTerm %>"
-      id="searchInput"
-      class="form-control"
-      placeholder="Search..."
-    />
+
+<div class="container-fluid p-3">
+  <div class="row">
+    <!-- Search Bar -->
+    <div class="col-12 mb-3">
+      <div class="card bg-dark text-white border-light rounded-lg">
+        <div class="card-body">
+          <input
+            type="text"
+            autocomplete="off"
+            value="<%= searchTerm %>"
+            id="searchInput"
+            class="form-control"
+            placeholder="Search..."
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Trends Section -->
+    <div class="col-12 col-md-6 mb-3">
+      <div class="card bg-dark text-white border-light rounded-lg h-100">
+        <div class="card-body">
+          <h3 class="card-title">TRENDS</h3>
+          <hr
+            style="
+              opacity: 100%;
+              border-top: 1px solid var(--accent1) !important;
+            "
+          />
+          <div id="trendingPostsList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Users Section -->
+    <div class="col-12 col-md-6 mb-3">
+      <div class="card bg-dark text-white border-light rounded-lg h-100">
+        <div class="card-body">
+          <h3 class="card-title">TOP USERS</h3>
+          <hr
+            style="
+              opacity: 100%;
+              border-top: 1px solid var(--accent1) !important;
+            "
+          />
+          <div id="topList"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-<div class="card bg-dark text-white border-light d-flex rounded-lg mt-3">
-  <div class="card-body">
-    <h3 class="card-title">TRENDS</h3>
-    <hr
-      style="opacity: 100%; border-top: 1px solid var(--accent1) !important"
-    />
-    <div id="trendingPostsList"></div>
-  </div>
-</div>
-<div class="card bg-dark text-white border-light d-flex rounded-lg mt-3">
-  <div class="card-body">
-    <h3 class="card-title">TOP USERS</h3>
-    <hr
-      style="opacity: 100%; border-top: 1px solid var(--accent1) !important"
-    />
-    <div id="topList"></div>
-  </div>
-</div>
+
 <%- include("partials/footer.ejs") %>
