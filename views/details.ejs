@@ -227,8 +227,7 @@
 <% replies.forEach((reply) => { %>
 <div class="card bg-dark text-white p-3 post rounded-0 border-light">
   <a href="/?id=<%=reply.id %>">
-    <a
-      href="/user/details/<%= reply.user.username %>"
+    <article
       class="d-flex align-items-center"
     >
       <img src="<%= reply.user.pp %>" class="pfp rounded-circle" />
@@ -240,7 +239,7 @@
         </h4>
         <h4 class="text-secondary"><%= reply.time %></h4>
       </div>
-    </a>
+    </article>
     <h3 class="h4 mt-1"><%= reply.title.replace(/<[^>]+>/g, "") %></h3>
     <% if(reply.img) { %>
     <img style="border-radius: 2% !important" src="<%= reply.img %>" />
