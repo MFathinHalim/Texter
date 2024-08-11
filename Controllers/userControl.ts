@@ -57,7 +57,24 @@ class Users {
     desc: string
   ): Promise<userType> {
     password = await bcrypt.hash(btoa(password), 10); //bikin crypt buat passwordnya (biar gak diliat cihuyyy)
-    if (username.trim().length === 0) return this.#error[0]; //kalau usernamenya error yaaa
+    const MAX_USERNAME_LENGTH = 16;
+
+    // Regular expression to detect non-printable characters including Zero Width Space and other control characters
+    const hasInvalidCharacters = /[\u200B-\u200D\uFEFF]/.test(username);
+
+    // Regular expression to detect HTML tags
+    const hasHTMLTags = /<\/?[a-z][\s\S]*>/i.test(username);
+
+    // Check for invalid username
+    if (
+      username.trim().length === 0 ||
+      hasInvalidCharacters ||
+      hasHTMLTags ||
+      username.trim().length > MAX_USERNAME_LENGTH ||
+      name.trim().length > MAX_USERNAME_LENGTH
+    ) {
+      return this.#error[0]; // Handle username errors
+    }
     //untuk signup
     const isNameTaken = await this.#users.findOne({
       $or: [{ username: username }],
@@ -460,11 +477,29 @@ class Users {
   ): Promise<userType | {}> {
     try {
       const user = await this.#users.findOne({ id: userData.id });
+      const hasInvalidCharacters =
+        /[\u200B-\u200D\uFEFF]/.test(userData.username) ||
+        /[\u200B-\u200D\uFEFF]/.test(userData.name);
+
+      // Regular expression to detect HTML tags
+      const hasHTMLTags =
+        /<\/?[a-z][\s\S]*>/i.test(userData.username) ||
+        /<\/?[a-z][\s\S]*>/i.test(userData.name);
+
+      // Maximum length for Discord username
+      const MAX_DISCORD_USERNAME_LENGTH = 16;
+
+      // Check for invalid fields
       if (
         userData.username.trim().length === 0 ||
-        userData.name.trim().length === 0
-      )
+        userData.name.trim().length === 0 ||
+        hasInvalidCharacters ||
+        hasHTMLTags ||
+        userData.username.trim().length > MAX_DISCORD_USERNAME_LENGTH ||
+        userData.name.trim().length > MAX_DISCORD_USERNAME_LENGTH
+      ) {
         return this.#error[0];
+      }
       if (!user) {
         return this.#error[1]; // User not found
       }
