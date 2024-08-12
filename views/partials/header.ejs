@@ -107,7 +107,7 @@
          <form
     class="card bg-dark-glass text-light p-3 border-light rounded-0"
     enctype="multipart/form-data"
-    onsubmit="sendPostRequest(this, undefined, undefined, undefined, undefined)"
+    onsubmit="sendPostRequest(this, undefined, undefined, undefined, undefined, undefined, 'img')"
   >
     <button class="close-btn" onclick="togglePopup()" type="button">
         <i class="fa-solid fa-xmark"></i>
@@ -119,8 +119,8 @@
       style="
       width: 100%;
       height: 100%;
-      max-width: 70px;
-      max-height: 70px;
+      width: 70px;
+      height: 70px;
       "
       id="mypfp"
       src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
@@ -148,7 +148,7 @@
       id="preview"
       onerror="this.remove()"
     />
-      <video id="videoParent" height="450" class="mb-3 border-light d-none" loop style="border-radius: 2% !important" onerror="this.remove()" controls>
+      <video id="preview" height="450" class="mb-3 border-light d-none" loop style="border-radius: 2% !important" onerror="this.remove()" controls>
         <source id="videoPreview" type="video/mp4">
       </video>
     <div class="d-flex justify-content-between">

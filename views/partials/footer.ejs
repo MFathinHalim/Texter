@@ -381,7 +381,7 @@ getToken().then(() => {
     }
   }
   // Send a fetch request to the server for posting
-  function sendPostRequest(form, replyTo, reQuote, ogId, repost, repostTitle) {
+  function sendPostRequest(form, replyTo, reQuote, ogId, repost, repostTitle, imgId) {
     event.preventDefault(); // Prevent default form submission
     const title = repostTitle
       ? repostTitle
@@ -392,14 +392,11 @@ getToken().then(() => {
     if (!repost) {
       // Iterate over all file input elements with ID 'img'
        form.querySelector("button").remove();
-      const imgInput = form.querySelector("#img");
-      const imgFormInput = form.querySelector("#imgReply");
+      const imgInput = form.querySelector(`#${imgId}`);
       
       // Pilih file dari imgInput atau imgFormInput jika ada
       const selectedFile = (imgInput && imgInput.files.length > 0) 
         ? imgInput.files[0] 
-        : (imgFormInput && imgFormInput.files.length > 0) 
-        ? imgFormInput.files[0] 
         : null;
       
       formData.append("image", selectedFile ? selectedFile : ""); 
@@ -450,18 +447,18 @@ function previewImage(event) {
   if (input.files && input.files[0]) {
     var file = input.files[0];
     var reader = new FileReader();
-
+            const previewId = `#${input.getAttribute('data-preview-id')}`;
     // Handle image preview
     if (file.type.startsWith("image/")) {
       reader.onload = function (e) {
         // Iterate over all image previews and update the first one found
-        document.querySelectorAll('#preview').forEach((preview) => {
+        document.querySelectorAll(previewId).forEach((preview) => {
           preview.src = e.target.result;
           preview.classList.remove("d-none");
         });
         
         // Hide all video previews
-        document.querySelectorAll('#video-preview').forEach(video => {
+        document.querySelectorAll(`video[id='${previewId.replace("#", "")}']`).forEach(video => {
           video.classList.add("d-none");
         });
       };
@@ -470,7 +467,9 @@ function previewImage(event) {
 
     // Handle video preview
     else if (file.type.startsWith("video/")) {
-      document.querySelectorAll('#video-preview').forEach((videoParent) => {
+      document.querySelectorAll(`video[id='${previewId.replace("#", "")}']`).forEach((videoParent) => {
+        console.log(videoParent)
+        console.log(previewId.replace("#", ""))
         videoParent.classList.remove("d-none");
         videoParent.querySelector('source').src = URL.createObjectURL(file);
         videoParent.load();
@@ -478,12 +477,12 @@ function previewImage(event) {
       });
       
       // Hide all image previews
-      document.querySelectorAll('#preview').forEach(preview => {
+      document.querySelectorAll(`img[id='${previewId.replace("#", "")}']`).forEach(preview => {
         preview.classList.add("d-none");
       });
 
       // Clean up the object URL after video is loaded
-      document.querySelectorAll('#video-preview').forEach(videoParent => {
+      document.querySelectorAll(`video[id='${previewId.replace("#", "")}']`).forEach(videoParent => {
         videoParent.querySelector('source').addEventListener("loadeddata", function () {
           URL.revokeObjectURL(this.src); // Clean up object URL
         });
@@ -492,9 +491,13 @@ function previewImage(event) {
   }
 }
 
-  var inputFile = document.getElementById("img");
-  inputFile.addEventListener("change", previewImage);
-
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            const previewId = input.id.replace('img', 'preview');
+            input.setAttribute('data-preview-id', previewId);
+            
+            // Adding change event listener
+            input.addEventListener('change', previewImage);
+        });
   function sendEditProfile(myForm, id) {
     event.preventDefault(); // Prevent default form submission
     const formData = new FormData();
@@ -513,8 +516,8 @@ function previewImage(event) {
     formData.append("data", JSON.stringify(data));
     formData.append("token", token); // Assuming you have 'token' available
     // Handle image upload
-    if (myForm.querySelector("#img").files[0]) {
-      formData.append("image", myForm.querySelector("#img").files[0]);
+    if (myForm.querySelector("#imgEdit").files[0]) {
+      formData.append("image", myForm.querySelector("#imgEdit").files[0]);
     } else {
       formData.append("image", ""); // Empty string if no image selected
     }

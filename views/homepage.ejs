@@ -3,7 +3,7 @@
   <form
     class="card bg-dark text-light p-3 border-light rounded-0"
     enctype="multipart/form-data"
-    onsubmit="sendPostRequest(this, undefined, undefined, undefined, undefined)"
+    onsubmit="sendPostRequest(this, undefined, undefined, undefined, undefined, undefined, 'imgForm')"
   >
   <div class="mb-3">
     <div class="d-flex mb-2">
@@ -38,21 +38,21 @@
         <img
       style="border-radius: 2% !important"
       class="mb-3 d-none"
-      id="preview"
+      id="previewForm"
       onerror="this.remove()"
     />
-      <video id="videoParent" height="450" class="mb-3 border-light d-none" loop style="border-radius: 2% !important" onerror="this.remove()" controls>
+      <video id="previewForm" height="450" class="mb-3 border-light d-none" loop style="border-radius: 2% !important" onerror="this.remove()" controls>
         <source id="videoPreview" type="video/mp4">
       </video>
     <div class="d-flex justify-content-between">
       <input
         type="file"
         class="form-control d-none"
-        id="img"
+        id="imgForm"
         name="image"
       />
       <label
-        for="img"
+        for="imgForm"
         class="btn btn-outline-secondary rounded-pill p-3 pt-2 pb-2"
         style="font-size: larger"
       >

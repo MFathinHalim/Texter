@@ -19,23 +19,27 @@
       />
     </div>
     <div class="mb-3">
-      <label for="img" class="form-label">Profile Picture</label>
+      <label for="imgEdit" class="form-label">Profile Picture</label>
       <br />
       <input
         type="file"
         class="form-control d-none"
-        id="img"
+        id="imgEdit"
         name="image"
         accept="image/*"
       />
       <label
-        for="img"
+        for="imgEdit"
         class="btn btn-outline-secondary rounded-pill p-3 pt-2 pb-2"
         style="font-size: larger"
       >
         <i class="fa-solid fa-image"></i> Upload New Picture
       </label>
-      <img id="preview" src="<%= user.pp %>" class="rounded-circle pfp ms-2" />
+      <img
+        id="previewEdit"
+        src="<%= user.pp %>"
+        class="rounded-circle pfp ms-2"
+      />
     </div>
     <div class="mb-3">
       <label for="desc" class="form-label">Description</label>
