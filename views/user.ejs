@@ -9,44 +9,45 @@
   <div class="p-3 border-light rounded-0 pb-0">
     <div class="d-flex align-items-center" id="top">
       <img
-        src="<%= posts.posts[0].user.pp %>"
+        src="<%= user.user.pp %>"
         class="rounded-circle"
         style="height: 70px; width: 70px;"
       />
       <div class="d-flex flex-column ms-2 me-auto">
         <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
         <h3 class="h2" style="margin-bottom: 3px">
-          <%= posts.posts[0].user.name %>
+          <%= user.user.name %>
         </h3>
         <p style="margin-bottom: 5px" class="text-secondary">
-          @<%= posts.posts[0].user.username %>
+          @<%= user.user.username %>
         </p>
       </div>
 
       <button
         class="btn btn-outline-success rounded-pill ms-0 p-3 pt-1 pb-1"
         style="height: fit-content; font-size: larger"
-        onclick="followPost('<%= posts.posts[0].user.username %>')"
+        onclick="followPost('<%= user.user.username %>')"
         id="follow"
       >
         Follow
       </button>
     </div>
     <p class="mt-2">
-      <%= posts.posts[0].user.desc != "" ? posts.posts[0].user.desc : "" %>
+      <%= user.user.desc != "" ? user.user.desc : "" %>
     </p>
     <div class="d-flex mt-3" style="padding-left: 5px">
       <p style="color: var(--accent1)">
         <i class="fa-solid fa-user-group"></i> <%=
-        posts.posts[0].user.following.length %> following
+        user.user.following.length %> following
       </p>
       <p class="ms-2" style="color: var(--accent2)">
         <i class="fa-solid fa-user-group"></i> <%=
-        posts.posts[0].user.followers.length %> followers
+        user.user.followers.length %> followers
       </p>
     </div>
   </div>
 
+  <% if(posts.posts.length > 0) { %>
 <% posts.posts.slice().reverse().forEach((post) => { %>
   <div class="card bg-dark text-white p-3 border-light post rounded-0">
     <% if(post.repost) { %>
@@ -146,6 +147,9 @@
     </a>
   </div>
   <% }); %>
+  <% } else { %> 
+    <h3 class="text-center h1 mt-3"><strong>@<%= user.user.username %> hasn't posted text</strong></h3>
+    <% } %>
 </div>
 <%- include("partials/footer.ejs") %>
 
@@ -162,7 +166,7 @@
       id = check.user.id;
       const followBtn = document.getElementById("follow");
       fetch(
-        `/user/follow/<%= posts.posts[0].user.username %>?myname=${username}`
+        `/user/follow/<%= user.user.username %>?myname=${username}`
       )
         .then((res) => res.json())
         .then((check) => {
@@ -173,7 +177,7 @@
           }
         });
 
-      if ("<%= posts.posts[0].user.username %>" === username) {
+      if ("<%= user.user.username %>" === username) {
         followBtn.remove();
         // Membuat elemen <a> untuk tombol
         let profileLink = document.createElement("a");
