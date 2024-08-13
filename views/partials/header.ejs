@@ -6,8 +6,8 @@
 <title>
   <% if (typeof post !== 'undefined' && post) { %>
     <%= post.user.name %> on Texter: "<%= post.title %>"
-  <% } else if (typeof posts !== 'undefined' && posts && Array.isArray(posts.posts) && posts.posts.length > 0) { %>
-    See <%= posts.posts[0].user.name %> on Texter
+  <% } else if (typeof user !== 'undefined' && user) { %>
+    See <%= user.user.name %> on Texter
   <% } else { %>
     Texter
   <% } %>
@@ -26,8 +26,8 @@
 <meta name="twitter:description" content="
   <% if (typeof post !== 'undefined' && post) { %>
     <%= post.title ? post.title : 'Texter, Media Sosial Berbasis Text' %>
-  <% } else if (typeof posts !== 'undefined' && posts && Array.isArray(posts.posts) && posts.posts.length > 0) { %>
-    <%= posts.posts[0].user.desc !== '' ? posts.posts[0].user.desc : 'Texter, Media Sosial Berbasis Text' %>
+  <% } else if (typeof user !== 'undefined' && user) { %>
+    <%= user.user.desc !== '' ? user.user.desc : 'Texter, Media Sosial Berbasis Text' %>
   <% } else { %>
     Texter, Media Sosial Berbasis Text
   <% } %>
@@ -35,8 +35,8 @@
 <meta name="twitter:image" content="
   <% if (typeof post !== 'undefined' && post && post.img) { %>
     <%= post.img %>
-  <% } else if (typeof posts !== 'undefined' && posts && Array.isArray(posts.posts) && posts.posts.length > 0) { %>
-    <%= posts.posts[0].user.pp %>
+  <% } else if (typeof user !== 'undefined' && user) { %>
+    <%= user.user.pp %>
   <% } else { %>
     https://ik.imagekit.io/9hpbqscxd/SG/image-61.jpg?updatedAt=1705798245623
   <% } %>
@@ -47,8 +47,8 @@
 <meta property="og:title" content="
   <% if (typeof post !== 'undefined' && post) { %>
     <%= post.user.name %> (@<%= post.user.username %>) on Texter
-  <% } else if (typeof posts !== 'undefined' && posts && Array.isArray(posts.posts) && posts.posts.length > 0) { %>
-    See <%= posts.posts[0].user.name %>
+  <% } else if (typeof user !== 'undefined' && user) { %>
+    See <%= user.user.name %>
   <% } else { %>
     Texter
   <% } %>
@@ -56,8 +56,8 @@
 <meta property="og:description" content="
   <% if (typeof post !== 'undefined' && post) { %>
     <%= post.title ? post.title : 'Texter, Media Sosial Berbasis Text' %>
-  <% } else if (typeof posts !== 'undefined' && posts && Array.isArray(posts.posts) && posts.posts.length > 0) { %>
-    <%= posts.posts[0].user.desc !== '' ? posts.posts[0].user.desc : 'Texter, Media Sosial Berbasis Text' %>
+  <% } else if (typeof user !== 'undefined' && user) { %>
+    <%= user.user.desc !== '' ? user.user.desc : 'Texter, Media Sosial Berbasis Text' %>
   <% } else { %>
     Texter, Media Sosial Berbasis Text
   <% } %>
@@ -65,8 +65,8 @@
 <meta property="og:image" content="
   <% if (typeof post !== 'undefined' && post && post.img) { %>
     <%= post.img %>
-  <% } else if (typeof posts !== 'undefined' && posts && Array.isArray(posts.posts) && posts.posts.length > 0) { %>
-    <%= posts.posts[0].user.pp %>
+  <% } else if (typeof user !== 'undefined' && user) { %>
+    <%= user.user.pp %>
   <% } else { %>
     https://ik.imagekit.io/9hpbqscxd/SG/image-61.jpg?updatedAt=1705798245623
   <% } %>
@@ -90,7 +90,7 @@
       </a>
         <div id="followingfollowers" class="text-light border-0 pb-0 rounded-0 mx-auto">
         <div class="d-flex">
-            <a class="bg-0 text-light rounded-0 flex-fill text-center <%= typeof post !== 'undefined' && post || typeof posts !== 'undefined' && posts && Array.isArray(posts.posts) && posts.posts.length > 0 ? '' : 'active'%>" href="/">For you</a>
+            <a class="bg-0 text-light rounded-0 flex-fill text-center <%= typeof post !== 'undefined' && post || typeof user !== 'undefined' && user ? '' : 'active'%>" href="/">For you</a>
             <a class="bg-0 text-light ms-3 rounded-0 flex-fill text-center disabled" href="/following" class="disabled">Following</a>
         </div>
   </div>
