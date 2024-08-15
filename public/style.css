@@ -63,6 +63,17 @@ nav {
   z-index: 99999;
   transition: opacity 0.3s ease;
 }
+.notif-dot {
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  top: -5px;
+  right: -5px;
+  border: 2px solid white;
+  display: none; /* Sembunyikan secara default */
+}
+
 .popup-content {
   padding: 5px;
   border-radius: 8px;

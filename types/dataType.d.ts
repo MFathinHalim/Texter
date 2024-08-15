@@ -14,6 +14,10 @@ declare type userType = {
   followers?: any;
   following?: any;
   bookmark?: any;
+  notification?: {
+    messages: string[];
+    read: boolean;
+  };
 };
 
 declare type postType = {

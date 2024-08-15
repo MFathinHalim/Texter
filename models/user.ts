@@ -12,6 +12,10 @@ const userSchema: Schema<userType> = new Schema<userType>({
   followers: [{ type: Types.ObjectId, ref: "user" }],
   following: [{ type: Types.ObjectId, ref: "user" }],
   bookmark: [{ type: Types.ObjectId, ref: "posts" }],
+  notification: {
+    messages: { type: [String], default: [] },
+    read: { type: Boolean, default: false },
+  },
 });
 
 const userModel: Model<userType> = model("user", userSchema);

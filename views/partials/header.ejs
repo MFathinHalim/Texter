@@ -95,20 +95,19 @@
         </div>
   </div>
   <button
-                  class="btn btn-outline-danger rounded-pill m-2 mt-0 mb-0 ms-0"
-                  onclick="logout()"
-                  style="font-size: larger; border: none !important;"
-                >
-                  <i class="fa-solid fa-right-from-bracket"></i>
-                </button>
+    class="btn btn-outline-danger rounded-pill m-2 mt-0 mb-0 ms-0"
+    onclick="logout()"
+    style="font-size: larger; border: none !important;">
+      <i class="fa-solid fa-right-from-bracket"></i>
+  </button>
     </nav>
     <div id="popup" class="popup d-none" onclick="togglePopup()">
       <div class="popup-content" onclick="event.stopPropagation()">
          <form
-    class="card bg-dark-glass text-light p-3 border-light rounded-0"
-    enctype="multipart/form-data"
-    onsubmit="sendPostRequest(this, undefined, undefined, undefined, undefined, undefined, 'img')"
-  >
+          class="card bg-dark-glass text-light p-3 border-light rounded-0"
+          enctype="multipart/form-data"
+          onsubmit="sendPostRequest(this, undefined, undefined, undefined, undefined, undefined, 'img')"
+          >
     <button class="close-btn" onclick="togglePopup()" type="button">
         <i class="fa-solid fa-xmark"></i>
     </button>
@@ -185,21 +184,28 @@
     <div class="container">
       <div class="row no-gutters">
         <div class="col-12 col-lg-3 h-100 sticky-on-navbar" id="col-lb-2">
-          <div
-            class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg"
-            style="max-width: 400px"
-          >
-            <div class="card-body">
-              <input
-                type="text"
-                autocomplete="off"
-                value="<%= searchTerm %>"
-                id="searchInput"
-                class="form-control"
-                placeholder="Search..."
-              />
+          <div class="d-flex">
+            <a id="notifbtn" class="d-none d-lg-flex btn pe-4 ps-4 text-center bg-dark text-white border-light rounded-lg d-flex align-items-center justify-content-center" href="/notification">
+              <i class="fas fa-bell"></i> <!-- Ikon notifikasi dari FontAwesome -->
+              <span id="notif-dot" class="notif-dot ms-1"></span>
+            </a>
+            <div
+              class="card bg-dark text-white ms-2 border-light d-none d-lg-flex rounded-lg"
+              style="max-width: 300px"
+            >
+              <div class="card-body">
+                <input
+                  type="text"
+                  autocomplete="off"
+                  value="<%= searchTerm %>"
+                  id="searchInput"
+                  class="form-control"
+                  placeholder="Search..."
+                />
+              </div>
             </div>
           </div>
+
 
           <div
             class="card bg-dark text-white border-light d-none d-lg-flex pt-3 rounded-lg mt-3"

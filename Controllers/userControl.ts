@@ -540,6 +540,84 @@ class Users {
       return [];
     }
   }
+  async createPostNotification(userId: string): Promise<void | boolean> {
+    try {
+      // Cari user yang memposting
+      const user = await this.#users.findOne({ id: userId });
+      if (!user) return console.error("User not found");
+
+      // Kirim notifikasi ke semua pengikut
+      await Promise.all(
+        user.followers.map(async (followerId: string) => {
+          const follower = await this.#users.findById(followerId);
+          if (follower) {
+            follower.notification?.messages.push(
+              `${user.name} just posted something`
+            );
+            follower.notification!.read = false;
+            await follower.save();
+          }
+        })
+      );
+
+      // Kirim notifikasi ke user itu sendiri
+      user.notification?.messages.push(`You just posted something`);
+      user.notification!.read = true;
+      await user.save();
+
+      return true;
+    } catch (error) {
+      console.error("Error creating post notification:", error);
+    }
+  }
+  async likePostNotification(
+    userId: string,
+    ownerId: string
+  ): Promise<boolean | void> {
+    try {
+      // Cari user yang memposting
+      const postOwner = await this.#users.findOne({ id: ownerId });
+      if (!postOwner) return console.error("Post owner not found");
+
+      // Cari user yang melakukan like
+      const liker = await this.#users.findOne({ id: userId });
+      if (!liker) return console.error("Liker not found");
+
+      // Kirim notifikasi kepada pemilik postingan
+      postOwner.notification?.messages.push(
+        `${liker.name} just liked your post`
+      );
+      postOwner.notification!.read = true;
+      await postOwner.save();
+
+      return true;
+    } catch (error) {
+      console.error("Error creating like notification:", error);
+    }
+  }
+
+  async getNotification(userId: string): Promise<any> {
+    try {
+      // Ambil user berdasarkan userId
+      const user = await this.#users.findById(userId).exec();
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      // Filter notifikasi berdasarkan status baca
+      const notifications = user.notification;
+
+      // Jika status baca adalah true, update notifikasi yang belum dibaca menjadi false
+      user.notification!.read = false;
+      await user.save();
+
+      return notifications;
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      return [];
+    }
+  }
 }
 
 export default Users; //TODO Export biar bisa dipake

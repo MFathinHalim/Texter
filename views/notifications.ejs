@@ -1,0 +1,90 @@
+<%- include("partials/header.ejs") %>
+
+<div
+  id="loading-screen"
+  class="d-none position-fixed top-50 start-50 translate-middle"
+>
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <p class="mt-2">Loading...</p>
+</div>
+
+<div class="container border-light rounded-lg p-3">
+  <a class="btn border-light mb-2 text-white" href="/">Back to Home</a>
+
+  <h3>Notifications</h3>
+
+  <div id="notifications-container">
+    <!-- Notifikasi akan dimuat di sini oleh JavaScript -->
+  </div>
+
+  <ul id="notifications-list" class="list-unstyled mt-3">
+    <!-- Notifikasi akan ditampilkan di sini -->
+  </ul>
+</div>
+
+<%- include("partials/footer.ejs") %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const loadingScreen = document.getElementById("loading-screen");
+    const notificationsList = document.getElementById("notifications-list");
+
+    async function fetchNotifications() {
+      try {
+        loadingScreen.classList.remove("d-none");
+
+        const response = await fetch("/notification", {
+          method: "POST", // Menggunakan POST untuk mengambil notifikasi
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Menambahkan token jika diperlukan
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        console.log(data);
+
+        // Kosongkan daftar notifikasi jika ada
+        notificationsList.innerHTML = "";
+
+        if (data.notifications.messages.length > 0) {
+          data.notifications.messages
+            .slice()
+            .reverse()
+            .forEach((notification) => {
+              const listItem = document.createElement("li");
+              listItem.className =
+                "mb-2 p-2 border-light text-white rounded d-flex align-items-center";
+
+              const icon = document.createElement("i");
+              icon.className = notification.includes("liked")
+                ? "fa-solid fa-heart text-danger me-2"
+                : "fa-solid fa-plus text-success me-2";
+
+              const text = document.createElement("span");
+              text.textContent = notification;
+
+              listItem.appendChild(icon);
+              listItem.appendChild(text);
+              notificationsList.appendChild(listItem);
+            });
+        } else {
+          notificationsList.innerHTML = "<li>No notifications available.</li>";
+        }
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+        notificationsList.innerHTML = "<li>Failed to load notifications.</li>";
+      } finally {
+        loadingScreen.classList.add("d-none");
+      }
+    }
+
+    fetchNotifications(); // Panggil fungsi saat halaman dimuat
+  });
+</script>

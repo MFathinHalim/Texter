@@ -67,7 +67,27 @@ class Posts {
     if (!Posts.instance) Posts.instance = new Posts(); //? Bikin kelasnya
     return Posts.instance; //return instancenya (alias kelasnya)
   }
+  async getOwner(postId: string): Promise<userType | null> {
+    try {
+      // Cari postingan berdasarkan ID
+      const post = await this.#posts
+        .findOne({ id: postId })
+        .populate("user", "-password") // Populate user field tanpa password
+        .exec();
 
+      // Periksa apakah postingan ditemukan
+      if (!post) {
+        console.error("Post not found");
+        return null;
+      }
+
+      // Kembalikan data pengguna dari postingan
+      return post.user;
+    } catch (error) {
+      console.error("Error fetching post owner:", error);
+      return null;
+    }
+  }
   //Fungsi untuk mendapatkan data
   async getData(
     id: string,

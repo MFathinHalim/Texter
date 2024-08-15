@@ -108,6 +108,7 @@ router
             // Post data to PostsClass
             await PostsClass.posting(userData, checkToken, img)
               .then((post) => {
+                userClass.createPostNotification(checkToken.id);
                 res.json(post);
               })
               .catch((error) => {
@@ -122,6 +123,7 @@ router
         // Post data to PostsClass
         await PostsClass.posting(userData, checkToken, img)
           .then((post) => {
+            userClass.createPostNotification(checkToken.id);
             res.json(post);
           })
           .catch((error) => {
@@ -184,12 +186,38 @@ router.route("/like/").post(async (req: Request, res: Response) => {
   const checkToken = await userClass.checkAccessToken(token);
   let likes: number | postType = 0;
   if (checkToken) {
+    const owner: any = await PostsClass.getOwner(req.body.id);
+    userClass.likePostNotification(checkToken.id, owner.id);
     likes = await PostsClass.liking(req.body.id, checkToken);
   }
   return res.json({
     likes: likes,
   });
 });
+router
+  .route("/notification")
+  .get((req: Request, res: Response) => {
+    res.render("notifications", { searchTerm: "" }); // Render template notifications.ejs
+  })
+  .post(async (req: Request, res: Response) => {
+    try {
+      const authHeader = req.headers["authorization"];
+      const token = authHeader && authHeader.split(" ")[1];
+      if (token == null) return res.sendStatus(401);
+
+      const checkToken = await userClass.checkAccessToken(token);
+      if (!checkToken) return res.sendStatus(401);
+
+      // Ambil notifikasi
+      const notifications = await userClass.getNotification(checkToken._id);
+
+      // Kembalikan data notifikasi dalam format JSON
+      return res.json({ notifications });
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      return res.status(500).send("Failed to fetch notifications");
+    }
+  });
 router
   .route("/bookmark/")
   .get(async (req: Request, res: Response) => {

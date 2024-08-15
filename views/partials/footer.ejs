@@ -53,8 +53,10 @@
       </button>
     </li>
     <li class="nav-item">
-      <a href="#" class="nav-link disabled text-white" style="font-size: x-large"
-        ><i class="fa-solid fa-heart"></i
+      <a id="notifbtn" href="/notification" class="nav-link text-white" style="font-size: x-large"
+        >
+          <span id="notif-dot" class="notif-dot"></span>
+        <i class="fa-solid fa-bell"></i
       ></a>
     </li>
     <li class="nav-item">
@@ -206,6 +208,13 @@ getToken().then(() => {
         `<i class="fa-solid fa-user-group"></i> ${check.user.following.length} following`;
       document.getElementById("myfollowers").innerHTML =
         `<i class="fa-solid fa-user-group"></i> ${check.user.followers.length} followers`;
+      document.querySelectorAll(".notif-dot").forEach(dot => {
+          if (check.user.notification.read) {
+            dot.style.display = "block";
+          } else {
+            dot.style.display = "none";
+          }
+        });
     });
 }).catch(error => {
   console.error('Error getting token:', error);
