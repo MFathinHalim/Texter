@@ -442,8 +442,11 @@ router
     const token = authHeader && authHeader.split(" ")[1];
     if (token == null) return res.sendStatus(401);
     const checkToken = await userClass.checkAccessToken(token);
-    if (checkToken)
+    if (checkToken) {
       await userClass.follow(req.params.username, req.body.myname);
+      const owner: any = await userClass.getUserByUsername(req.params.username);
+      await userClass.followPostNotification(checkToken.id, owner.id);
+    }
     res.send(200);
   });
 

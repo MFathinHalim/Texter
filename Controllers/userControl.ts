@@ -305,7 +305,33 @@ class Users {
       return "Error updating admin status"; // Handle potential errors
     }
   }
+  async getUserByUsername(username: string) {
+    try {
+      // Cari user berdasarkan username
+      const user = await this.#users.findOne({ username: username });
 
+      // Jika user tidak ditemukan, kembalikan error
+      if (!user) {
+        return this.#error[1];
+      }
+
+      // Menghilangkan password dari data pengguna yang dikembalikan
+      const userWithoutPassword = {
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        pp: user.pp,
+        desc: user.desc,
+        followersCount: user.followers.length,
+        followingCount: user.following.length,
+      };
+
+      return userWithoutPassword;
+    } catch (error) {
+      console.error("Error fetching user by username:", error);
+      return this.#error[1];
+    }
+  }
   async follow(
     username: string,
     myusername: string
@@ -588,6 +614,29 @@ class Users {
       postOwner.notification?.messages.push(
         `${liker.name} just liked your post`
       );
+      postOwner.notification!.read = true;
+      await postOwner.save();
+
+      return true;
+    } catch (error) {
+      console.error("Error creating like notification:", error);
+    }
+  }
+  async followPostNotification(
+    userId: string,
+    ownerId: string
+  ): Promise<boolean | void> {
+    try {
+      // Cari user yang memposting
+      const postOwner = await this.#users.findOne({ id: ownerId });
+      if (!postOwner) return console.error("Post owner not found");
+
+      // Cari user yang melakukan like
+      const liker = await this.#users.findOne({ id: userId });
+      if (!liker) return console.error("Liker not found");
+
+      // Kirim notifikasi kepada pemilik postingan
+      postOwner.notification?.messages.push(`${liker.name} followed you`);
       postOwner.notification!.read = true;
       await postOwner.save();
 
