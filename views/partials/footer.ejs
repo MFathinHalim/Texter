@@ -33,36 +33,33 @@
     </li>
   </ul>
 </div>
-<nav
-  class="navbar navbar-dark bg-dark-glass navbar-expand d-lg-none d-xl-none fixed-bottom"
->
+<nav class="navbar navbar-dark bg-dark-glass navbar-expand d-lg-none d-xl-none fixed-bottom">
   <ul class="navbar-nav nav-justified w-100">
     <li class="nav-item">
-      <a href="/" class="nav-link" style="font-size: x-large"
-        ><i class="fa-solid fa-house"></i
-      ></a>
+      <a href="/" class="nav-link home-link" style="font-size: x-large">
+        <i class="fa-solid fa-home"></i>
+      </a>
     </li>
     <li class="nav-item">
-      <a href="/search" class="nav-link" style="font-size: x-large"
-        ><i class="fa-solid fa-magnifying-glass"></i
-      ></a>
+      <a href="/search" class="nav-link search-link" style="font-size: x-large">
+        <i id="search-icon" class="fa-solid fa-magnifying-glass"></i>
+      </a>
     </li>
     <li class="nav-item">
-      <button onclick="togglePopup()" class="nav-link text-white" style="font-size: x-large"
-        ><i class="fa-solid fa-plus" style="font-size: x-large"></i>
+      <button onclick="togglePopup()" class="nav-link text-white" style="font-size: x-large">
+        <i id="plus-icon" class="fa-solid fa-plus" style="font-size: x-large"></i>
       </button>
     </li>
     <li class="nav-item">
-      <a id="notifbtn" href="/notification" class="nav-link text-white" style="font-size: x-large"
-        >
-          <span id="notif-dot" class="notif-dot"></span>
-        <i class="fa-solid fa-bell"></i
-      ></a>
+      <a id="notifbtn" href="/notification" class="nav-link notification-link text-white" style="font-size: x-large">
+        <span id="notif-dot" class="notif-dot"></span>
+        <i id="bell-icon" class="fa-solid fa-bell"></i>
+      </a>
     </li>
     <li class="nav-item">
-      <a href="#" id="myDetails" class="nav-link" style="font-size: x-large"
-        ><i class="fa-solid fa-user"></i
-      ></a>
+      <a href="#" id="myDetails" class="nav-link profile-link" style="font-size: x-large">
+        <i id="user-icon" class="fa-solid fa-user"></i>
+      </a>
     </li>
   </ul>
 </nav>
@@ -83,6 +80,7 @@
 ></script>
 </body>
 <script>
+
 localStorage.removeItem("name");
 localStorage.removeItem("username");
 localStorage.removeItem("id");
@@ -228,6 +226,34 @@ getToken().then(() => {
       elements2.forEach(element => {
         element.innerText = check.user.name
       });
+          const currentPath = window.location.pathname;
+          
+          // Daftar ikon dan rute yang sesuai
+          const icons = {
+            '/notification': 'bell',
+            [`/user/details/${check.user.username}`]: 'user'
+          };
+          
+          // Mengambil semua ikon
+          const bellIcon = document.getElementById('bell-icon');
+          const userIcon = document.getElementById('user-icon');
+          
+          // Menghapus kelas solid dan menambahkan kelas regular untuk ikon
+          Object.values(icons).forEach(icon => {
+            [bellIcon, userIcon].forEach(iconElement => {
+              if (iconElement.classList.contains('fa-solid')) {
+                iconElement.classList.remove('fa-solid');
+                iconElement.classList.add('fa-regular');
+              }
+            });
+          });
+
+          // Menambahkan kelas solid pada ikon yang sesuai dengan path saat ini
+          if (currentPath in icons) {
+            const activeIcon = document.querySelector(`#${icons[currentPath]}-icon`);
+            activeIcon.classList.remove('fa-regular');
+            activeIcon.classList.add('fa-solid');
+          }
       document.getElementById("myusername").innerText =
         `@${check.user.username}`;
       document.getElementById("mydesc").innerText =
