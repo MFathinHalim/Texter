@@ -620,7 +620,8 @@ class Users {
         username: user.username,
         pp: user.pp,
         desc: user.desc,
-        followersCount: user.followers.length,
+        followers: user.followers.length,
+        following: user.following.length,
       }));
     } catch (error) {
       console.error("Error searching users:", error);
