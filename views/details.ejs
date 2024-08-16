@@ -15,12 +15,12 @@
       <img
         src="<%= post.user.pp %>"
         class="rounded-circle"
-        style="height: 80px; width:80px;"
+        style="height: 50px; width:50px;"
       />
     </a>
     <div class="d-flex flex-column ms-2 me-auto">
       <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
-      <h3 class="h2" style="margin-bottom: 3px"><%= post.user.name.replace(/<[^>]+>/g, "") %></h3>
+      <h5 style="margin-bottom: 3px"><%= post.user.name.replace(/<[^>]+>/g, "") %></h5>
       <p style="margin-bottom: 5px" class="text-secondary">
         @<%= post.user.username.replace(/<[^>]+>/g, "") %>
       </p>
@@ -60,10 +60,10 @@
     <img src="<%= post.repost ? post.repost.pp : post.user.pp %>" class="pfp rounded-circle" />
     <div class="d-flex flex-column ms-2 me-auto">
       <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
-      <h4>
+      <h5>
         <%= post.repost ? post.repost.name : post.user.name %>
-      </h4>
-      <h4 class="text-secondary"><%= post.time %></h4>
+      </h5>
+      <h5 class="text-secondary"><%= post.time %></h5>
     </div>
     </article>
     <button class="btn btn-outline-light rounded-pill ms-2" onclick="report('<%= post._id %>', this)" 
@@ -91,13 +91,13 @@
       <article class="d-flex pt-2">
         <img class="pfp rounded-circle" src="<%= post.reQuote.user.pp %>" />
         <div class="ms-2">
-          <h4 class="mb-1"><%= post.reQuote.user.name.replace(/<[^>]+>/g, "") %></h4>
+          <h5 class="mb-1"><%= post.reQuote.user.name.replace(/<[^>]+>/g, "") %></h5>
           <h5 class="text-secondary"><%= post.reQuote.time %></h5>
         </div>
       </article>
-      <h3 class="ms-2 h4 mt-2">
+      <h5 class="ms-2 h4 mt-2">
         <%= post.reQuote.title.replace(/<[^>]+>/g, "") %>
-      </h3>
+      </h5>
       <% if(post.reQuote.img) { %>
     <% if(post.reQuote.img.includes(".mp4") || post.reQuote.img.includes(".ogg")) { %>
       <video height="450" class="border-light" loop style="border-radius: 2% !important; width: 100%;" controls>
@@ -249,14 +249,14 @@
       <img src="<%= reply.user.pp %>" class="pfp rounded-circle" />
       <div class="d-flex flex-column ms-2 me-auto pt-2">
         <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
-        <h4>
+        <h5>
           <%= reply.user.name.replace(/<[^>]+>/g, "") %> <%= reply.reQuote ? `is
           Requote to ${reply.reQuote.user.name.replace(/<[^>]+>/g, "")}` : "" %>
-        </h4>
-        <h4 class="text-secondary"><%= reply.time %></h4>
+        </h5>
+        <h5 class="text-secondary"><%= reply.time %></h5>
       </div>
     </article>
-    <h3 class="h4 mt-1"><%= reply.title.replace(/<[^>]+>/g, "") %></h3>
+    <h5 class="h4 mt-1"><%= reply.title.replace(/<[^>]+>/g, "") %></h5>
     <% if(reply.img) { %>
     <img style="border-radius: 2% !important" src="<%= reply.img %>" />
     <% } %>

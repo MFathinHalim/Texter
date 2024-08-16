@@ -10,14 +10,13 @@
     <div class="d-flex align-items-center" id="top">
       <img
         src="<%= user.user.pp %>"
-        class="rounded-circle"
-        style="height: 70px; width: 70px;"
+        class="rounded-circle pfp"
       />
       <div class="d-flex flex-column ms-2 me-auto">
         <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
-        <h3 class="h2" style="margin-bottom: 3px">
+        <h5 style="margin-bottom: 3px">
           <%= user.user.name %>
-        </h3>
+        </h5>
         <p style="margin-bottom: 5px" class="text-secondary">
           @<%= user.user.username %>
         </p>
@@ -63,13 +62,13 @@
         />
         <div class="d-flex flex-column ms-2 me-auto pt-1">
           <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
-          <h4><%= post.repost ? post.repost.name : post.user.name %></h4>
-          <h4 class="text-secondary"><%= post.time %></h4>
+          <h5><%= post.repost ? post.repost.name : post.user.name %></h5>
+          <h5 class="text-secondary"><%= post.time %></h5>
         </div>
       </article>
-      <h3 class="h4 mt-2">
+      <h5 class="mt-2">
         <%- post.title.replace(/#(\w+)/g, '<a href="/?search=$1" class="text-info">$&</a>') %>
-      </h3>
+      </h5>
       <% if(post.img) { %>
     <% if(post.img.includes(".mp4") || post.img.includes(".ogg")) { %>
       <video height="450" class="mb-3 border-light" loop style="border-radius: 2% !important; width: 100%;" controls>
@@ -87,13 +86,13 @@
       <article class="d-flex pt-2">
         <img class="pfp rounded-circle" src="<%= post.reQuote.user.pp %>" />
         <div class="ms-2">
-          <h4 class="mb-1"><%= post.reQuote.user.name.replace(/<[^>]+>/g, "") %></h4>
+          <h5 class="mb-1"><%= post.reQuote.user.name.replace(/<[^>]+>/g, "") %></h5>
           <h5 class="text-secondary"><%= post.reQuote.time %></h5>
         </div>
       </article>
-      <h3 class="ms-2 h4 mt-2">
+      <h5 class="ms-2 mt-2">
         <%= post.reQuote.title.replace(/<[^>]+>/g, "") %>
-      </h3>
+      </h5>
       <% if(post.reQuote.img) { %>
     <% if(post.reQuote.img.includes(".mp4") || post.reQuote.img.includes(".ogg")) { %>
       <video height="450" class="border-light" loop style="border-radius: 2% !important; width: 100%;" controls>
@@ -148,7 +147,7 @@
   </div>
   <% }); %>
   <% } else { %> 
-    <h3 class="text-center h1 mt-3"><strong>@<%= user.user.username %> hasn't posted text</strong></h3>
+    <h4 class="text-center mt-3"><strong>@<%= user.user.username %> hasn't posted text</strong></h4>
     <% } %>
 </div>
 <%- include("partials/footer.ejs") %>

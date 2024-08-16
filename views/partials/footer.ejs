@@ -2,7 +2,7 @@
 <div class="col-12 col-lg-3 h-100 sticky-element">
   <div class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg">
     <div class="card-body">
-      <h3 class="card-title">TRENDS</h3>
+      <h5 class="card-title">TRENDS</h5>
       <hr
         style="opacity: 100%; border-top: 1px solid var(--accent1) !important"
       />
@@ -13,7 +13,7 @@
     class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg mt-3"
   >
     <div class="card-body">
-      <h3 class="card-title">TOP USERS</h3>
+      <h5 class="card-title">TOP USERS</h5>
       <hr
         style="opacity: 100%; border-top: 1px solid var(--accent1) !important"
       />
@@ -382,7 +382,7 @@ getToken().then(() => {
             trendingtext.textContent = "Trending";
             listItem.appendChild(trendingtext);
             postLink.href = `/?search=${post}`;
-            postLink.classList.add("text-white", "text-decoration-none", "h4");
+            postLink.classList.add("text-white", "text-decoration-none", "h5");
             postLink.textContent = "#" + post;
             listItem.appendChild(postLink);
 
