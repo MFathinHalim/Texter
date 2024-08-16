@@ -37,7 +37,7 @@
   <ul class="navbar-nav nav-justified w-100">
     <li class="nav-item">
       <a href="/" class="nav-link home-link" style="font-size: x-large">
-        <i class="fa-solid fa-home"></i>
+        <i id="star-icon" class="fa-solid fa-star"></i>
       </a>
     </li>
     <li class="nav-item">
@@ -51,8 +51,8 @@
       </button>
     </li>
     <li class="nav-item">
-      <a id="notifbtn" href="/notification" class="nav-link notification-link text-white" style="font-size: x-large">
-        <span id="notif-dot" class="notif-dot"></span>
+      <a id="notifbtn" href="/notification" class="nav-link notification-link text-white position-relative" style="font-size: x-large">
+        <span id="notif-dot" class="notif-dot position-absolute top-0 start-0"></span>
         <i id="bell-icon" class="fa-solid fa-bell"></i>
       </a>
     </li>
@@ -230,6 +230,7 @@ getToken().then(() => {
           
           // Daftar ikon dan rute yang sesuai
           const icons = {
+            '/': 'star',
             '/notification': 'bell',
             [`/user/details/${check.user.username}`]: 'user'
           };
@@ -237,10 +238,11 @@ getToken().then(() => {
           // Mengambil semua ikon
           const bellIcon = document.getElementById('bell-icon');
           const userIcon = document.getElementById('user-icon');
+          const starIcon = document.getElementById('star-icon');
           
           // Menghapus kelas solid dan menambahkan kelas regular untuk ikon
           Object.values(icons).forEach(icon => {
-            [bellIcon, userIcon].forEach(iconElement => {
+            [starIcon, bellIcon, userIcon].forEach(iconElement => {
               if (iconElement.classList.contains('fa-solid')) {
                 iconElement.classList.remove('fa-solid');
                 iconElement.classList.add('fa-regular');
@@ -264,6 +266,7 @@ getToken().then(() => {
         `<i class="fa-solid fa-user-group"></i> ${check.user.followers.length} followers`;
       document.querySelectorAll(".notif-dot").forEach(dot => {
           if (check.user.notification.read) {
+            document.title = `(1) ${document.title.replace("(1) ", "")}`
             dot.style.display = "block";
           } else {
             dot.style.display = "none";
