@@ -1,0 +1,56 @@
+<%- include("partials/header.ejs") %>
+<div id="loading-screen" class="d-none">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <p>Loading...</p>
+</div>
+<div class="row mb-2">
+  <div class="col-12 text-center">
+    <div class="btn-group">
+      <a href="#" id="postLink" class="btn btn-outline-light rounded-pill"
+        >Post</a
+      >
+      <a
+        href="#"
+        id="usersLink"
+        class="btn btn-light text-black ms-1 rounded-pill"
+        >Users</a
+      >
+    </div>
+  </div>
+</div>
+<!-- Search Results -->
+<div id="searchResults">
+  <% if(users && users.length > 0) { %> <% users.forEach(user => { %>
+  <div class="card bg-dark text-white p-3 border-light rounded-0 mb-2">
+    <article class="d-flex align-items-center justify-content-between">
+      <a
+        href="/user/details/<%= user.username %>"
+        class="d-flex align-items-center"
+      >
+        <img
+          src="<%= user.pp %>"
+          class="rounded-circle"
+          style="height: 60px; width: 60px"
+        />
+        <div class="ms-2">
+          <h4 class="mb-1"><%= user.name %></h4>
+          <p class="text-secondary mb-1 pb-0">@<%= user.username %></p>
+          <p><%= user.desc %></p>
+        </div>
+      </a>
+      <a
+        href="/user/details/<%= user.username %>"
+        class="btn btn-outline-warning text-warning rounded-pill ms-2"
+      >
+        Check
+      </a>
+    </article>
+  </div>
+  <% }); %> <% } else { %>
+  <p>No users found.</p>
+  <% } %>
+</div>
+
+<%- include("partials/footer.ejs") %>

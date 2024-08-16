@@ -1,5 +1,15 @@
 <%- include("partials/header.ejs") %>
 <div>
+  <% if(searchTerm) { %>
+    <div class="row mb-2">
+      <div class="col-12 text-center">
+        <div class="btn-group">
+          <a href="#" id="postLink" class="btn btn-light text-black rounded-pill">Post</a>
+          <a href="#" id="usersLink" class="btn btn-outline-light ms-1 rounded-pill">Users</a>
+        </div>
+      </div>
+    </div>
+    <% } %>
   <form
     class="card bg-dark text-light p-3 border-light rounded-0"
     enctype="multipart/form-data"

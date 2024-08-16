@@ -31,7 +31,12 @@ router
       try {
         const id = req.query.id ? req.query.id.toString() : "";
         const search = req.query.search ? req.query.search.toString() : "";
-
+        const user: string | undefined = req.query.user?.toString();
+        if (user) {
+          userClass.searchUser(search).then((users) => {
+            return res.render("searchUser", { users, searchTerm: search });
+          });
+        }
         PostsClass.getData(id, 0, 0, search)
           .then((data) => {
             if (data) {

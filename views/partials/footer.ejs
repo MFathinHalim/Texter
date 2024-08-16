@@ -138,16 +138,44 @@ let id;
         logout()
       }
     }
+    try {
+   document.getElementById('postLink').addEventListener('click', () => {
+      // Redirect to post URL without user=true parameter
+      window.location.href = window.location.href.replace("&user=true", "");
+    });
 
+    document.getElementById('usersLink').addEventListener('click', () => {
+      // Redirect to users URL with user=true parameter
+      window.location.href = window.location.href + '&user=true';
+    });}
+    catch {
+      
+    }
 document.querySelectorAll("#searchInput").forEach((inputSearch) => {
   inputSearch.addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
       event.preventDefault();
+      
       const query = event.target.value;
-      window.location.href = `/?search=${encodeURIComponent(query)}`;
+      let url = `/?search=${encodeURIComponent(query)}`;
+
+      // Check if the current URL contains user=true
+      if (window.location.search.includes("user=true")) {
+        // Append user=true to the new URL if it's not already present
+        if (!url.includes("user=true")) {
+          url += (url.includes('?') ? '&' : '?') + 'user=true';
+        }
+      } else if (window.location.search.includes("user")) {
+        // Ensure any existing user parameter is replaced with user=true
+        url += (url.includes('?') ? '&' : '?') + 'user=true';
+      }
+
+      // Redirect to the new URL
+      window.location.href = url;
     }
   });
 });
+
 let lastScrollTop = 0;
 const navbar = document.querySelector('.navbar');
 const navbar2 = document.querySelector('.navbar.fixed-bottom');

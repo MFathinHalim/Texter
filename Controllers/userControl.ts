@@ -71,7 +71,8 @@ class Users {
       hasInvalidCharacters ||
       hasHTMLTags ||
       username.trim().length > MAX_USERNAME_LENGTH ||
-      name.trim().length > MAX_USERNAME_LENGTH
+      name.trim().length > MAX_USERNAME_LENGTH ||
+      username.trim().includes("/")
     ) {
       return this.#error[0]; // Handle username errors
     }
@@ -595,7 +596,37 @@ class Users {
       console.error("Error creating like notification:", error);
     }
   }
+  async searchUser(searchTerm: string): Promise<userType[]> {
+    try {
+      // Menghilangkan HTML tags dan whitespace ekstra dari searchTerm
+      const cleanSearchTerm = searchTerm
+        .replace(/<\/?[a-z][\s\S]*>/i, "")
+        .trim();
 
+      // Mencari pengguna berdasarkan nama atau username yang mirip dengan searchTerm
+      const users: (Document<userType, any, any> & userType)[] =
+        await this.#users.find({
+          $or: [
+            { username: { $regex: cleanSearchTerm, $options: "i" } }, // Pencarian tidak sensitif huruf
+            { name: { $regex: cleanSearchTerm, $options: "i" } }, // Pencarian tidak sensitif huruf
+          ],
+          ban: false, // Pastikan pengguna tidak dibanned
+        });
+
+      // Menghilangkan password dari data pengguna yang dikembalikan
+      return users.map((user) => ({
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        pp: user.pp,
+        desc: user.desc,
+        followersCount: user.followers.length,
+      }));
+    } catch (error) {
+      console.error("Error searching users:", error);
+      return [];
+    }
+  }
   async getNotification(userId: string): Promise<any> {
     try {
       // Ambil user berdasarkan userId
