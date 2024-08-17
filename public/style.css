@@ -26,6 +26,9 @@ nav {
 
 /* Class to hide the navbar when scrolling down */
 @media (max-width: 767px) {
+  h5 {
+    font-size: medium !important; /* 22.56px */
+  }
   .row.no-gutters {
     margin-right: 0;
     margin-left: 0;
