@@ -187,6 +187,8 @@ class Posts {
           select: "-password",
         });
 
+        posts = posts.filter((post) => !post.user.ban);
+
         return { posts };
       } catch (error) {
         console.error("Error fetching posts:", error);
