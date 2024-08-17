@@ -300,7 +300,7 @@ h2 {
 }
 
 h5 {
-  font-size: 1.414rem !important; /* 22.56px */
+  font-size: larger; /* 22.56px */
 }
 
 small {

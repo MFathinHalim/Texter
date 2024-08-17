@@ -32,9 +32,9 @@
         <i class="fa-solid fa-flag"></i>
     </button>
   </a>
-<h3 class="h4 mt-2 mb-2">
+<h5 class="mt-2 mb-2">
   <%- post.title.replace(/#(\w+)/g, '<a href="/?search=$1" class="text-info">$&</a>') %>
-</h3>
+</h5>
   <% if(post.img) { %>
     <% if(post.img.includes(".mp4") || post.img.includes(".ogg")) { %>
       <video height="450" class="mb-3 border-light" loop style="border-radius: 2% !important" controls>
@@ -251,7 +251,7 @@
         <h5 class="text-secondary"><%= reply.time %></h5>
       </div>
     </article>
-    <h5 class="h4 mt-1"><%= reply.title.replace(/<[^>]+>/g, "") %></h5>
+    <h5 class="mt-1"><%= reply.title.replace(/<[^>]+>/g, "") %></h5>
     <% if(reply.img) { %>
     <img style="border-radius: 2% !important" src="<%= reply.img %>" />
     <% } %>
