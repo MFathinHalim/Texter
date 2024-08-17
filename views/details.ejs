@@ -32,9 +32,9 @@
         <i class="fa-solid fa-flag"></i>
     </button>
   </a>
-<h5 class="mt-2 mb-2">
+<h3 class="mt-2 mb-2">
   <%- post.title.replace(/#(\w+)/g, '<a href="/?search=$1" class="text-info">$&</a>') %>
-</h5>
+</h3>
   <% if(post.img) { %>
     <% if(post.img.includes(".mp4") || post.img.includes(".ogg")) { %>
       <video height="450" class="mb-3 border-light" loop style="border-radius: 2% !important" controls>

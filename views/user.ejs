@@ -66,9 +66,9 @@
           <h5 class="text-secondary"><%= post.time %></h5>
         </div>
       </article>
-      <h5 class="mt-2">
+      <h3 class="mt-2">
         <%- post.title.replace(/#(\w+)/g, '<a href="/?search=$1" class="text-info">$&</a>') %>
-      </h5>
+      </h3>
       <% if(post.img) { %>
     <% if(post.img.includes(".mp4") || post.img.includes(".ogg")) { %>
       <video height="450" class="mb-3 border-light" loop style="border-radius: 2% !important; width: 100%;" controls>
@@ -90,9 +90,9 @@
           <h5 class="text-secondary"><%= post.reQuote.time %></h5>
         </div>
       </article>
-      <h5 class="ms-2 mt-2">
+      <h3 class="ms-2 mt-2">
         <%= post.reQuote.title.replace(/<[^>]+>/g, "") %>
-      </h5>
+      </h3>
       <% if(post.reQuote.img) { %>
     <% if(post.reQuote.img.includes(".mp4") || post.reQuote.img.includes(".ogg")) { %>
       <video height="450" class="border-light" loop style="border-radius: 2% !important; width: 100%;" controls>
