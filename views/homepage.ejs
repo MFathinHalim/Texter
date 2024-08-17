@@ -86,20 +86,6 @@
   <div id="post-container"></div>
 </div>
 <script>
-  function updateCurrentTime() {
-    const now = new Date();
-    const day = now.getDate();
-    const month = now.getMonth() + 1; // Bulan dimulai dari 0
-    const year = now.getFullYear();
-    const formattedDate = `${month}/${day}/${year}`;
-    
-    document.querySelectorAll('#currentTime').forEach(element => {
-      element.textContent = formattedDate;
-    });
-  }
-
-  // Panggil fungsi untuk menampilkan waktu saat halaman dimuat
-  updateCurrentTime();
 
   const postContainer = document.getElementById("post-container");
   let currentPage = 1;

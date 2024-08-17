@@ -232,10 +232,24 @@ class Posts {
             select: "-password",
           })
           .exec();
-        const replies = await this.#posts
+        let replies: any = await this.#posts
           .find({ replyTo: id })
           .populate("user", "-password")
           .exec();
+        replies = replies.filter(
+          (reply: postType | any) => reply.user !== undefined
+        );
+
+        // Jika Anda ingin menghapus elemen yang tidak valid dari database, lakukan seperti berikut
+        // (Opsional, tergantung pada kebutuhan Anda):
+        const invalidReplyIds = replies
+          .filter((reply: postType | any) => reply.user === undefined)
+          .map((reply: postType | any) => reply._id);
+
+        if (invalidReplyIds.length > 0) {
+          await this.#posts.deleteMany({ _id: { $in: invalidReplyIds } });
+        }
+
         return { post: post || null, replies: replies || [] };
       } catch (error) {
         console.error("Error fetching data:", error);

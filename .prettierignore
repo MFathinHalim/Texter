@@ -3,3 +3,4 @@ views/homepage.ejs
 views/user.ejs
 views/dashboard.ejs
 views/bookmark.ejs
+views/details.ejs
