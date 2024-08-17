@@ -76,6 +76,7 @@
   <% } %>
   <div class="d-flex mb-2">
     <button
+    id="likePost"
       class="btn btn-outline-danger rounded-pill"
       onclick="sendLikeRequest('<%= post.id %>', this)"
     >
@@ -234,7 +235,6 @@
     </button>
   </div>
 </form>
-
 <% replies.forEach((reply) => { %>
 <div class="card bg-dark text-white p-3 post rounded-0 border-light">
   <a href="/?id=<%=reply.id %>">
@@ -276,60 +276,45 @@
       <i class="fa-solid fa-recycle"></i>
     </button>
     <button class="btn btn-outline-info rounded-pill ms-2" onclick='share("/?id=$<%= reply.id %>")'><i class="fa-solid fa-share"></i></button>
-
   </div>
 </div>
 <% }); %> <% } %> <%- include("partials/footer.ejs") %>
-<script>
-fetch(`/user/check?id=${token}`)
-  .then((res) => res.json())
-  .then((check) => {
-    if (check.check === true) {
-      logout();
-    }
-    name = check.user.name;
-    username = check.user.username;
 
-    id = check.user.id;
-    const followBtn = document.getElementById("follow");
-    fetch(`/user/follow/<%= post.user.username %>?myname=${username}`)
-      .then((res) => res.json())
-      .then((check) => {
-        if (check.isFollowing) {
-          followBtn.innerText = "Remove";
-          followBtn.classList.remove("btn-outline-success");
-          followBtn.classList.add("btn-outline-danger");
+<script>
+    async function fetchIsLiked(postId, buttonElement) {
+    try {
+      const response = await fetch(`/isLiked?id=${postId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`, // Add authorization header if needed
         }
       });
 
-    if ("<%= post.user.username %>" === username) {
-      followBtn.remove();
-      // Membuat elemen <a> untuk tombol
-      let profileLink = document.createElement("a");
+      if (!response.ok) {
+        throw new Error('Failed to fetch like status');
+      }
 
-      // Menetapkan atribut href ke URL profil dengan username
-      profileLink.setAttribute("href", "/profile/" + username);
+      const result = await response.json();
+      updateLikeButton(result.isLiked, buttonElement);
+    } catch (error) {
+      console.error('Error fetching like status:', error);
+    }
+  }
 
-      // Menambahkan kelas Bootstrap untuk tampilan tombol
-      profileLink.classList.add("btn", "btn-outline-warning", "rounded-pill");
-      // Menambahkan teks atau konten di dalam tombol
-      profileLink.textContent = "Edit";
-
-      // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
-      document.getElementById("top").appendChild(profileLink);
-        let bookmarkLink = document.createElement("a");
-
-        // Menetapkan atribut href ke URL profil dengan username
-        bookmarkLink.setAttribute("href", "/bookmark?username=" + username);
-
-        // Menambahkan kelas Bootstrap untuk tampilan tombol
-        bookmarkLink.classList.add("btn", "btn-outline-secondary", "rounded-pill", "ms-1");
-        // Menambahkan teks atau konten di dalam tombol
-        bookmarkLink.innerHTML = '<i class="fa-solid fa-bookmark"></i>';
-
-        // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
-        document.getElementById("top").appendChild(bookmarkLink);
+  function updateLikeButton(isLiked, buttonElement) {
+    if (isLiked) {
+      buttonElement.classList.remove('btn-outline-danger');
+      buttonElement.classList.add('btn-danger');
+    } else {
+      buttonElement.classList.remove('btn-danger');
+      buttonElement.classList.add('btn-outline-danger');
+    }
+  }
+    document.addEventListener('DOMContentLoaded', () => {
+    const postId = '<%= post.id %>'; // Assuming post.id is available in your EJS template
+    const likeButton = document.querySelector(`#likePost`);
+    if (likeButton) {
+      fetchIsLiked(postId, likeButton);
     }
   });
-
 </script>

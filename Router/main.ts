@@ -223,6 +223,27 @@ router
       return res.status(500).send("Failed to fetch notifications");
     }
   });
+router.route("/isLiked").get(async (req: Request, res: Response) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (token == null) return res.sendStatus(401);
+
+    const checkToken = await userClass.checkAccessToken(token);
+    if (!checkToken) return res.sendStatus(401);
+
+    const postId = req.query.id?.toString();
+    if (!postId) return res.status(400).send("Post ID is required");
+
+    const isLiked = await PostsClass.isLike(postId, checkToken.id);
+
+    return res.json({ isLiked });
+  } catch (error) {
+    console.error("Error checking post like status:", error);
+    return res.status(500).send("Failed to check post like status");
+  }
+});
+
 router
   .route("/bookmark/")
   .get(async (req: Request, res: Response) => {

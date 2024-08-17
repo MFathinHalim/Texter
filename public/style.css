@@ -194,7 +194,7 @@ a {
 .btn-danger {
   background-color: var(--error) !important;
   border: 1px solid var(--error) !important;
-  color: var(--background) !important;
+  color: var(--text) !important;
 }
 
 .btn-secondary {

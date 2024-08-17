@@ -613,6 +613,35 @@ function previewImage(event) {
       window.location.href = "/user/details/" + username;
     });
   }
+  async function fetchIsLiked(postId, buttonElement) {
+    try {
+      const response = await fetch(`/isLiked?id=${postId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`, // Add authorization header if needed
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch like status');
+      }
+
+      const result = await response.json();
+      updateLikeButton(result.isLiked, buttonElement);
+    } catch (error) {
+      console.error('Error fetching like status:', error);
+    }
+  }
+
+  function updateLikeButton(isLiked, buttonElement) {
+    if (isLiked) {
+      buttonElement.classList.remove('btn-outline-danger');
+      buttonElement.classList.add('btn-danger');
+    } else {
+      buttonElement.classList.remove('btn-danger');
+      buttonElement.classList.add('btn-outline-danger');
+    }
+  }
 
   function sendLikeRequest(id, button) {
     fetch(`/like/`, {
@@ -627,6 +656,7 @@ function previewImage(event) {
     })
       .then((res) => res.json()) // Parse the JSON response
       .then((data) => {
+        fetchIsLiked(id, button)
         button.innerHTML = '<i class="fa-solid fa-heart"></i> ' + data.likes; // Update the button text with the new like count
       })
       .catch((error) => {

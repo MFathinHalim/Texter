@@ -395,6 +395,28 @@ class Posts {
       return false;
     }
   }
+  async isLike(postId: string, userId: string): Promise<boolean> {
+    try {
+      // Cari post berdasarkan ID
+      const post = await this.#posts
+        .findOne({ id: postId })
+        .populate("like.users", "-password") // Populate user field
+        .exec();
+
+      if (!post) {
+        console.error("Post not found");
+        return false;
+      }
+
+      // Cek apakah pengguna sudah menyukai post tersebut
+      return post.like.users.some(
+        (user: userType) => user.id.toString() === userId
+      );
+    } catch (error) {
+      console.error("Error checking like status:", error);
+      return false;
+    }
+  }
 
   liking(postId: string, user: any): Promise<number> {
     //Fungsi ngelike

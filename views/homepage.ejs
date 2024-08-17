@@ -86,7 +86,35 @@
   <div id="post-container"></div>
 </div>
 <script>
+  async function fetchIsLiked(postId, buttonElement) {
+    try {
+      const response = await fetch(`/isLiked?id=${postId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`, // Add authorization header if needed
+        }
+      });
 
+      if (!response.ok) {
+        throw new Error('Failed to fetch like status');
+      }
+
+      const result = await response.json();
+      updateLikeButton(result.isLiked, buttonElement);
+    } catch (error) {
+      console.error('Error fetching like status:', error);
+    }
+  }
+
+  function updateLikeButton(isLiked, buttonElement) {
+    if (isLiked) {
+      buttonElement.classList.remove('btn-outline-danger');
+      buttonElement.classList.add('btn-danger');
+    } else {
+      buttonElement.classList.remove('btn-danger');
+      buttonElement.classList.add('btn-outline-danger');
+    }
+  }
   const postContainer = document.getElementById("post-container");
   let currentPage = 1;
   const postsPerPage = 10; // Adjust as needed
@@ -207,7 +235,7 @@
           : ""
       }
       <div class="d-flex">
-        <button class="btn btn-outline-danger rounded-pill" onclick="sendLikeRequest('${
+        <button class="btn btn-outline-danger rounded-pill" id="like-btn-${post.id}" onclick="sendLikeRequest('${
           post.id
         }', this)">
         <i class="fa-solid fa-heart"></i> ${post.like.users.length}
@@ -232,8 +260,12 @@
     </div>
     `;
       postContainer.appendChild(postElement);
+
+      // Fetch and update like status for this post
+      fetchIsLiked(post.id, document.getElementById(`like-btn-${post.id}`));
     });
   }
+
   async function loadMorePosts() {
     currentPage++;
     const newPosts = await fetchPosts(currentPage);
