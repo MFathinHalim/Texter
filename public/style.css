@@ -258,7 +258,7 @@ a {
 .btn-primary {
   background-color: var(--accent2) !important;
   border: 1px solid var(--accent2) !important;
-  color: var(--background) !important;
+  color: white !important;
 }
 .text-primary {
   color: var(--accent2) !important;
