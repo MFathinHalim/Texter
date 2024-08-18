@@ -1,21 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Mulish:700|Ubuntu:400");
 
 :root {
-  --text: #ededed;
-  --text2: #b6b6b6;
-  --background: #000000;
-  --background2: #12121298;
-  --background3: #f7f5fe;
-  --primary: #f8f6fe;
-  --secondary: #393e46;
-  --accent1: #efbd46;
-  --accent2: #3aaaef;
-  --success: rgb(0, 203, 136);
-  --error: rgb(255, 45, 143);
-  --glass-bg: rgba(18, 18, 18, 0.49);
-}
-
-[data-theme="light"] {
   --background3: #f7f5feef;
   --background2: rgba(237, 235, 241, 0.322);
   --text2: #000000;
@@ -29,7 +14,20 @@
   --success: rgb(0, 186, 124);
   --error: rgb(249, 24, 128);
 }
-
+[data-theme="dark"] {
+  --text: #ededed;
+  --text2: #b6b6b6;
+  --background: #000000;
+  --background2: #12121298;
+  --background3: #f7f5fe;
+  --primary: #f8f6fe;
+  --secondary: #393e46;
+  --accent1: #efbd46;
+  --accent2: #3aaaef;
+  --success: rgb(0, 203, 136);
+  --error: rgb(255, 45, 143);
+  --glass-bg: rgba(18, 18, 18, 0.49);
+}
 .text-white {
   color: var(--text) !important;
 }
