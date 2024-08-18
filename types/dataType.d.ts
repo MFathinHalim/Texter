@@ -29,7 +29,7 @@ declare type postType = {
     total: number;
     users: any;
   };
-  replyTo: string;
+  replyTo: string | postType;
   img?: string;
   repost?: userType | undefined;
   ogId?: string;

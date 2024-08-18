@@ -6,9 +6,8 @@
   <p>Loading...</p>
 </div>
 <% if(post) { %>
-
 <div class="card bg-dark text-white p-3 border-light rounded-0">
-  <% if(post.repost) { %> <p class="text-secondary mb-1 ms-1"><i class="fa-solid fa-recycle"></i> <%= post.user.name %> reposted</p> <% } %>
+    <% if(post.repost) { %> <p class="text-secondary mb-1 ms-1"><i class="fa-solid fa-recycle"></i> <%= post.user.name %> reposted</p> <% } %>
   <a
     href="/user/details/<%= post.user.username %>"
     class="d-flex justify-content-between mb-0"
@@ -56,9 +55,9 @@
           <h5 class="text-secondary"><%= post.reQuote.time %></h5>
         </div>
       </article>
-      <h5 class="ms-2 h4 mt-2">
-        <%= post.reQuote.title.replace(/<[^>]+>/g, "") %>
-      </h5>
+      <h3 class="ms-2 h4 mt-2">
+        <%- post.reQuote.title.replace(/#(\w+)/g, '<a href="/?search=$1") class="text-info">$&</a>') %>
+      </h3>
       <% if(post.reQuote.img) { %>
     <% if(post.reQuote.img.includes(".mp4") || post.reQuote.img.includes(".ogg")) { %>
       <video height="450" class="border-light" loop style="border-radius: 2% !important; width: 100%;" controls>
@@ -256,7 +255,7 @@
     <img style="border-radius: 2% !important" src="<%= reply.img %>" />
     <% } %>
   </a>
-  <div class="d-flex mb-2">
+  <div class="d-flex mt-2">
     <button
       class="btn btn-outline-danger rounded-pill"
       onclick="sendLikeRequest('<%= reply.id %>', this)"
@@ -317,4 +316,11 @@
       fetchIsLiked(postId, likeButton);
     }
   });
+  window.onload = function() {
+    var el = document.getElementById('target');
+   el.scrollIntoView({
+        behavior: 'smooth', // Optional: to make the scroll smooth
+        block: 'start'     // Scroll to the top of the element
+    });
+  }
 </script>

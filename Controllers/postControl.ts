@@ -187,7 +187,7 @@ class Posts {
           select: "-password",
         });
 
-        posts = posts.filter((post) => !post.user.ban);
+        posts = posts.filter((post) => !post.user.ban && !post.replyTo);
 
         return { posts };
       } catch (error) {
@@ -214,12 +214,12 @@ class Posts {
           select: "-password",
         })
         .exec();
-      posts = posts.filter((post) => post.user?.id === userId); //di filter yang sama dengan user
+      posts = posts.filter((post) => post.user?.id === userId && !post.replyTo); //di filter yang sama dengan user
       return { posts };
     } else {
       //? Jika detail post
       try {
-        const post = await this.#posts
+        const post: postType | any = await this.#posts
           .findOne({ id })
           .populate("user", "-password")
           .populate({
@@ -250,6 +250,15 @@ class Posts {
 
         if (invalidReplyIds.length > 0) {
           await this.#posts.deleteMany({ _id: { $in: invalidReplyIds } });
+        }
+        if (post && post.replyTo) {
+          const replyToPost = await this.#posts
+            .findOne({ id: post.replyTo })
+            .populate("user", "-password")
+            .exec();
+
+          // Tambahkan informasi replyTo ke dalam post
+          post.replyTo = JSON.stringify(replyToPost) || null;
         }
 
         return { post: post || null, replies: replies || [] };
