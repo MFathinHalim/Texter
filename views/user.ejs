@@ -35,13 +35,11 @@
       <%= user.user.desc != "" ? user.user.desc : "" %>
     </p>
     <div class="d-flex mt-3" style="padding-left: 5px">
-      <p style="color: var(--accent1)">
-        <i class="fa-solid fa-user-group"></i> <%=
-        user.user.following.length %> following
+      <p>
+        <strong><%= user.user.following.length %></strong> following
       </p>
-      <p class="ms-2" style="color: var(--accent2)">
-        <i class="fa-solid fa-user-group"></i> <%=
-        user.user.followers.length %> followers
+      <p class="ms-2">
+        <strong><%= user.user.followers.length %></strong> followers
       </p>
     </div>
   </div>
@@ -186,9 +184,9 @@
         profileLink.setAttribute("href", "/profile/" + username);
 
         // Menambahkan kelas Bootstrap untuk tampilan tombol
-        profileLink.classList.add("btn", "btn-outline-warning", "rounded-pill");
+        profileLink.classList.add("btn", "btn-outline-light", "rounded-pill");
         // Menambahkan teks atau konten di dalam tombol
-        profileLink.textContent = "Edit";
+        profileLink.innerHTML = '<i class="fa-solid fa-gear"></i>';
 
         // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
         document.getElementById("top").appendChild(profileLink);
