@@ -10,7 +10,7 @@
   <% data.forEach(post => { %>
       <div id="<%= post._id %>" class="card bg-dark text-white p-3 border-light post rounded-0">
         <% if(post.repost) { %> <p class="text-secondary mb-1 ms-1"><i class="fa-solid fa-recycle"></i> <%= post.user.name %> was reposted</p> <% } %>
-        <a href="/user/details/<%= post.user %>" class="d-flex align-items-center">
+        <a href="/@<%= post.user %>" class="d-flex align-items-center">
           <img src="<%= post.repost ? post.repost.pp : post.user.pp %>" class="pfp rounded-circle" />
           <div class="d-flex flex-column ms-2 me-auto pt-2">
             <h4><%= post.repost ? post.repost.name : post.user.name %></h4>

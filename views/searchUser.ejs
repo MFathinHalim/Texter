@@ -25,10 +25,7 @@
   <% if(users && users.length > 0) { %> <% users.forEach(user => { %>
   <div class="card bg-dark text-white p-3 pt-1 border-0 rounded-0 border-light">
     <article class="d-flex align-items-center justify-content-between mb-0">
-      <a
-        href="/user/details/<%= user.username %>"
-        class="d-flex align-items-center"
-      >
+      <a href="/@<%= user.username %>" class="d-flex align-items-center">
         <img
           src="<%= user.pp %>"
           class="rounded-circle"
@@ -40,7 +37,7 @@
         </div>
       </a>
       <a
-        href="/user/details/<%= user.username %>"
+        href="/@<%= user.username %>"
         class="btn btn-outline-warning text-warning rounded-pill ms-2"
       >
         Check
