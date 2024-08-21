@@ -313,7 +313,7 @@ router.route("/search").get(async (req: Request, res: Response) => {
   return res.render("search", { searchTerm: "" });
 });
 router
-  .route("/profile/:username")
+  .route("/settings/:username")
   .get(async (req: Request, res: Response) => {
     const user = await userClass.checkUserDetails(
       req.params.username,
