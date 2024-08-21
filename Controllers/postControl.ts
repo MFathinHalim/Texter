@@ -2,6 +2,7 @@ import { type Model, type Document } from "mongoose";
 import { mainModel, reportModel } from "../models/post";
 const { htmlToText } = require("html-to-text");
 import * as dotenv from "dotenv";
+import mongoose from "mongoose";
 
 dotenv.config();
 //function untuk shuffle array
@@ -219,8 +220,11 @@ class Posts {
     } else {
       //? Jika detail post
       try {
+        const objectId = mongoose.Types.ObjectId.isValid(id)
+          ? new mongoose.Types.ObjectId(id)
+          : null;
         const post: postType | any = await this.#posts
-          .findOne({ id })
+          .findOne({ $or: [{ _id: objectId }, { id: id }] })
           .populate("user", "-password")
           .populate({
             path: "reQuote",
@@ -235,7 +239,7 @@ class Posts {
           })
           .exec();
         let replies: any = await this.#posts
-          .find({ replyTo: id })
+          .find({ replyTo: post.id })
           .populate("user", "-password")
           .exec();
         replies = replies.filter(
@@ -294,7 +298,11 @@ class Posts {
     }
 
     // Buat ID dan waktu post
-    post.id = "txtr" + Math.random().toString(16).slice(2) + "tme:" + time;
+    post.id = (
+      Math.random().toString().replace("0.", "") + time.replace(/\//g, "")
+    )
+      .slice(0, 19)
+      .padEnd(19, "0");
     post.time = time; // Buat ID nya dulu :D
     post.user = user._id; // Set user nya sesuai id (0o0)
     post.title = htmlToText(post.title);

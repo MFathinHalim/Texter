@@ -123,9 +123,9 @@
        const url = new URL(window.location.href);
 
     // Ambil parameter pencarian dari query string
-    const search = url.searchParams.get('search').replace("#", "") || '';
+    const search = url.searchParams.get('search')?.replace("#", "") || '';
       const response = await fetch(`/get
-/posts?page=${page}&limit=${postsPerPage}&search=${search}`);
+/posts?page=${page}&limit=${postsPerPage}${search!== null ? `&search=${search}`: ''}`);
       const data = await response.json();
       return data.posts.posts;
     } catch (error) {
@@ -141,7 +141,7 @@
       const postElement = document.createElement("div");
       postElement.innerHTML = `
     <div class="card bg-dark text-white p-3 post rounded-0 border-light">
-      <a href="/?id=${post.id}">
+      <a href="/@${post.user.username}/${post.id.includes("txtr") ? post._id : post.id}">
         <div>
         ${ post.repost ? `<p class="text-secondary mb-1 ms-1">
           <i class="fa-solid fa-recycle"></i> ${ post.user.name } reposted

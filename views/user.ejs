@@ -8,7 +8,7 @@
 <div>
   <div class="p-3 border-light rounded-0 pb-0">
     <div class="d-flex align-items-center" id="top">
-                  <button class="btn btn-outline-light m-2 ms-0 pb-0 pt-0 text-center" onclick="history.back()" 
+      <button class="btn btn-outline-light m-2 ms-0 pb-0 pt-0 text-center" onclick="history.back()" 
             style=" border: none !important; height:fit-content">
               <i class="fa-solid fa-arrow-left"></i>
           </button>
@@ -56,7 +56,7 @@
       <i class="fa-solid fa-recycle"></i> <%= post.user.name %> reposted
     </p>
     <% } %>
-    <a href="/?id=<%= post.id %>">
+    <a href="/@<%= post.user.username%>/<%= post.id.includes("txtr") ? post._id : post.id %>">
         <article
           class="d-flex justify-content-between mb-0"
         >

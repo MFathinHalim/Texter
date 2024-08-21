@@ -505,11 +505,17 @@ getToken().then(() => {
         return response.json();
       })
       .then((post) => {
-        console.log(post); // Menampilkan data JSON dari respons
-
         // Redirect setelah POST request berhasil
         const redirectId = post.id;
-        window.location.href = `/?id=${redirectId}`;
+        fetch(`/user/check?id=${token}`)
+        .then((res) => res.json())
+        .then((check) => {
+          if (check.check === true) {
+            logout();
+          }
+          username = check.user.username;
+          window.location.href = `/@${username}/${redirectId}`;
+        })
       })
       .catch((error) => {
         console.error("Error sending POST request:", error);

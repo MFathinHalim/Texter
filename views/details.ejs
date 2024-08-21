@@ -9,7 +9,7 @@
    <% if (post.replyTo) { %> 
     <!-- Tampilan untuk replyTo -->
     <div class="card bg-dark text-white p-3 border-light rounded-0">
-      <a href="/?id=<%= JSON.parse(post.replyTo).id %>">
+      <a href="/@<%= JSON.parse(post.replyTo).user.username %>/<%= JSON.parse(post.replyTo).id.includes("txtr") ? JSON.parse(post.replyTo)._id : JSON.parse(post.replyTo).id %>">
         <div class="d-flex justify-content-between mb-0">
         <article class="d-flex align-items-center" >
           <button class="btn btn-outline-light m-2 ms-0 pb-0 pt-0 text-center" onclick="history.back()" 
@@ -274,7 +274,7 @@
 </form>
 <% replies.forEach((reply) => { %>
 <div class="card bg-dark text-white p-3 post rounded-0 border-light">
-  <a href="/?id=<%=reply.id %>">
+  <a href="/@<%= reply.user.username %>/<%=reply.id %>">
     <article
       class="d-flex align-items-center"
     >

@@ -65,7 +65,34 @@ router
       return res.status(500).send("Failed to fetch data");
     }
   });
-
+router.route("/@:username/:id").get(async (req: Request, res: Response) => {
+  try {
+    const { username, id } = req.params;
+    const search = req.query.search ? req.query.search.toString() : "";
+    if (username === undefined) {
+      return res.status(404).render("notfound", { searchTerm: "" });
+    }
+    // Fetch user details or other data related to username and id
+    try {
+      const userDetails = await userClass.checkUserUname(username);
+      const data: any = await PostsClass.getData(id, 0, 0, search);
+      if (data && userDetails.ban === false) {
+        return res.render("details", {
+          ...data,
+          searchTerm: search,
+        });
+      } else {
+        return res.status(404).render("notfound", { searchTerm: "" });
+      }
+    } catch (error) {
+      console.error("Error fetching user or post data:", error);
+      return res.status(500).send("Failed to fetch user or post data");
+    }
+  } catch (error) {
+    console.error("Unexpected error:", error);
+    return res.status(500).send("Failed to fetch data");
+  }
+});
 router
   .route("/post")
   .post(upload.single("image"), async (req: Request, res: Response) => {
