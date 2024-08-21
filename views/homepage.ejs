@@ -123,7 +123,7 @@
        const url = new URL(window.location.href);
 
     // Ambil parameter pencarian dari query string
-    const search = url.searchParams.get('search') || '';
+    const search = url.searchParams.get('search').replace("#", "") || '';
       const response = await fetch(`/get
 /posts?page=${page}&limit=${postsPerPage}&search=${search}`);
       const data = await response.json();
