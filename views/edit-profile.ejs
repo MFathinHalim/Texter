@@ -70,12 +70,20 @@
     <h1 class="d-none" id="username"><%= user.username %></h1>
     <h3>Edit Your Display</h3>
     <div class="card bg-dark text-light p-3 border-light rounded-0">
-      <h4>Light/Dark Mode</h4>
+      <h4>Background</h4>
       <article class="d-flex justify-content-between">
-        <button id="lightMode" class="btn btn-light me-2 w-100">
-          Light Mode
+        <button id="auto" class="btn btn-primary me-2 w-100">Auto</button>
+        <button id="lightMode" class="btn btn-light w-100">Light Mode</button>
+      </article>
+      <article class="d-flex justify-content-between mt-2">
+        <button id="darkMode" class="btn btn-dark w-100 me-2">Dark Mode</button>
+        <button
+          id="dimMode"
+          class="btn btn-dark w-100"
+          style="background-color: rgb(56, 68, 77)"
+        >
+          Dim
         </button>
-        <button id="darkMode" class="btn btn-dark w-100">Dark Mode</button>
       </article>
     </div>
   </div>
@@ -99,8 +107,13 @@
   document.getElementById("lightMode").addEventListener("click", () => {
     applyTheme("light");
   });
-
   document.getElementById("darkMode").addEventListener("click", () => {
     applyTheme("dark");
+  });
+  document.getElementById("dimMode").addEventListener("click", () => {
+    applyTheme("dim");
+  });
+  document.getElementById("auto").addEventListener("click", () => {
+    applyTheme("auto");
   });
 </script>

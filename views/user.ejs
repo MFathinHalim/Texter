@@ -8,6 +8,10 @@
 <div>
   <div class="p-3 border-light rounded-0 pb-0">
     <div class="d-flex align-items-center" id="top">
+                  <button class="btn btn-outline-light m-2 ms-0 pb-0 pt-0 text-center" onclick="history.back()" 
+            style=" border: none !important; height:fit-content">
+              <i class="fa-solid fa-arrow-left"></i>
+          </button>
       <img
         src="<%= user.user.pp %>"
         class="rounded-circle pfp"
@@ -53,17 +57,24 @@
     </p>
     <% } %>
     <a href="/?id=<%= post.id %>">
-      <article class="d-flex align-items-center">
-        <img
-          src="<%= post.repost ? post.repost.pp : post.user.pp %>"
-          class="pfp rounded-circle"
-        />
-        <div class="d-flex flex-column ms-2 me-auto pt-1">
-          <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
-          <h5><%= post.repost ? post.repost.name : post.user.name %></h5>
-          <h5 class="text-secondary"><%= post.time %></h5>
-        </div>
-      </article>
+        <article
+          class="d-flex justify-content-between mb-0"
+        >
+          <article class="d-flex align-items-center">
+          <img src="<%= post.repost ? post.repost.pp : post.user.pp %>" class="pfp rounded-circle ms-1" />
+          <div class="d-flex flex-column ms-2 me-auto">
+            <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
+            <h5 class="mb-0">
+              <%= post.repost ? post.repost.name : post.user.name %>
+            </h5>
+            <h5 class="text-secondary"><%= post.time %></h5>
+          </div>
+          </article>
+          <button class="btn btn-outline-light rounded-pill ms-2" onclick="report('<%= post._id %>', this)" 
+            style=" border: none !important;">
+              <i class="fa-solid fa-flag"></i>
+          </button>
+       </article>
       <h3 class="mt-2">
         <%- post.title.replace(/#(\w+)/g, '<a href="/?search=$1" class="text-info">$&</a>') %>
       </h3>
@@ -138,9 +149,6 @@
         >
           <i class="fa-solid fa-bookmark"></i>
         </button>
-        <button class="btn btn-outline-danger rounded-pill ms-2" onclick="report('<%= post._id %>', this)">
-            <i class="fa-solid fa-flag"></i>
-        </button>
       </div>
     </a>
   </div>
@@ -184,7 +192,7 @@
         profileLink.setAttribute("href", "/profile/" + username);
 
         // Menambahkan kelas Bootstrap untuk tampilan tombol
-        profileLink.classList.add("btn", "btn-outline-light", "rounded-pill");
+        profileLink.classList.add("btn", "btn-outline-white", "rounded-pill", "border-0");
         // Menambahkan teks atau konten di dalam tombol
         profileLink.innerHTML = '<i class="fa-solid fa-gear"></i>';
 

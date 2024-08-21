@@ -284,13 +284,6 @@ class Posts {
       return this.#notFound;
     }
 
-    // Proses repost dan requote jika diperlukan
-    if (post.repost) {
-      const og: (Document<postType, any, any> & postType) | null =
-        await this.#posts.findOne({ post }); // Cari tahu original postnya jika dia merupakan repost
-      post.ogId = og?.id; // Kasih ogId nya
-    }
-
     if (post.reQuote) {
       // Kalau dia merupakan requote
       post.reQuote =
@@ -306,6 +299,12 @@ class Posts {
     post.user = user._id; // Set user nya sesuai id (0o0)
     post.title = htmlToText(post.title);
     post.img = trimmedFile; // Set file
+    // Proses repost dan requote jika diperlukan
+    if (post.repost) {
+      const og: (Document<postType, any, any> & postType) | null =
+        await this.#posts.findOne({ id: post.ogId }); // Cari tahu original postnya jika dia merupakan repost
+      post.img = og?.img;
+    }
 
     // Cek jika post tidak ditemukan
     // (Anda bisa menambahkan logika pengecekan lebih lanjut di sini jika diperlukan)

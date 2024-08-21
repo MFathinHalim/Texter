@@ -28,6 +28,20 @@
   --error: rgb(255, 45, 143);
   --glass-bg: rgba(18, 18, 18, 0.49);
 }
+[data-theme="dim"] {
+  --text: #ededed;
+  --text2: #b6b6b6;
+  --background: rgb(21, 32, 43);
+  --background2: #12121298;
+  --background3: #f7f5fe;
+  --primary: #f8f6fe;
+  --secondary: #393e46;
+  --accent1: #efbd46;
+  --accent2: #3aaaef;
+  --success: rgb(0, 203, 136);
+  --error: rgb(255, 45, 143);
+  --glass-bg: rgba(21, 32, 43, 0.49);
+}
 .text-white {
   color: var(--text) !important;
 }
@@ -37,7 +51,7 @@
 
 /* Style for the active state */
 a.active {
-  border-bottom: 2px solid var(--success); /* Adjust color as needed */
+  border-bottom: 2px solid var(--accent2); /* Adjust color as needed */
 }
 /* Initial state of the navbar */
 div,
@@ -319,7 +333,7 @@ strong {
   color: var(--text) !important;
 }
 .btn-outline-light {
-  border: 1px solid var(--background) !important;
+  border: 1px solid var(--text) !important;
   color: var(--text) !important;
 }
 .btn-outline-light:hover {

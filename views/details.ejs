@@ -6,6 +6,44 @@
   <p>Loading...</p>
 </div>
 <% if(post) { %>
+   <% if (post.replyTo) { %> 
+    <!-- Tampilan untuk replyTo -->
+    <div class="card bg-dark text-white p-3 border-light rounded-0">
+      <a href="/?id=<%= JSON.parse(post.replyTo).id %>">
+        <div class="d-flex justify-content-between mb-0">
+        <article class="d-flex align-items-center" >
+          <button class="btn btn-outline-light m-2 ms-0 pb-0 pt-0 text-center" onclick="history.back()" 
+            style=" border: none !important; height:fit-content">
+              <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <img src="<%= JSON.parse(post.replyTo).user.pp %>" class="pfp rounded-circle" />
+          <div class="d-flex flex-column ms-2 me-auto">
+            <h5 class="mb-1"><%= JSON.parse(post.replyTo).user.name %></h5>
+            <h5 class="text-secondary"><%= JSON.parse(post.replyTo).time %></h5>
+          </div>
+        </article>
+        <button class="btn btn-outline-light rounded-pill ms-2" onclick="report('<%= post._id %>', this)" 
+          style=" border: none !important;">
+            <i class="fa-solid fa-flag"></i>
+        </button>
+        </div>
+
+        <h3 class="mt-2 mb-2"><%= JSON.parse(post.replyTo).title %></h3>
+        <% if(JSON.parse(post.replyTo).img) { %>
+          <% if(JSON.parse(post.replyTo).img.includes(".mp4") || JSON.parse(post.replyTo).img.includes(".ogg")) { %>
+            <video height="450" class="border-light" loop style="border-radius: 2% !important; width: 100%;" controls>
+              <source src="<%= JSON.parse(post.replyTo).img %>" type="video/mp4">
+            </video>
+          <% } else { %>
+            <img style="border-radius: 2% !important" class="mb-3 border-light" src="<%= JSON.parse(post.replyTo).img %>" />
+          <% } %>
+        <% } %>
+      </a>      </div>
+      <div class="d-flex align-items-center" style="height: 50px;" id="target">
+        <div class="vr" style="width: 5px; background-color: #969696 !important"></div>
+          <h4 class="text-center ms-3">Reply For <%= JSON.parse(post.replyTo).user.name %></h4>
+      </div>
+  <% } %>
 <div class="card bg-dark text-white p-3 border-light rounded-0">
     <% if(post.repost) { %> <p class="text-secondary mb-1 ms-1"><i class="fa-solid fa-recycle"></i> <%= post.user.name %> reposted</p> <% } %>
   <a
@@ -162,7 +200,7 @@
     </label>
     <button
       type="submit"
-      class="btn btn-warning rounded-pill p-4 pt-2 pb-2"
+      class="btn btn-primary rounded-pill p-4 pt-2 pb-2"
       style="font-size: larger"
     >
       Reply

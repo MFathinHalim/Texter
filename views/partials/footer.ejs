@@ -628,13 +628,23 @@ function previewImage(event) {
     }
   }
   function applyTheme(theme) {
-    document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
+    if (theme === 'auto') {
+      // If data-theme is auto, check the color scheme preference
+      console.log(window.matchMedia('(prefers-color-scheme: dark)').matches)
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      } else {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+      return
+    }
+    document.documentElement.setAttribute("data-theme", theme);
   }
 
   // Load the theme from localStorage on page load
   document.addEventListener("DOMContentLoaded", () => {
-    const savedTheme = localStorage.getItem("theme") || "dark"; // Default to 'dark' if no theme is saved
+    const savedTheme = localStorage.getItem("theme") || "light"; // Default to 'dark' if no theme is saved
     applyTheme(savedTheme);
   });
   function updateLikeButton(isLiked, buttonElement) {
@@ -682,7 +692,7 @@ function previewImage(event) {
   }
   function report(postId) {
     try {
-      const response = fetch(`/post/report?id=${postId}`, {
+      fetch(`/post/report?id=${postId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -691,11 +701,6 @@ function previewImage(event) {
         credentials: 'include' // Ensure cookies are included with the request
       });
 
-      if (response.ok) {
-        alert('Post reported successfully!');
-      } else {
-        alert('Failed to report post: ' + response.statusText);
-      }
     } catch (error) {
       console.error('Error reporting post:', error);
       alert('An error occurred while reporting the post.');
