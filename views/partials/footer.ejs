@@ -253,15 +253,15 @@ getToken().then(() => {
 
       // Menghapus kelas 'text-warning' dari semua ikon
       [starIcon, bellIcon, userIcon].forEach(iconElement => {
-        if (iconElement.classList.contains('text-success')) {
-          iconElement.classList.remove('text-success');
+        if (iconElement.classList.contains('text-primary')) {
+          iconElement.classList.remove('text-primary');
         }
       });
 
       // Menambahkan kelas 'text-warning' pada ikon yang sesuai dengan path saat ini
       if (currentPath in icons) {
         const activeIcon = document.querySelector(`#${icons[currentPath]}-icon`);
-        activeIcon.classList.add('text-success');
+        activeIcon.classList.add('text-primary');
       }
 
           document.getElementById("bookmarkLink").setAttribute("href", `/bookmark?username=${check.user.username}`);
