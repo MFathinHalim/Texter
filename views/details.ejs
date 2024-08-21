@@ -288,7 +288,7 @@
         <h5 class="text-secondary"><%= reply.time %></h5>
       </div>
     </article>
-    <h5 class="mt-1"><%= reply.title.replace(/<[^>]+>/g, "") %></h5>
+    <h5 class="mt-1"><%- reply.title.replace(/#(\w+)/g, '<a href="/?search=$1") class="text-info">$&</a>') %></h5>
     <% if(reply.img) { %>
     <img style="border-radius: 2% !important" src="<%= reply.img %>" />
     <% } %>
