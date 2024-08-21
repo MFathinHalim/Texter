@@ -28,7 +28,7 @@
         </button>
         </div>
 
-        <h3 class="mt-2 mb-2"><%= JSON.parse(post.replyTo).title %></h3>
+        <h3 class="mt-2 mb-2"><%- JSON.parse(post.replyTo).title.replace(/#(\w+)/g, '<a href="/?search=$1") class="text-info">$&</a>') %></h3>
         <% if(JSON.parse(post.replyTo).img) { %>
           <% if(JSON.parse(post.replyTo).img.includes(".mp4") || JSON.parse(post.replyTo).img.includes(".ogg")) { %>
             <video height="450" class="border-light" loop style="border-radius: 2% !important; width: 100%;" controls>
