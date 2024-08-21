@@ -39,6 +39,15 @@
     <%= user.user.pp %>
   <% } %>
 " />
+<meta name="twitter:site" content="Texter">
+<meta name="twitter:creator" content="
+  <% if (typeof post !== 'undefined' && post) { %>
+    <%= post.user.username %>
+  <% } else if (typeof user !== 'undefined' && user.user) { %>
+    <%= user.user.username %>
+  <% } else { %>
+    Texter
+  <% } %>">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website" />

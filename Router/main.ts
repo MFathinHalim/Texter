@@ -297,18 +297,16 @@ router
     return res.sendStatus(200);
   });
 
-router
-  .route("/user/details/:username")
-  .get(async (req: Request, res: Response) => {
-    const user = await userClass.checkUserDetails(
-      req.params.username,
-      req.query.myname?.toString() || ""
-    );
-    const post = await PostsClass.getData("", 0, 0, user.user.id);
-    if (user && post) {
-      return res.render("user", { user: user, posts: post, searchTerm: "" });
-    }
-  });
+router.route("/@:username").get(async (req: Request, res: Response) => {
+  const user = await userClass.checkUserDetails(
+    req.params.username,
+    req.query.myname?.toString() || ""
+  );
+  const post = await PostsClass.getData("", 0, 0, user.user.id);
+  if (user && post) {
+    return res.render("user", { user: user, posts: post, searchTerm: "" });
+  }
+});
 router.route("/search").get(async (req: Request, res: Response) => {
   return res.render("search", { searchTerm: "" });
 });

@@ -221,7 +221,7 @@ getToken().then(() => {
       }
 
       document.querySelectorAll("#myDetails").forEach((link) => {
-        link.href = `/user/details/${check.user.username}`;
+        link.href = `/@${check.user.username}`;
       });
       const elements = document.querySelectorAll("#mypfp");
 
@@ -241,7 +241,7 @@ getToken().then(() => {
       const icons = {
         '/': 'home',
         '/notification': 'bell',
-        [`/user/details/${check.user.username}`]: 'user',
+        [`/@${check.user.username}`]: 'user',
         '/search': 'search'
       };
 
@@ -337,7 +337,7 @@ getToken().then(() => {
           userInfo.classList.add("d-flex", "flex-column");
 
           const dName = document.createElement("a");
-          dName.href = `/user/details/${user.username}`; // Link to user profile page
+          dName.href = `/@${user.username}`; // Link to user profile page
           dName.classList.add("text-white", "text-decoration-none", "h5");
           dName.textContent = user.name;
           userInfo.appendChild(dName);
@@ -611,7 +611,7 @@ function previewImage(event) {
       method: "POST",
       body: formData,
     }).then(() => {
-      window.location.href = "/user/details/" + username;
+      window.location.href = "/@" + username;
     });
   }
   async function fetchIsLiked(postId, buttonElement) {

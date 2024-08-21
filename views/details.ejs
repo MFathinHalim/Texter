@@ -47,7 +47,7 @@
 <div class="card bg-dark text-white p-3 border-light rounded-0">
     <% if(post.repost) { %> <p class="text-secondary mb-1 ms-1"><i class="fa-solid fa-recycle"></i> <%= post.user.name %> reposted</p> <% } %>
   <a
-    href="/user/details/<%= post.user.username %>"
+    href="/@<%= post.user.username %>"
     class="d-flex justify-content-between mb-0"
   >
     <article class="d-flex align-items-center">
