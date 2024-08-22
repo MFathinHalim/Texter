@@ -654,7 +654,7 @@ function previewImage(event) {
 
   // Load the theme from localStorage on page load
   document.addEventListener("DOMContentLoaded", () => {
-    const savedTheme = localStorage.getItem("theme") || "light"; // Default to 'dark' if no theme is saved
+    const savedTheme = localStorage.getItem("theme") || "auto"; // Default to 'dark' if no theme is saved
     applyTheme(savedTheme);
   });
   function updateLikeButton(isLiked, buttonElement) {
