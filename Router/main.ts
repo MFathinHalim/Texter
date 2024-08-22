@@ -496,8 +496,11 @@ router
     res.send(200);
   });
 
-router.route("/user/check").get(async (req: Request, res: Response) => {
-  const id = userClass.checkAccessToken(req.query.id?.toString() || "").id;
+router.route("/user/check/").get(async (req: Request, res: Response) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.sendStatus(401);
+  const id = userClass.checkAccessToken(token).id;
   if (!id || id === "System") {
     return res.status(401);
   }

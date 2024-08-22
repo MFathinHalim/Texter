@@ -213,7 +213,9 @@ if (
   !window.location.href.toString().includes("/signup")
 ) {
 getToken().then(() => {
-  fetch(`/user/check?id=${token}`)
+  fetch(`/user/check`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+  })
     .then((res) => res.json())
     .then((check) => {
       if(check.check) {
@@ -507,7 +509,9 @@ getToken().then(() => {
       .then((post) => {
         // Redirect setelah POST request berhasil
         const redirectId = post.id;
-        fetch(`/user/check?id=${token}`)
+          fetch(`/user/check`, {
+              headers: { 'Authorization': `Bearer ${token}` }
+          })        
         .then((res) => res.json())
         .then((check) => {
           if (check.check === true) {

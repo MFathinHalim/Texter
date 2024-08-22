@@ -139,11 +139,20 @@ class Users {
     try {
       const user = await this.#users.findOne({ id });
       if (!user) return { newToken: "", refreshToken: "" };
+      const {
+        notification,
+        followers,
+        following,
+        desc,
+        bookmark,
+        ...userPayload
+      } = user.toObject();
+
       const newToken: string = jwt.sign(
-        user.toObject(),
+        userPayload,
         process.env.JWT_SECRET_KEY || "",
         { expiresIn: "1d" }
-      ); //Bikin access token
+      ); // Buat access token
       const refreshToken = jwt.sign(
         { id: user.id },
         process.env.JWT_SECRET_KEY,
