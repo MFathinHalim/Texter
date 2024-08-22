@@ -90,7 +90,9 @@
 </div>
 <%- include("partials/footer.ejs") %>
 <script>
-  fetch(`/user/check?id=${token}`)
+  fetch(`/user/check`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
     .then((res) => res.json())
     .then((check) => {
       if (check.check === true) {
