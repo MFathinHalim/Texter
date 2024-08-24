@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 import type { Model } from "mongoose";
 import { userModel } from "../models/user";
 import type { Document } from "mongoose";
+import mongoose from "mongoose";
 ///////////////////////////////////////////
 dotenv.config();
 class Users {
@@ -202,19 +203,47 @@ class Users {
       .updateOne({ id: id }, { $set: { bookmark: user.bookmark } })
       .then(() => 200);
   }
-  async getBookmarks(id: string): Promise<{ posts?: any[] } | userType> {
+  async getBookmarks(
+    id: string,
+    page: number = 1,
+    limit: number = 5
+  ): Promise<{ posts?: any[]; totalPages?: number } | userType> {
     try {
-      const user = await this.#users.findOne({ id }).populate({
-        path: "bookmark",
-        populate: {
-          path: "user",
-          select: "-password",
-        },
-      }); // Populasi jika bookmark merujuk ke postModel
+      // Validasi halaman dan limit
+      if (page < 1 || limit <= 0) {
+        throw new Error("Invalid page number or limit");
+      }
+      const objectId = mongoose.Types.ObjectId.isValid(id)
+        ? new mongoose.Types.ObjectId(id)
+        : null;
+
+      // Temukan pengguna dengan ID dan populasi bookmark
+      const user = await this.#users
+        .findOne({ $or: [{ _id: objectId }, { id: id }] })
+        .populate({
+          path: "bookmark",
+          populate: {
+            path: "user",
+            select: "-password",
+          },
+        });
+
       if (!user) {
         return this.#error[1];
       }
-      return { posts: user.bookmark }; // Return the populated bookmarks
+
+      // Hitung total bookmarks untuk paginasi
+      const totalBookmarks = user.bookmark.length;
+      const totalPages = Math.ceil(totalBookmarks / limit);
+
+      // Hitung indeks mulai dan akhir untuk paginasi
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+
+      // Ambil bookmarks sesuai halaman
+      const paginatedBookmarks = user.bookmark.slice(startIndex, endIndex);
+
+      return { posts: paginatedBookmarks, totalPages };
     } catch (error) {
       console.error("Error fetching bookmarks:", error);
       return this.#error[1];

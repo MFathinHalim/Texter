@@ -73,7 +73,8 @@ class Posts {
       // Cari postingan berdasarkan ID
       const post = await this.#posts
         .findOne({ id: postId })
-        .populate("user", "-password") // Populate user field tanpa password
+        .populate("user", "-password")
+        .populate("user", "-notification") // Populate user field tanpa password
         .exec();
 
       // Periksa apakah postingan ditemukan
@@ -197,6 +198,8 @@ class Posts {
       }
     } else if (userId) {
       //? Jika dia user details
+      const limit = 5;
+      const skip = (page - 1) * limit;
       let posts = await this.#posts
         .find({})
         .populate({
@@ -214,6 +217,9 @@ class Posts {
           path: "repost",
           select: "-password",
         })
+        .limit(limit)
+        .skip(skip)
+        .sort({ $natural: -1 })
         .exec();
       posts = posts.filter((post) => post.user?.id === userId && !post.replyTo); //di filter yang sama dengan user
       return { posts };
@@ -226,6 +232,7 @@ class Posts {
         const post: postType | any = await this.#posts
           .findOne({ $or: [{ _id: objectId }, { id: id }] })
           .populate("user", "-password")
+          .populate("user", "-notification")
           .populate({
             path: "reQuote",
             populate: {
@@ -238,39 +245,84 @@ class Posts {
             select: "-password",
           })
           .exec();
-        let replies: any = await this.#posts
-          .find({ replyTo: post.id })
-          .populate("user", "-password")
-          .exec();
-        replies = replies.filter(
-          (reply: postType | any) => reply.user !== undefined
-        );
-
-        // Jika Anda ingin menghapus elemen yang tidak valid dari database, lakukan seperti berikut
-        // (Opsional, tergantung pada kebutuhan Anda):
-        const invalidReplyIds = replies
-          .filter((reply: postType | any) => reply.user === undefined)
-          .map((reply: postType | any) => reply._id);
-
-        if (invalidReplyIds.length > 0) {
-          await this.#posts.deleteMany({ _id: { $in: invalidReplyIds } });
-        }
-        if (post && post.replyTo) {
+        // Tambahkan informasi replyTo ke dalam post jika ada
+        if (post.replyTo) {
           const replyToPost = await this.#posts
             .findOne({ id: post.replyTo })
             .populate("user", "-password")
+            .populate("user", "-notification")
             .exec();
 
-          // Tambahkan informasi replyTo ke dalam post
           post.replyTo = JSON.stringify(replyToPost) || null;
         }
-
-        return { post: post || null, replies: replies || [] };
+        return { post: post || null };
       } catch (error) {
         console.error("Error fetching data:", error);
-        return { post: null, replies: [] };
+        return { post: null };
       }
     }
+  }
+  async getReplies(id: string, page: number) {
+    // Validasi dan ambil post
+    const objectId = mongoose.Types.ObjectId.isValid(id)
+      ? new mongoose.Types.ObjectId(id)
+      : null;
+    const post: postType | any = await this.#posts
+      .findOne({ $or: [{ _id: objectId }, { id: id }] })
+      .populate("user", "-password")
+      .populate("user", "-notification")
+      .populate({
+        path: "reQuote",
+        populate: {
+          path: "user",
+          select: "-password",
+        },
+      })
+      .populate({
+        path: "repost",
+        select: "-password",
+      })
+      .exec();
+
+    // Jika post tidak ditemukan, kembalikan kosong
+    if (!post) {
+      return { replies: [], totalPages: 0 };
+    }
+
+    // Parameter paginasi
+    const limit = 5;
+    const skip = (page - 1) * limit;
+
+    // Ambil replies dengan limit dan skip
+    let replies: any = await this.#posts
+      .find({ replyTo: post.id })
+      .populate("user", "-password")
+      .populate("user", "-notification")
+      .limit(limit)
+      .skip(skip)
+      .exec();
+
+    // Filter replies yang valid
+    replies = replies.filter(
+      (reply: postType | any) => reply.user !== undefined
+    );
+
+    // Hapus elemen yang tidak valid (opsional)
+    const invalidReplyIds = replies
+      .filter((reply: postType | any) => reply.user === undefined)
+      .map((reply: postType | any) => reply._id);
+
+    if (invalidReplyIds.length > 0) {
+      await this.#posts.deleteMany({ _id: { $in: invalidReplyIds } });
+    }
+
+    // Hitung total replies untuk menentukan total halaman
+    const totalReplies = await this.#posts
+      .countDocuments({ replyTo: post.id })
+      .exec();
+    const totalPages = Math.ceil(totalReplies / limit);
+    // Kembalikan hasil termasuk paginasi
+    return { replies, totalPages };
   }
 
   async posting(post: postType, user: any, file: string): Promise<postType> {
@@ -327,7 +379,8 @@ class Posts {
       // Fetch reported posts from the reportModel
       const reportedPosts = await this.#reports
         .find({})
-        .populate("user", "-password") // Populate user field if needed
+        .populate("user", "-password")
+        .populate("user", "-notification") // Populate user field if needed
         .populate("reQuote.user", "-password") // Populate reQuote user field if needed
         .populate("repost", "-password") // Populate repost field if needed
         .exec();

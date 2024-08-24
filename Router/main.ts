@@ -183,6 +183,28 @@ router.route("/get/posts").get(async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Failed to fetch posts" });
   }
 });
+
+router.route("/get/replies/:id").get(async (req: Request, res: Response) => {
+  const search: string = req.query.search?.toString() || "";
+  const page: number = parseInt(req.query.page as string, 10) || 1; // Default ke halaman 1 jika tidak ada
+
+  if (isNaN(page) || page < 1) {
+    return res.status(400).json({ error: "Invalid page number" });
+  }
+
+  try {
+    const { replies, totalPages } = await PostsClass.getReplies(
+      req.params.id,
+      page
+    );
+
+    return res.json({ replies, totalPages, searchTerm: search });
+  } catch (error) {
+    console.error("Error fetching replies:", error);
+    return res.status(500).json({ error: "Failed to fetch replies" });
+  }
+});
+
 router.route("/get/trends").get(async (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string) || 1; // Get page from query
   const limit = parseInt(req.query.limit as string) || 10; // Get limit from query
@@ -271,17 +293,35 @@ router.route("/isLiked").get(async (req: Request, res: Response) => {
   }
 });
 
+router.route("/get/bookmark/:id").get(async (req: Request, res: Response) => {
+  const userId = req.params.id || "";
+  const page = parseInt(req.query.page as string, 10) || 1; // Default ke halaman 1 jika tidak ada
+  const limit = 5; // Jumlah item per halaman
+
+  // Validasi halaman
+  if (page < 1) {
+    return res.status(400).json({ error: "Invalid page number" });
+  }
+
+  try {
+    // Ambil bookmarks dengan paginasi
+    const result = await userClass.getBookmarks(userId, page, limit);
+    return res.json(result); // Kirim data sebagai respons
+  } catch (error) {
+    console.error("Error fetching bookmarks:", error);
+    return res.status(500).json({ error: "Failed to fetch bookmarks" });
+  }
+});
+
 router
   .route("/bookmark/")
   .get(async (req: Request, res: Response) => {
     const user = await userClass.checkUserDetails(
       req.query.username?.toString() || ""
     );
-    const post = await userClass.getBookmarks(user.user.id);
-    if (user && post) {
+    if (user) {
       return res.render("bookmark", {
         user: user,
-        posts: post,
         searchTerm: "",
       });
     }
@@ -302,11 +342,26 @@ router.route("/@:username").get(async (req: Request, res: Response) => {
     req.params.username,
     req.query.myname?.toString() || ""
   );
-  const post = await PostsClass.getData("", 0, 0, user.user.id);
-  if (user && post) {
-    return res.render("user", { user: user, posts: post, searchTerm: "" });
+  if (user) {
+    return res.render("user", { user: user, searchTerm: "" });
   }
 });
+router
+  .route("/get/user/post/:username")
+  .get(async (req: Request, res: Response) => {
+    const user = await userClass.checkUserDetails(
+      req.params.username,
+      req.query.myname?.toString() || ""
+    );
+    const page = parseInt(req.query.page as string, 10) || 1; // Default ke halaman 1 jika tidak ada
+
+    // Validasi halaman
+    if (page < 1) {
+      return res.status(400).json({ error: "Invalid page number" });
+    }
+    const posts = await PostsClass.getData("", page, 5, user.user.id);
+    return res.json({ posts: posts });
+  });
 router.route("/search").get(async (req: Request, res: Response) => {
   return res.render("search", { searchTerm: "" });
 });
