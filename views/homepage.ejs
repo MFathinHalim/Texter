@@ -85,6 +85,8 @@
   </form>
   <div id="post-container"></div>
 </div>
+
+<%- include("partials/footer.ejs") %>
 <script>
   async function fetchIsLiked(postId, buttonElement) {
     try {
@@ -122,8 +124,18 @@
     try {
        const url = new URL(window.location.href);
 
-    // Ambil parameter pencarian dari query string
-    const search = url.searchParams.get('search')?.replace("#", "") || '';
+      // Ambil parameter pencarian dari query string
+      const search = url.searchParams.get('search')?.replace("#", "") || '';
+      const isFollowing = url.searchParams.get('following') || '';
+      if(isFollowing!==''){
+        const response = await fetch(`/get/following?page=${page}&limit=${postsPerPage}${search!== null ? `&search=${search}`: ''}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        console.log(data)
+        return data.posts.posts;
+      }
+
       const response = await fetch(`/get
 /posts?page=${page}&limit=${postsPerPage}${search!== null ? `&search=${search}`: ''}`);
       const data = await response.json();
@@ -282,4 +294,3 @@
     }
   });
 </script>
-<%- include("partials/footer.ejs") %>

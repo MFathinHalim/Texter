@@ -221,7 +221,23 @@ getToken().then(() => {
       if(check.check) {
         logout()
       }
+    // Ambil parameter query string
+        const params = new URLSearchParams(window.location.search);
+        const isFollowing = params.has('following');
 
+        // Ambil elemen
+        const forYouLink = document.getElementById('forYou');
+        const followingLink = document.getElementById('following');
+
+        // Tambahkan atau hapus kelas aktif
+        if (isFollowing) {
+            forYouLink.classList.remove('active');
+            followingLink.classList.add('active');
+            document.title = "Following / Texter";
+        } else {
+            forYouLink.classList.add('active');
+            followingLink.classList.remove('active');
+        }
       document.querySelectorAll("#myDetails").forEach((link) => {
         link.href = `/@${check.user.username}`;
       });

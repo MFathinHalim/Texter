@@ -262,6 +262,52 @@ class Posts {
       }
     }
   }
+  async getDataByFollowedUsers(followingUserIds: any, page = 1, limit = 10) {
+    try {
+      // Parameter paginasi
+      const skip = (page - 1) * limit;
+
+      // Query untuk mendapatkan posts dari pengguna yang di-follow
+      let posts = await this.#posts
+        .find({ user: { $in: followingUserIds } })
+        .populate({
+          path: "user",
+          select: "-password",
+        })
+        .populate({
+          path: "reQuote",
+          populate: {
+            path: "user",
+            select: "-password",
+          },
+        })
+        .populate({
+          path: "repost",
+          select: "-password",
+        })
+        .limit(limit)
+        .skip(skip)
+        .sort({ $natural: -1 }) // Mengurutkan berdasarkan waktu
+        .exec();
+
+      // Hitung total posts untuk menentukan total halaman
+      const totalPosts = await this.#posts
+        .countDocuments({
+          user: { $in: followingUserIds },
+        })
+        .exec();
+      const totalPages = Math.ceil(totalPosts / limit);
+
+      // Filter posts jika diperlukan
+      posts = posts.filter((post) => !post.user.ban && !post.replyTo);
+
+      return { posts, totalPages };
+    } catch (error) {
+      console.error("Error fetching posts from followed users:", error);
+      return { posts: [], totalPages: 0 };
+    }
+  }
+
   async getReplies(id: string, page: number) {
     // Validasi dan ambil post
     const objectId = mongoose.Types.ObjectId.isValid(id)

@@ -95,8 +95,8 @@
       </a>
         <div id="followingfollowers" class="text-light border-0 pb-0 rounded-0 mx-auto">
         <div class="d-flex">
-            <a class="bg-0 text-light rounded-0 flex-fill text-center <%= typeof post !== 'undefined' && post || typeof user !== 'undefined' && user ? '' : 'active'%>" href="/">For you</a>
-            <a class="bg-0 text-light ms-3 rounded-0 flex-fill text-center disabled" href="/following" class="disabled">Following</a>
+          <a id="forYou" class="bg-0 text-light rounded-0 flex-fill text-center <%= typeof post !== 'undefined' && post || typeof user !== 'undefined' && user ? '' : 'active'%>" href="/">For you</a>
+          <a id="following" class="bg-0 text-light ms-3 rounded-0 flex-fill text-center" href="?following=true">Following</a>        
         </div>
   </div>
   <a

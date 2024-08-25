@@ -258,7 +258,11 @@ class Users {
       return this.#error[0];
     }
   }
-
+  async checkWhatUserFollowing(id: string) {
+    const user: (Document<userType, any, any> & userType) | any =
+      await this.#users.findOne({ id });
+    return user.following;
+  }
   async checkIsAdmin(id: string): Promise<boolean | userType> {
     try {
       // Find the user by their ID
