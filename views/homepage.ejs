@@ -286,16 +286,14 @@
 fetchPosts(currentPage).then(renderPosts)  // Add scroll listener for infinite scrolling
   window.addEventListener("scroll", () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    if (scrollTop + clientHeight >= scrollHeight) {
+    if (scrollTop + clientHeight >= scrollHeight - 100) {
       // Adjust threshold as needed
+      loadMorePosts();
       loadMorePosts();
     }
   });
-    window.addEventListener("DOMContentLoaded", () => {
-    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    if (scrollTop + clientHeight >= scrollHeight) {
-      // Adjust threshold as needed
-      loadMorePosts();
-    }
-  });
+window.addEventListener("DOMContentLoaded", () => {
+    loadMorePosts();
+    loadMorePosts();
+});
 </script>
