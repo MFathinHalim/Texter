@@ -128,11 +128,10 @@
       const search = url.searchParams.get('search')?.replace("#", "") || '';
       const isFollowing = url.searchParams.get('following') || '';
       if(isFollowing!==''){
-        const response = await fetch(`/get/following?page=${page}&limit=${postsPerPage}${search!== null ? `&search=${search}`: ''}`, {
+        const response = await fetch(`/get/following?page=${currentPage}&limit=${postsPerPage}${search!== null ? `&search=${search}`: ''}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
-        console.log(data)
         return data.posts.posts;
       }
 
@@ -284,11 +283,17 @@
     renderPosts(newPosts);
   }
   // Initial load
-  fetchPosts(currentPage).then(renderPosts);
-  // Add scroll listener for infinite scrolling
+fetchPosts(currentPage).then(renderPosts)  // Add scroll listener for infinite scrolling
   window.addEventListener("scroll", () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    if (scrollTop + clientHeight >= scrollHeight - 100) {
+    if (scrollTop + clientHeight >= scrollHeight) {
+      // Adjust threshold as needed
+      loadMorePosts();
+    }
+  });
+    window.addEventListener("DOMContentLoaded", () => {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    if (scrollTop + clientHeight >= scrollHeight) {
       // Adjust threshold as needed
       loadMorePosts();
     }
