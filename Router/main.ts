@@ -275,6 +275,9 @@ router.route("/like/").post(async (req: Request, res: Response) => {
     likes: likes,
   });
 });
+router.route("/privacy").get((req: Request, res: Response) => {
+  res.render("privacy-police", { searchTerm: "" }); // Render template notifications.ejs
+});
 router
   .route("/notification")
   .get((req: Request, res: Response) => {
