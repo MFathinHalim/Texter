@@ -48,27 +48,27 @@
         }
 
         const data = await response.json();
-        console.log(data);
 
         // Kosongkan daftar notifikasi jika ada
         notificationsList.innerHTML = "";
 
-        if (data.notifications.messages.length > 0) {
-          data.notifications.messages
+        if (data.notifications && data.notifications.length > 0) {
+          data.notifications
             .slice()
             .reverse()
             .forEach((notification) => {
-              const listItem = document.createElement("li");
+              const listItem = document.createElement("a");
               listItem.className =
-                "mb-2 p-2 border-light text-white rounded d-flex align-items-center";
+                "bg-dark text-white p-3 post rounded-0 border-light d-flex align-items-center";
 
               const icon = document.createElement("i");
-              icon.className = notification.includes("liked")
+              icon.className = notification.message.includes("liked")
                 ? "fa-solid fa-heart text-danger me-2"
                 : "fa-solid fa-plus text-success me-2";
 
               const text = document.createElement("span");
-              text.textContent = notification;
+              listItem.href = notification.link;
+              text.textContent = notification.message;
 
               listItem.appendChild(icon);
               listItem.appendChild(text);

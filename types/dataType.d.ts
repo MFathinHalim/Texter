@@ -15,7 +15,7 @@ declare type userType = {
   following?: any;
   bookmark?: any;
   notification?: {
-    messages: string[];
+    messages: [{ message: string; link: string }];
     read: boolean;
   };
 };

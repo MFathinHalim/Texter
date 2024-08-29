@@ -264,16 +264,25 @@ getToken().then(() => {
       };
 
       // Mengambil semua ikon
-      const bellIcon = document.getElementById('bell-icon');
+      const bellIcons = document.querySelectorAll('.bell-icon'); // Perhatikan bahwa querySelectorAll memerlukan selector yang benar
       const userIcon = document.getElementById('user-icon');
       const starIcon = document.getElementById('home-icon');
       const searchIcon = document.getElementById('search-icon');
 
-      // Menghapus kelas 'text-warning' dari semua ikon
-      [starIcon, bellIcon, userIcon].forEach(iconElement => {
-        if (iconElement.classList.contains('text-primary')) {
-          iconElement.classList.remove('text-primary');
+      // Fungsi untuk menghapus kelas 'text-primary' dari elemen
+      function removeTextPrimaryClass(element) {
+        if (element && element.classList.contains('text-primary')) {
+          element.classList.remove('text-primary');
         }
+      }
+
+      // Hapus kelas 'text-primary' dari ikon yang spesifik
+      removeTextPrimaryClass(starIcon);
+      removeTextPrimaryClass(userIcon);
+
+      // Iterasi setiap bellIcon dan hapus kelas 'text-primary'
+      bellIcons.forEach(icon => {
+        removeTextPrimaryClass(icon);
       });
 
       // Menambahkan kelas 'text-warning' pada ikon yang sesuai dengan path saat ini
@@ -292,7 +301,7 @@ getToken().then(() => {
       document.getElementById("myfollowers").innerHTML =
         `<strong>${check.user.followers.length}</strong> followers`;
       document.querySelectorAll(".notif-dot").forEach(dot => {
-          if (check.user.notification.read) {
+          if (check.user.notification.read && window.location.pathname !== '/notification') {
             document.title = `(1) ${document.title.replace("(1) ", "")}`
             dot.style.display = "block";
           } else {

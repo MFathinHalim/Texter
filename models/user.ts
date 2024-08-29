@@ -13,7 +13,7 @@ const userSchema: Schema<userType> = new Schema<userType>({
   following: [{ type: Types.ObjectId, ref: "user" }],
   bookmark: [{ type: Types.ObjectId, ref: "posts" }],
   notification: {
-    messages: { type: [String], default: [] },
+    messages: { type: [{ message: String, link: String }], default: [] },
     read: { type: Boolean, default: false },
   },
 });

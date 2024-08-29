@@ -141,7 +141,7 @@ router
             // Post data to PostsClass
             await PostsClass.posting(userData, checkToken, img)
               .then((post) => {
-                userClass.createPostNotification(checkToken.id);
+                userClass.createPostNotification(checkToken.id, post.id);
                 res.json(post);
               })
               .catch((error) => {
@@ -156,7 +156,7 @@ router
         // Post data to PostsClass
         await PostsClass.posting(userData, checkToken, img)
           .then((post) => {
-            userClass.createPostNotification(checkToken.id);
+            userClass.createPostNotification(checkToken.id, post.id);
             res.json(post);
           })
           .catch((error) => {
@@ -263,7 +263,12 @@ router.route("/like/").post(async (req: Request, res: Response) => {
   let likes: number | postType = 0;
   if (checkToken) {
     const owner: any = await PostsClass.getOwner(req.body.id);
-    userClass.likePostNotification(checkToken.id, owner.id);
+    let postId = req.body.id;
+    if (postId.includes("txtr")) {
+      const post: any = await PostsClass.getData(req.body.id, 0, 0, "");
+      postId = post.post._id;
+    }
+    userClass.likePostNotification(checkToken.id, owner.id, postId);
     likes = await PostsClass.liking(req.body.id, checkToken);
   }
   return res.json({

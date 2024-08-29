@@ -609,28 +609,34 @@ class Users {
       return [];
     }
   }
-  async createPostNotification(userId: string): Promise<void | boolean> {
+  async createPostNotification(
+    userId: string,
+    postId: string
+  ): Promise<void | boolean> {
     try {
-      // Cari user yang memposting
-      const user = await this.#users.findOne({ id: userId });
+      const user = await userModel.findOne({ id: userId });
       if (!user) return console.error("User not found");
 
-      // Kirim notifikasi ke semua pengikut
+      const postLink = `https://texter-id.glitch.me/@${user.username}/${postId}`;
+
       await Promise.all(
-        user.followers.map(async (followerId: string) => {
-          const follower = await this.#users.findById(followerId);
+        user.followers.map(async (followerId: any) => {
+          const follower = await userModel.findById(followerId);
           if (follower) {
-            follower.notification?.messages.push(
-              `${user.name} just posted something`
-            );
+            follower.notification?.messages.push({
+              message: `${user.name} just posted something`,
+              link: postLink,
+            });
             follower.notification!.read = false;
             await follower.save();
           }
         })
       );
 
-      // Kirim notifikasi ke user itu sendiri
-      user.notification?.messages.push(`You just posted something`);
+      user.notification?.messages.push({
+        message: `You just posted something`,
+        link: postLink,
+      });
       user.notification!.read = true;
       await user.save();
 
@@ -639,23 +645,26 @@ class Users {
       console.error("Error creating post notification:", error);
     }
   }
+
+  // Function to create a like post notification
   async likePostNotification(
     userId: string,
-    ownerId: string
+    ownerId: string,
+    postId: string
   ): Promise<boolean | void> {
     try {
-      // Cari user yang memposting
-      const postOwner = await this.#users.findOne({ id: ownerId });
+      const postOwner = await userModel.findOne({ id: ownerId });
       if (!postOwner) return console.error("Post owner not found");
 
-      // Cari user yang melakukan like
-      const liker = await this.#users.findOne({ id: userId });
+      const liker = await userModel.findOne({ id: userId });
       if (!liker) return console.error("Liker not found");
 
-      // Kirim notifikasi kepada pemilik postingan
-      postOwner.notification?.messages.push(
-        `${liker.name} just liked your post`
-      );
+      const postLink = `https://texter-id.glitch.me/@${liker.username}/${postId}`;
+
+      postOwner.notification?.messages.push({
+        message: `${liker.name} just liked your post`,
+        link: postLink,
+      });
       postOwner.notification!.read = true;
       await postOwner.save();
 
@@ -664,27 +673,31 @@ class Users {
       console.error("Error creating like notification:", error);
     }
   }
+
+  // Function to create a follow notification
   async followPostNotification(
     userId: string,
     ownerId: string
   ): Promise<boolean | void> {
     try {
-      // Cari user yang memposting
-      const postOwner = await this.#users.findOne({ id: ownerId });
+      const postOwner = await userModel.findOne({ id: ownerId });
       if (!postOwner) return console.error("Post owner not found");
 
-      // Cari user yang melakukan like
-      const liker = await this.#users.findOne({ id: userId });
-      if (!liker) return console.error("Liker not found");
+      const follower = await userModel.findOne({ id: userId });
+      if (!follower) return console.error("Follower not found");
 
-      // Kirim notifikasi kepada pemilik postingan
-      postOwner.notification?.messages.push(`${liker.name} followed you`);
+      const followLink = `https://texter-id.glitch.me/@${follower.username}`;
+
+      postOwner.notification?.messages.push({
+        message: `${follower.name} followed you`,
+        link: followLink,
+      });
       postOwner.notification!.read = true;
       await postOwner.save();
 
       return true;
     } catch (error) {
-      console.error("Error creating like notification:", error);
+      console.error("Error creating follow notification:", error);
     }
   }
   async searchUser(searchTerm: string): Promise<userType[]> {
@@ -722,20 +735,28 @@ class Users {
   async getNotification(userId: string): Promise<any> {
     try {
       // Ambil user berdasarkan userId
-      const user = await this.#users.findById(userId).exec();
+      const user = await userModel.findById(userId).exec();
 
       if (!user) {
         throw new Error("User not found");
       }
 
-      // Filter notifikasi berdasarkan status baca
-      const notifications = user.notification;
+      // Ambil notifikasi dari user
+      let notifications: any = user.notification?.messages || [];
 
-      // Jika status baca adalah true, update notifikasi yang belum dibaca menjadi false
+      // Filter notifikasi untuk memastikan setiap notifikasi memiliki message dan link
+      notifications = notifications.filter(
+        (notification: any) => notification.message && notification.link
+      );
+
+      // Ambil hanya 20 notifikasi terakhir
+      const last20Notifications = notifications.slice(-20);
+
+      // Update status baca notifikasi menjadi false
       user.notification!.read = false;
       await user.save();
 
-      return notifications;
+      return last20Notifications;
     } catch (error) {
       console.error("Error fetching notifications:", error);
       return [];
