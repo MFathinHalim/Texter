@@ -1,53 +1,56 @@
 <%- include("partials/header.ejs") %>
-<div class="container border-light rounded-lg p-3">
-  <h2 class="text-center">Sign up</h2>
+
+<div class="border-light rounded-0 p-3 text-center pt-5 pb-5">
+  <img
+    style="max-width: 100px; max-height: 100px"
+    src="https://ik.imagekit.io/9hpbqscxd/SG/image-67.jpg?updatedAt=1705798245623"
+    alt=""
+  />
+  <h4 class="h1 text-center">Join Texter now</h4>
+  <h4 class="h4 text-center text-secondary mb-3">Tell us who are you</h4>
+
   <form action="/signup" method="POST" enctype="application/json">
     <div class="mb-3">
-      <label for="name" class="form-label">Display Name</label>
       <input
         type="text"
-        class="form-control border-light"
+        class="form-control border-light p-3"
         id="name"
+        placeholder="Display Name"
         autocomplete="off"
         name="name"
       />
     </div>
     <div class="mb-3">
-      <label for="username" class="form-label">Username</label>
       <input
         type="text"
-        class="form-control border-light"
+        class="form-control border-light p-3"
+        placeholder="Username"
         id="username"
         autocomplete="off"
         name="username"
       />
     </div>
     <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
       <input
         type="password"
-        class="form-control border-light"
+        class="form-control border-light p-3"
         id="password"
+        placeholder="Password"
         name="password"
       />
     </div>
-    <div class="mb-3">
-      <label for="name" class="form-label">Description</label>
-      <textarea
-        type="text"
-        class="form-control border-light"
-        id="desc"
-        autocomplete="off"
-        name="desc"
-        placeholder="description"
-      ></textarea>
-    </div>
-    <button type="submit" class="btn btn-secondary">Sign up</button>
+    <button
+      type="submit"
+      style="font-size: larger"
+      class="btn btn-success p-3 w-100"
+    >
+      Sign Up
+    </button>
   </form>
 
   <p class="mt-3">
     Already have an account?
-    <a class="text-info text-decoration-underline" href="/login">Login</a>
+    <a class="text-info text-decoration-underline" href="/login">Sign In</a>
   </p>
 </div>
 <script>
