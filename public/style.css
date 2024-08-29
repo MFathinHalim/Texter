@@ -160,10 +160,6 @@ a.disabled {
   border: 1px solid #9696963a !important;
 }
 
-.card:hover {
-  background-color: var(--background2) !important;
-}
-
 .post.border-light {
   border: 1px solid #9696963a !important;
   border-top: none !important;
@@ -411,4 +407,9 @@ h3 {
 
 small {
   font-size: 0.707rem !important; /* 11.36px */
+}
+
+.card:hover,
+.post:hover {
+  background-color: var(--background2) !important;
 }
