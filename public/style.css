@@ -168,13 +168,9 @@ a.disabled {
 .sticky-container {
   position: relative;
 }
-
-/* Sticky element styles */
 .sticky-element {
   position: sticky;
-  top: -100px; /* Adjust this value based on your navbar height */
 }
-
 img {
   object-fit: cover !important;
 }
@@ -412,4 +408,7 @@ small {
 .card:hover,
 .post:hover {
   background-color: var(--background2) !important;
+}
+.rounded-lg {
+  border-radius: 12px !important;
 }
