@@ -65,7 +65,6 @@ router
       return res.status(500).send("Failed to fetch data");
     }
   });
-
 router.route("/@:username/:id").get(async (req: Request, res: Response) => {
   try {
     const { username, id } = req.params;
@@ -184,6 +183,26 @@ router.route("/get/posts").get(async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Failed to fetch posts" });
   }
 });
+router.route("/get/videos").get(async (req: Request, res: Response) => {
+  const page: number = parseInt(req.query.page as string, 10) || 1; // Default ke halaman 1 jika tidak ada
+  const limit = 5; // Get limit from query
+  const search: string = req.query.search?.toString() || "";
+  try {
+    const posts = await PostsClass.getData(
+      "",
+      page,
+      limit,
+      undefined,
+      search,
+      false,
+      true
+    ); // Assuming getData now takes page and limit
+    return res.json({ posts: posts, searchTerm: search }); // Send posts as JSON response
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    return res.status(500).json({ error: "Failed to fetch posts" });
+  }
+});
 router.route("/get/following").get(async (req: Request, res: Response) => {
   const page: number = parseInt(req.query.page as string, 10) || 1; // Default ke halaman 1 jika tidak ada
   const limit = 5; // Get limit from query
@@ -205,7 +224,20 @@ router.route("/get/following").get(async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Failed to fetch posts" });
   }
 });
-
+router.route("/get/followers").get(async (req: Request, res: Response) => {
+  const search: string = req.query.search?.toString() || "";
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.sendStatus(401);
+  const checkToken = await userClass.checkAccessToken(token);
+  try {
+    const userFollowers = await userClass.getFollowersDetails(checkToken.id);
+    return res.json({ users: userFollowers, searchTerm: search }); // Send posts as JSON response
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    return res.status(500).json({ error: "Failed to fetch posts" });
+  }
+});
 router.route("/get/replies/:id").get(async (req: Request, res: Response) => {
   const search: string = req.query.search?.toString() || "";
   const page: number = parseInt(req.query.page as string, 10) || 1; // Default ke halaman 1 jika tidak ada
@@ -277,6 +309,9 @@ router.route("/like/").post(async (req: Request, res: Response) => {
 });
 router.route("/privacy").get((req: Request, res: Response) => {
   res.render("privacy-police", { searchTerm: "" }); // Render template notifications.ejs
+});
+router.route("/video").get((req: Request, res: Response) => {
+  res.render("video", { searchTerm: "" }); // Render template notifications.ejs
 });
 router
   .route("/notification")

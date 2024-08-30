@@ -1,4 +1,5 @@
 <%- include("partials/header.ejs") %>
+
 <div>
   <% if(searchTerm) { %>
     <div class="row mb-2">
@@ -10,8 +11,43 @@
       </div>
     </div>
     <% } %>
+    <div class="card rounded-0 bg-dark border-light text-white">    
+      <div class="ps-3 px-3 pt-3 d-flex justify-content-between"><h4>Explore Fathin’s apps.</h4><h4><i class="fa-solid fa-rectangle-ad"></i></h4></div>
+      <div class="scroll-container d-flex flex-row align-items-center">
+<div class="scroll-item d-flex flex-column text-center align-items-center justify-content-center">
+  <a href="https://kamusrejang.glitch.me/" class="text-decoration-none">
+    <img src="https://www.fathin.my.id/kamus.png" class="rounded-circle border-light p-2" style="width: 80px; height: 80px;" alt="Logo">
+    <div class="mt-2">Kamus Bahasa Rejang</div>
+  </a>
+</div>
+<div class="scroll-item d-flex flex-column text-center align-items-center justify-content-center">
+  <a href="https://rejangpedia.glitch.me/" class="text-decoration-none">
+    <img src="https://www.fathin.my.id/logo.png" class="rounded-circle border-light p-2" style="width: 80px; height: 80px;" alt="Logo">
+    <div class="mt-2">rejangpedia</div>
+  </a>
+</div>
+<div class="scroll-item d-flex flex-column text-center align-items-center justify-content-center">
+  <a href="https://shared-gallery.glitch.me/" class="text-decoration-none">
+    <img src="https://ik.imagekit.io/9hpbqscxd/SG/image-3.jpg" class="rounded-circle border-light p-2" style="width: 80px; height: 80px;" alt="Logo">
+    <div class="mt-2">Shared Gallery</div>
+  </a>
+</div>
+<div class="scroll-item d-flex flex-column text-center align-items-center justify-content-center">
+  <a href="https://mysimplenotes.glitch.me/" class="text-decoration-none">
+    <img src="https://www.fathin.my.id/images" class="rounded-circle border-light p-2" style="width: 80px; height: 80px;" alt="Logo">
+    <div class="mt-2">My Simple Notes</div>
+  </a>
+</div>
+<div class="scroll-item d-flex flex-column text-center align-items-center justify-content-center">
+  <a href="https://fathinchat.glitch.me/" class="text-decoration-none">
+    <img src="https://cdn.glitch.global/415b2a45-a913-4f2c-96ca-b6598c3c6e8a/logo.png?v=1718077655964" class="rounded-circle border-light p-2" style="width: 80px; height: 80px;" alt="Logo">
+    <div class="mt-2">Fathin Chat</div>
+  </a>
+</div>
+      </div>
+    </div>
   <form
-    class="card bg-dark text-light p-3 border-light rounded-0"
+    class="card post bg-dark text-light p-3 border-light rounded-0"
     enctype="multipart/form-data"
     onsubmit="sendPostRequest(this, undefined, undefined, undefined, undefined, undefined, 'imgForm')"
   >

@@ -227,6 +227,8 @@ getToken().then(() => {
       if(check.check) {
         logout()
       }
+          displayFollowerUsers();
+
     // Ambil parameter query string
         const params = new URLSearchParams(window.location.search);
         const isFollowing = params.has('following');
@@ -293,11 +295,12 @@ getToken().then(() => {
 
       // Menambahkan kelas 'text-warning' pada ikon yang sesuai dengan path saat ini
       if (currentPath in icons) {
-        const activeIcon = document.querySelector(`#${icons[currentPath]}-icon`);
-        activeIcon.classList.add('text-primary');
+        const activeIcon = document.querySelectorAll(`#${icons[currentPath]}-icon`);
+        activeIcon.forEach((active) => {
+          active.classList.add('text-primary');
+        })
       }
 
-          document.getElementById("bookmarkLink").setAttribute("href", `/bookmark?username=${check.user.username}`);
       document.getElementById("myusername").innerText =
         `@${check.user.username}`;
       document.getElementById("mydesc").innerText =
@@ -325,6 +328,27 @@ getToken().then(() => {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
+      return data.users; // Assuming the API response structure is { users: [...] }
+    } catch (error) {
+      console.error("Error fetching top users:", error);
+      return []; // Return empty array on error
+    }
+  }
+    async function getFollowerUsers() {
+    try {
+    const response = await fetch("/get/followers", {
+      method: 'GET', // Use the appropriate HTTP method (GET, POST, etc.)
+      headers: {
+        'Authorization': `Bearer ${token}`, // Add the authorization header
+        'Content-Type': 'application/json', // Specify the content type if necessary
+      },
+    });
+          if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log(data.users)
       return data.users; // Assuming the API response structure is { users: [...] }
     } catch (error) {
       console.error("Error fetching top users:", error);
@@ -386,9 +410,54 @@ getToken().then(() => {
       }
     });
   }
+    async function displayFollowerUsers() {
+    const topUsers = await getFollowerUsers();
+
+    document.querySelectorAll("#follower").forEach((topList) => {
+      topList.innerHTML = ""; // Clear existing content
+
+      if (topUsers.length === 0) {
+        topList.innerHTML = "<div>No top users available!</div>";
+      } else {
+        topUsers.forEach((user) => {
+          const listItem = document.createElement("div");
+          listItem.classList.add("d-flex", "align-items-center", "mb-3"); // Use Flexbox for layout
+
+          // User profile picture
+          const profilePic = document.createElement("img");
+          profilePic.src = user.pp || "https://via.placeholder.com/50"; // Default placeholder image
+          profilePic.alt = user.username;
+          profilePic.classList.add("pfp", "rounded-circle");
+          profilePic.style.width = "50px"; // Set the width of the profile picture
+          profilePic.style.height = "50px"; // Set the height of the profile picture
+          profilePic.style.marginRight = "10px"; // Margin between profile picture and text
+          listItem.appendChild(profilePic);
+
+          // User info
+          const userInfo = document.createElement("div");
+          userInfo.classList.add("d-flex", "flex-column");
+
+          const dName = document.createElement("a");
+          dName.href = `/@${user.username}`; // Link to user profile page
+          dName.classList.add("text-white", "text-decoration-none", "h5");
+          dName.textContent = user.name;
+          userInfo.appendChild(dName);
+
+          const userFollowers = document.createElement("p");
+          userFollowers.classList.add("text-secondary", "mb-0");
+          userFollowers.textContent = `@${user.username}`;
+          userInfo.appendChild(userFollowers);
+
+          listItem.appendChild(userInfo);
+          topList.appendChild(listItem);
+        });
+      }
+    });
+  }
 
   // Call the displayTopUsers function on page load or after successful login
   displayTopUsers();
+
   document.addEventListener("DOMContentLoaded", function () {
     var stickyElements = document.querySelectorAll(".sticky-element");
       let lastScrollTop = window.scrollY || document.documentElement.scrollTop;

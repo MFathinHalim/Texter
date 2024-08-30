@@ -58,7 +58,18 @@ div,
 nav {
   transition: transform 0.2s ease-in-out; /* Smooth transition for sliding effect */
 }
+.scroll-container {
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent items from wrapping to the next line */
+  padding: 10px; /* Optional: add padding */
+}
+.scroll-item {
+  display: inline-block; /* Make items inline-block to stay in one line */
+  padding: 10px;
 
+  margin-right: 10px; /* Space between items */
+  border-radius: 4px; /* Optional: rounded corners */
+}
 /* Class to hide the navbar when scrolling down */
 @media (max-width: 767px) {
   h3 {
@@ -68,7 +79,13 @@ nav {
     margin-right: 0;
     margin-left: 0;
   }
-
+  .scroll-container {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .scroll-container::-webkit-scrollbar {
+    display: none !important;
+  }
   .col-12 {
     padding-right: 0;
     padding-left: 0;

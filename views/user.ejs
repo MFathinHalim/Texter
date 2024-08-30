@@ -88,9 +88,15 @@
         profileLink.classList.add("btn", "btn-outline-white", "rounded-pill", "border-0");
         // Menambahkan teks atau konten di dalam tombol
         profileLink.innerHTML = '<i class="fa-solid fa-gear"></i>';
-
+      let bookmarkLink = document.createElement("a");
+      bookmarkLink.setAttribute("id", "bookmarkLink");
+        bookmarkLink.classList.add("btn", "btn-outline-warning", "text-warning", "rounded-pill", "border-0");
+          bookmarkLink.innerHTML = '<i class="fa-solid fa-bookmark"></i>';
         // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
+        document.getElementById("top").appendChild(bookmarkLink);
         document.getElementById("top").appendChild(profileLink);
+        document.getElementById("bookmarkLink").setAttribute("href", `/bookmark?username=<%= user.user.username %>`);
+
 
           let logoutButton = document.createElement("button");
 

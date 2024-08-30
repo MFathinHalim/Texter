@@ -97,7 +97,8 @@ class Posts {
     limit: number,
     userId?: string,
     search?: string,
-    trend?: boolean
+    trend?: boolean,
+    video?: boolean
   ): Promise<
     | { posts: postType[] }
     | { post: postType | null; replies?: postType[] }
@@ -162,12 +163,20 @@ class Posts {
 
         // Query posts and shuffle the results
         let posts = await this.#posts.find({}).exec();
+
         posts = shuffleArray(posts);
 
         // Take only the necessary portion of shuffled posts
         posts = posts.filter((post) =>
           post.title.toLowerCase().includes(search?.toLowerCase() || "")
         );
+        if (video) {
+          posts = posts.filter(
+            (post) =>
+              post.img &&
+              (post.img.includes(".mp4") || post.img.includes(".ogg"))
+          );
+        }
         if (search?.trim().length === 0) {
           posts = posts.slice(skip, skip + adjustedLimit);
         }
@@ -199,7 +208,7 @@ class Posts {
     } else if (userId) {
       //? Jika dia user details
       const limit = 5;
-      const skip = (page - 1) * limit;
+      const skip = page > 0 ? (page - 1) * limit : 0;
       let posts = await this.#posts
         .find({})
         .populate({

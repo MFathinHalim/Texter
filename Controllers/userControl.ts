@@ -645,7 +645,39 @@ class Users {
       console.error("Error creating post notification:", error);
     }
   }
+  async getFollowersDetails(id: string): Promise<any[] | userType> {
+    try {
+      // Temukan pengguna berdasarkan username
+      const user = await this.#users.findOne({ id }).populate("followers");
 
+      // Jika pengguna tidak ditemukan, kembalikan pesan kesalahan
+      if (!user) {
+        return this.#error[1];
+      }
+
+      // Ambil detail dari setiap pengikut
+      const followersDetails = await Promise.all(
+        user.followers.map(async (followerId: any) => {
+          const follower = await this.#users.findById(followerId);
+          if (follower && user.following.includes(follower._id)) {
+            return {
+              name: follower.name,
+              username: follower.username,
+              pp: follower.pp,
+            };
+          }
+        })
+      );
+
+      // Filter untuk menghapus nilai undefined (jika ada)
+      return followersDetails
+        .filter((detail) => detail !== undefined)
+        .slice(0, 5);
+    } catch (error) {
+      console.error("Error fetching followers details:", error);
+      return this.#error[1];
+    }
+  }
   // Function to create a like post notification
   async likePostNotification(
     userId: string,
