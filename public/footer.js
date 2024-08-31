@@ -607,7 +607,7 @@ if (!window.location.href.toString().includes("/login") && !window.location.href
     }
 
     // Send POST request using fetch
-    fetch(`/profile/${username}`, {
+    fetch(`/settings/${username}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
