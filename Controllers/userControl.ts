@@ -173,7 +173,7 @@ class Users {
     return jwt.verify(
       refresh,
       process.env.JWT_SECRET_KEY,
-      async (err: Error, user: any) => {
+      async (err: Error, user: userType) => {
         if (err) return "error";
         const createAccessToken = await this.createAccessToken(user.id);
         const accessToken: string = createAccessToken.newToken;
@@ -190,11 +190,13 @@ class Users {
       return this.#error[1];
     }
     const userAlreadyBookmark: userType | undefined = user.bookmark.find(
-      (entry: any) => entry._id.toString() === postId
+      (entry: Document<postType, any, any> & postType) =>
+        entry._id?.toString() === postId
     );
     if (userAlreadyBookmark) {
       user.bookmark = user.bookmark.filter(
-        (entry: any) => entry._id.toString() !== postId
+        (entry: Document<postType, any, any> & postType) =>
+          entry._id?.toString() !== postId
       );
     } else {
       user.bookmark.push(postId);
@@ -207,7 +209,7 @@ class Users {
     id: string,
     page: number = 1,
     limit: number = 5
-  ): Promise<{ posts?: any[]; totalPages?: number } | userType> {
+  ): Promise<{ posts?: postType[]; totalPages?: number } | userType> {
     try {
       // Validasi halaman dan limit
       if (page < 1 || limit <= 0) {
@@ -541,7 +543,7 @@ class Users {
     }
   }
   async editProfile(
-    userData: any,
+    userData: userType,
     profilePicture: string
   ): Promise<userType | {}> {
     try {
@@ -620,7 +622,7 @@ class Users {
       const postLink = `https://texter-id.glitch.me/@${user.username}/${postId}`;
 
       await Promise.all(
-        user.followers.map(async (followerId: any) => {
+        user.followers.map(async (followerId: mongoose.ObjectId) => {
           const follower = await userModel.findById(followerId);
           if (follower) {
             follower.notification?.messages.push({
@@ -657,7 +659,7 @@ class Users {
 
       // Ambil detail dari setiap pengikut
       const followersDetails = await Promise.all(
-        user.followers.map(async (followerId: any) => {
+        user.followers.map(async (followerId: mongoose.ObjectId) => {
           const follower = await this.#users.findById(followerId);
           if (follower && user.following.includes(follower._id)) {
             return {
@@ -774,11 +776,13 @@ class Users {
       }
 
       // Ambil notifikasi dari user
-      let notifications: any = user.notification?.messages || [];
+      let notifications: { message: string; link: string }[] =
+        user.notification?.messages || [];
 
       // Filter notifikasi untuk memastikan setiap notifikasi memiliki message dan link
       notifications = notifications.filter(
-        (notification: any) => notification.message && notification.link
+        (notification: { message: string; link: string }) =>
+          notification.message && notification.link
       );
 
       // Ambil hanya 20 notifikasi terakhir
