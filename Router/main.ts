@@ -93,83 +93,79 @@ router.route("/@:username/:id").get(async (req: Request, res: Response) => {
     return res.status(500).send("Failed to fetch data");
   }
 });
-router
-  .route("/post")
-  .post(upload.single("image"), async (req: Request, res: Response) => {
-    try {
-      const authHeader = req.headers["authorization"];
-      const token = authHeader && authHeader.split(" ")[1];
-      if (token == null) return res.sendStatus(401);
-      const checkToken = await userClass.checkAccessToken(token);
-      if (!checkToken) {
-        throw new Error("Invalid token");
-      }
-
-      const userData = JSON.parse(req.body.data);
-
-      let img: string = ""; // Initialize image URL
-      //@ts-ignore: Unreachable code error
-      if (req.file) {
-        // If a file is uploaded, process it
-        //@ts-ignore: Unreachable code error
-        const buffer = req.file.buffer;
-        const time = new Date().toLocaleDateString();
-
-        const id = `${userData.title}-texter-${time}`;
-        // Upload image to ImageKit
-        //@ts-ignore: Unreachable code error
-        const originalFileName = req.file.originalname;
-        const ext = path.extname(originalFileName).toLowerCase();
-        await imagekit.upload(
-          {
-            file: buffer,
-            fileName: `image-${id}${ext}`,
-            useUniqueFileName: false,
-            folder: "Txtr",
-          },
-          async function (error: Error, result: any) {
-            if (error) {
-              console.error("Error uploading to ImageKit:", error);
-              return res
-                .status(500)
-                .json({ msg: "Terjadi kesalahan saat mengunggah file" });
-            }
-
-            img = result.url; // Save the uploaded image URL
-
-            // Post data to PostsClass
-            await PostsClass.posting(userData, checkToken, img)
-              .then((post) => {
-                userClass.createPostNotification(checkToken.id, post.id);
-                res.json(post);
-              })
-              .catch((error) => {
-                // Tangani error jika diperlukan
-                console.error("Error posting:", error);
-                // Atau tampilkan pesan error
-                res.status(500).send("Error posting");
-              });
-          }
-        );
-      } else {
-        // Post data to PostsClass
-        await PostsClass.posting(userData, checkToken, img)
-          .then((post) => {
-            userClass.createPostNotification(checkToken.id, post.id);
-            res.json(post);
-          })
-          .catch((error) => {
-            // Tangani error jika diperlukan
-            console.error("Error posting:", error);
-            // Atau tampilkan pesan error
-            res.status(500).send("Error posting");
-          });
-      }
-    } catch (error) {
-      console.error("Error posting data:", error);
-      return res.status(500).send("Failed to post data");
+router.route("/post").post(upload.single("image"), async (req: Request, res: Response) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (token == null) return res.sendStatus(401);
+    const checkToken = await userClass.checkAccessToken(token);
+    if (!checkToken) {
+      throw new Error("Invalid token");
     }
-  });
+
+    const userData = JSON.parse(req.body.data);
+
+    let img: string = ""; // Initialize image URL
+    //@ts-ignore: Unreachable code error
+    if (req.file) {
+      // If a file is uploaded, process it
+      //@ts-ignore: Unreachable code error
+      const buffer = req.file.buffer;
+      const time = new Date().toLocaleDateString();
+
+      const id = `${userData.title}-texter-${time}`;
+      // Upload image to ImageKit
+      //@ts-ignore: Unreachable code error
+      const originalFileName = req.file.originalname;
+      const ext = path.extname(originalFileName).toLowerCase();
+      await imagekit.upload(
+        {
+          file: buffer,
+          fileName: `image-${id}${ext}`,
+          useUniqueFileName: false,
+          folder: "Txtr",
+        },
+        async function (error: Error, result: any) {
+          if (error) {
+            console.error("Error uploading to ImageKit:", error);
+            return res.status(500).json({ msg: "Terjadi kesalahan saat mengunggah file" });
+          }
+
+          img = result.url; // Save the uploaded image URL
+
+          // Post data to PostsClass
+          await PostsClass.posting(userData, checkToken, img)
+            .then((post) => {
+              userClass.createPostNotification(checkToken.id, post.id);
+              res.json(post);
+            })
+            .catch((error) => {
+              // Tangani error jika diperlukan
+              console.error("Error posting:", error);
+              // Atau tampilkan pesan error
+              res.status(500).send("Error posting");
+            });
+        }
+      );
+    } else {
+      // Post data to PostsClass
+      await PostsClass.posting(userData, checkToken, img)
+        .then((post) => {
+          userClass.createPostNotification(checkToken.id, post.id);
+          res.json(post);
+        })
+        .catch((error) => {
+          // Tangani error jika diperlukan
+          console.error("Error posting:", error);
+          // Atau tampilkan pesan error
+          res.status(500).send("Error posting");
+        });
+    }
+  } catch (error) {
+    console.error("Error posting data:", error);
+    return res.status(500).send("Failed to post data");
+  }
+});
 
 router.route("/get/posts").get(async (req: Request, res: Response) => {
   const page: number = parseInt(req.query.page as string, 10) || 1; // Default ke halaman 1 jika tidak ada
@@ -188,15 +184,7 @@ router.route("/get/videos").get(async (req: Request, res: Response) => {
   const limit = 5; // Get limit from query
   const search: string = req.query.search?.toString() || "";
   try {
-    const posts = await PostsClass.getData(
-      "",
-      page,
-      limit,
-      undefined,
-      search,
-      false,
-      true
-    ); // Assuming getData now takes page and limit
+    const posts = await PostsClass.getData("", page, limit, undefined, search, false, true); // Assuming getData now takes page and limit
     return res.json({ posts: posts, searchTerm: search }); // Send posts as JSON response
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -213,11 +201,7 @@ router.route("/get/following").get(async (req: Request, res: Response) => {
   const checkToken = await userClass.checkAccessToken(token);
   try {
     const userFollowing = await userClass.checkWhatUserFollowing(checkToken.id);
-    const posts = await PostsClass.getDataByFollowedUsers(
-      userFollowing,
-      page,
-      limit
-    ); // Assuming getData now takes page and limit
+    const posts = await PostsClass.getDataByFollowedUsers(userFollowing, page, limit); // Assuming getData now takes page and limit
     return res.json({ posts: posts, searchTerm: search }); // Send posts as JSON response
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -247,10 +231,7 @@ router.route("/get/replies/:id").get(async (req: Request, res: Response) => {
   }
 
   try {
-    const { replies, totalPages } = await PostsClass.getReplies(
-      req.params.id,
-      page
-    );
+    const { replies, totalPages } = await PostsClass.getReplies(req.params.id, page);
 
     return res.json({ replies, totalPages, searchTerm: search });
   } catch (error) {
@@ -264,14 +245,7 @@ router.route("/get/trends").get(async (req: Request, res: Response) => {
   const limit = parseInt(req.query.limit as string) || 10; // Get limit from query
   const search: string = req.query.search?.toString() || "";
   try {
-    const posts = await PostsClass.getData(
-      "",
-      page,
-      limit,
-      undefined,
-      search,
-      true
-    ); // Assuming getData now takes page and limit
+    const posts = await PostsClass.getData("", page, limit, undefined, search, true); // Assuming getData now takes page and limit
     return res.json({ posts: posts, searchTerm: search }); // Send posts as JSON response
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -381,9 +355,7 @@ router.route("/get/bookmark/:id").get(async (req: Request, res: Response) => {
 router
   .route("/bookmark/")
   .get(async (req: Request, res: Response) => {
-    const user = await userClass.checkUserDetails(
-      req.query.username?.toString() || ""
-    );
+    const user = await userClass.checkUserDetails(req.query.username?.toString() || "");
     if (user) {
       return res.render("bookmark", {
         user: user,
@@ -403,40 +375,29 @@ router
   });
 
 router.route("/@:username").get(async (req: Request, res: Response) => {
-  const user = await userClass.checkUserDetails(
-    req.params.username,
-    req.query.myname?.toString() || ""
-  );
+  const user = await userClass.checkUserDetails(req.params.username, req.query.myname?.toString() || "");
   if (user) {
     return res.render("user", { user: user, searchTerm: "" });
   }
 });
-router
-  .route("/get/user/post/:username")
-  .get(async (req: Request, res: Response) => {
-    const user = await userClass.checkUserDetails(
-      req.params.username,
-      req.query.myname?.toString() || ""
-    );
-    const page = parseInt(req.query.page as string, 10) || 1; // Default ke halaman 1 jika tidak ada
+router.route("/get/user/post/:username").get(async (req: Request, res: Response) => {
+  const user = await userClass.checkUserDetails(req.params.username, req.query.myname?.toString() || "");
+  const page = parseInt(req.query.page as string, 10) || 1; // Default ke halaman 1 jika tidak ada
 
-    // Validasi halaman
-    if (page < 1) {
-      return res.status(400).json({ error: "Invalid page number" });
-    }
-    const posts = await PostsClass.getData("", page, 5, user.user.id);
-    return res.json({ posts: posts });
-  });
+  // Validasi halaman
+  if (page < 1) {
+    return res.status(400).json({ error: "Invalid page number" });
+  }
+  const posts = await PostsClass.getData("", page, 5, user.user.id);
+  return res.json({ posts: posts });
+});
 router.route("/search").get(async (req: Request, res: Response) => {
   return res.render("search", { searchTerm: "" });
 });
 router
   .route("/settings/:username")
   .get(async (req: Request, res: Response) => {
-    const user = await userClass.checkUserDetails(
-      req.params.username,
-      req.query.myname?.toString() || ""
-    );
+    const user = await userClass.checkUserDetails(req.params.username, req.query.myname?.toString() || "");
     if (user) {
       return res.render("edit-profile", { ...user, searchTerm: "" });
     }
@@ -448,18 +409,19 @@ router
       if (token == null) return res.sendStatus(401);
       const checkToken = await userClass.checkAccessToken(token);
       if (!checkToken) {
-        throw new Error("Invalid token");
+        return res.sendStatus(401);
       }
 
-      const userData = JSON.parse(req.body.data);
+      let userData = JSON.parse(req.body.data);
 
       let img: string = ""; // Initialize image URL
+      userData.id = checkToken.id;
       //@ts-ignore: Unreachable code error
       if (req.file) {
         // If a file is uploaded, process it
         //@ts-ignore: Unreachable code error
         const buffer = req.file.buffer;
-        const id: string = userData.id;
+        const id: string = checkToken.id;
         // Upload image to ImageKit
         await imagekit.upload(
           {
@@ -471,9 +433,7 @@ router
           async function (error: Error, result: any) {
             if (error) {
               console.error("Error uploading to ImageKit:", error);
-              return res
-                .status(500)
-                .json({ msg: "Terjadi kesalahan saat mengunggah file" });
+              return res.status(500).json({ msg: "Terjadi kesalahan saat mengunggah file" });
             }
             const currentEpochTime = Date.now();
             const updatedAt = `updatedAt=${currentEpochTime}`;
@@ -492,15 +452,6 @@ router
     }
   });
 
-router
-  .route("/user/details/json/:username")
-  .get(async (req: Request, res: Response) => {
-    const user = await userClass.checkUserDetails(
-      req.params.username,
-      req.params.username
-    );
-    return res.json({ user: user });
-  });
 router.route("/post/report/").post(async (req: Request, res: Response) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
@@ -562,9 +513,7 @@ router
   .route("/dashboard/admin")
   .get(async (req: Request, res: Response) => {
     const isDashboardUser: boolean = req.query.user?.toString() === "true";
-    const data = isDashboardUser
-      ? await userClass.getAllUsers()
-      : await PostsClass.getReportData();
+    const data = isDashboardUser ? await userClass.getAllUsers() : await PostsClass.getReportData();
     return res.render(isDashboardUser ? "dashboardUser" : "dashboard", {
       data: data,
       searchTerm: "",
@@ -597,10 +546,7 @@ router
 router
   .route("/user/follow/:username")
   .get(async (req: Request, res: Response) => {
-    const isFollowing: boolean | userType = await userClass.checkFollow(
-      req.params.username,
-      req.query.myname?.toString() || ""
-    );
+    const isFollowing: boolean | userType = await userClass.checkFollow(req.params.username, req.query.myname?.toString() || "");
     return res.json({ isFollowing });
   })
   .post(async (req: Request, res: Response) => {
@@ -610,9 +556,7 @@ router
     const checkToken = await userClass.checkAccessToken(token);
     if (checkToken) {
       await userClass.follow(req.params.username, req.body.myname);
-      const owner: userType = await userClass.getUserByUsername(
-        req.params.username
-      );
+      const owner: userType = await userClass.getUserByUsername(req.params.username);
       await userClass.followPostNotification(checkToken.id, owner.id);
     }
     res.send(200);
@@ -640,10 +584,7 @@ router
     return res.render("login", { searchTerm: "" });
   }) //untuk get login, ya di render aja
   .post(async (req: Request, res: Response) => {
-    let result: userType = await userClass.login(
-      req.body.username.replace(" ", ""),
-      req.body.password
-    ); //liat hasil resultnya nih
+    let result: userType = await userClass.login(req.body.username.replace(" ", ""), req.body.password); //liat hasil resultnya nih
 
     if (result.username === "system") {
       //kalau sistem dia ke error
@@ -653,9 +594,7 @@ router
         searchTerm: "",
       });
     }
-    const tokenFunction = await userClass.createAccessToken(
-      result.id.toString()
-    );
+    const tokenFunction = await userClass.createAccessToken(result.id.toString());
     const token = tokenFunction.newToken;
     res.cookie("refreshtoken", tokenFunction.refreshToken, {
       path: "/refresh",
@@ -685,12 +624,7 @@ router
     return res.render("signup", { searchTerm: "" }); //? ya render
   })
   .post(async (req: Request, res: Response) => {
-    await userClass.signUp(
-      req.body.name,
-      req.body.username,
-      req.body.password,
-      req.body.desc
-    ); //di adain
+    await userClass.signUp(req.body.name, req.body.username, req.body.password, req.body.desc); //di adain
     return res.redirect("/login"); //lalu ke /login
   });
 
