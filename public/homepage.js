@@ -29,6 +29,27 @@ function updateLikeButton(isLiked, buttonElement) {
 }
 const postContainer = document.getElementById("post-container");
 function renderPosts(posts) {
+  if (posts.length === 0) {
+    // Hide the spinner
+    document.getElementById("spinner-d").classList.add("d-none");
+
+    // Check if the message element already exists
+
+    const existingMessage = document.getElementById("no-posts-message");
+    if (!existingMessage) {
+      // Create a new HTML element for the message
+      const messageElement = document.createElement("h4");
+      messageElement.classList.add("text-white");
+      messageElement.id = "no-posts-message"; // Set the id for the new element
+      messageElement.textContent = "No Posts Available";
+
+      // Append the message to the target element
+      document.getElementById("loading-screen-bottom").appendChild(messageElement);
+    } else {
+      existingMessage.classList.remove("d-none");
+    }
+  }
+
   posts.forEach((post) => {
     if (post) {
       const postElement = document.createElement("div");
@@ -157,6 +178,11 @@ fetchPosts(currentPage).then(renderPosts); // Add scroll listener for infinite s
 window.addEventListener("scroll", () => {
   const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
   if (scrollTop + clientHeight >= scrollHeight - 100) {
+    document.getElementById("spinner-d").classList.remove("d-none");
+    if (document.getElementById("no-posts-message")) {
+      document.getElementById("no-posts-message").classList.add("d-none");
+    }
+
     // Adjust threshold as needed
     loadMorePosts();
     loadMorePosts();

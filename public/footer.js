@@ -324,7 +324,7 @@ if (!window.location.href.toString().includes("/login") && !window.location.href
       topList.innerHTML = ""; // Clear existing content
 
       if (topUsers.length === 0) {
-        topList.innerHTML = "<div>No top users available!</div>";
+        topList.innerHTML = "<div>No mutuals users available!</div>";
       } else {
         topUsers.forEach((user) => {
           const listItem = document.createElement("div");
@@ -730,11 +730,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("theme") || "auto"; // Default to 'dark' if no theme is saved
   applyTheme(savedTheme);
   // List of paths where loading screen should be hidden
-  const hiddenPaths = ["/settings", "/login", "/signup", "/notification"];
+  const hiddenPaths = [`/settings/${username}`, "/login", "/signup", "/notification"];
 
   // Get the current path
   const currentPath = window.location.pathname;
-  console.log(currentPath);
   // Check if the current path is in the list of hidden paths
   if (hiddenPaths.includes(currentPath)) {
     document.getElementById("loading-screen-bottom").classList.add("d-none");

@@ -40,4 +40,8 @@
   <% } %>
 </div>
 
-<%- include("partials/footer.ejs") %>
+<%- include("partials/footer.ejs") %> <% if(users && users.length === 0) { %>
+<script>
+  document.getElementById("loading-screen-bottom").classList.add("d-none");
+</script>
+<% } %>
