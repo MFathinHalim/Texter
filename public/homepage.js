@@ -1,95 +1,38 @@
-<%- include("partials/header.ejs") %>
-<style>
-  html,
-  body {
-    height: 100%; /* Ensure body and html take full height */
-    margin: 0; /* Remove default margin */
-    overflow: hidden; /* Disable scrolling on html and body */
-  }
+async function fetchIsLiked(postId, buttonElement) {
+  try {
+    const response = await fetch(`/isLiked?id=${postId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`, // Add authorization header if needed
+      },
+    });
 
-  #post-container {
-    height: 100vh; /* Full viewport height */
-    overflow-y: scroll; /* Enable vertical scroll */
-    scroll-snap-type: y mandatory; /* Enable scroll snap behavior */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  }
-
-  .card.post {
-    scroll-snap-align: center; /* Ensure snapping aligns to the center */
-    box-sizing: border-box; /* Ensure padding/border is included in height */
-    background: lightgray; /* Just for visibility */
-    border: 1px solid black; /* Just for visibility */
-  }
-</style>
-
-<div id="post-container" class="pt-3"></div>
-
-<%- include("partials/footer.ejs") %>
-<script>
-  async function fetchIsLiked(postId, buttonElement) {
-    try {
-      const response = await fetch(`/isLiked?id=${postId}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`, // Add authorization header if needed
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch like status");
-      }
-
-      const result = await response.json();
-      updateLikeButton(result.isLiked, buttonElement);
-    } catch (error) {
-      console.error("Error fetching like status:", error);
+    if (!response.ok) {
+      throw new Error("Failed to fetch like status");
     }
-  }
 
-  function updateLikeButton(isLiked, buttonElement) {
-    if (isLiked) {
-      buttonElement.classList.remove("btn-outline-danger");
-      buttonElement.classList.add("btn-danger");
-    } else {
-      buttonElement.classList.remove("btn-danger");
-      buttonElement.classList.add("btn-outline-danger");
-    }
+    const result = await response.json();
+    updateLikeButton(result.isLiked, buttonElement);
+  } catch (error) {
+    console.error("Error fetching like status:", error);
   }
-  const postContainer = document.getElementById("post-container");
-  let currentPage = 1;
-  const postsPerPage = 10; // Adjust as needed
-  async function fetchPosts(page) {
-    try {
-      const url = new URL(window.location.href);
+}
 
-      // Ambil parameter pencarian dari query string
-      const search = url.searchParams.get("search")?.replace("#", "") || "";
-      const isFollowing = url.searchParams.get("following") || "";
-      if (isFollowing !== "") {
-        const response = await fetch(`/get/following?page=${currentPage}&limit=${postsPerPage}${search !== null ? `&search=${search}` : ""}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await response.json();
-        return data.posts.posts;
-      }
-
-      const response = await fetch(`/get
-/videos?page=${page}&limit=${postsPerPage}${search !== null ? `&search=${search}` : ""}`);
-      const data = await response.json();
-      return data.posts.posts;
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-      return [];
-    }
+function updateLikeButton(isLiked, buttonElement) {
+  if (isLiked) {
+    buttonElement.classList.remove("btn-outline-danger");
+    buttonElement.classList.add("btn-danger");
+  } else {
+    buttonElement.classList.remove("btn-danger");
+    buttonElement.classList.add("btn-outline-danger");
   }
-  function escapeHTMLAttribute(jsonString) {
-    return jsonString.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
-  }
-  function renderPosts(posts) {
-    posts.forEach((post) => {
+}
+const postContainer = document.getElementById("post-container");
+function renderPosts(posts) {
+  posts.forEach((post) => {
+    if (post) {
       const postElement = document.createElement("div");
-      if ((post.img && !post.reQuote && post.img.includes(".mp4")) || post.img.includes(".ogg")) {
-        postElement.innerHTML = `
+      postElement.innerHTML = `
     <div class="card bg-dark text-white p-3 post rounded-0 border-light">
       <a href="/@${post.user.username}/${post.id.includes("txtr") ? post._id : post.id}">
         <div>
@@ -196,38 +139,30 @@
       </div>
     </div>
     `;
-        postContainer.appendChild(postElement);
+      postContainer.appendChild(postElement);
 
-        // Fetch and update like status for this post
-        fetchIsLiked(post.id, document.getElementById(`like-btn-${post.id}`));
-      }
-    });
-  }
-
-  async function loadMorePosts() {
-    currentPage++;
-    const newPosts = await fetchPosts(currentPage);
-    renderPosts(newPosts);
-  }
-  // Initial load
-  document.addEventListener("DOMContentLoaded", () => {
-    const postContainer = document.getElementById("post-container");
-
-    // Load initial posts
-    fetchPosts(currentPage).then(renderPosts);
-
-    // Event listener for scroll on #post-container
-    postContainer.addEventListener("scroll", () => {
-      const { scrollTop, scrollHeight, clientHeight } = postContainer;
-      if (scrollTop + clientHeight >= scrollHeight - 100) {
-        // Adjust threshold as needed
-        loadMorePosts();
-      }
-    });
-    const { scrollTop, scrollHeight, clientHeight } = postContainer;
-    if (scrollTop + clientHeight >= scrollHeight - 100) {
-      // Adjust threshold as needed
-      loadMorePosts();
+      // Fetch and update like status for this post
+      fetchIsLiked(post.id, document.getElementById(`like-btn-${post.id}`));
     }
   });
-</script>
+}
+
+async function loadMorePosts() {
+  currentPage++;
+  const newPosts = await fetchPosts(currentPage);
+  renderPosts(newPosts);
+}
+// Initial load
+fetchPosts(currentPage).then(renderPosts); // Add scroll listener for infinite scrolling
+window.addEventListener("scroll", () => {
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+  if (scrollTop + clientHeight >= scrollHeight - 100) {
+    // Adjust threshold as needed
+    loadMorePosts();
+    loadMorePosts();
+  }
+});
+window.addEventListener("DOMContentLoaded", () => {
+  loadMorePosts();
+  loadMorePosts();
+});

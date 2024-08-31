@@ -1,29 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>
-  <% if (typeof post !== 'undefined' && post) { %>
-    <%= post.user.name %> on Texter: "<%= post.title %>"
-  <% } else if (typeof user !== 'undefined' && user.user) { %>
-    See <%= user.user.name %> on Texter
-  <% } else { %>
-    Home / Texter
-  <% } %>
-</title>
+    <title>
+      <% if (typeof post !== 'undefined' && post) { %> <%= post.user.name %> on
+      Texter: "<%= post.title %>" <% } else if (typeof user !== 'undefined' &&
+      user.user) { %> See <%= user.user.name %> on Texter <% } else { %> Home /
+      Texter <% } %>
+    </title>
 
-<link rel="icon" type="image/x-icon" href="https://ik.imagekit.io/9hpbqscxd/SG/image-66.jpg?updatedAt=1705798245623">
-<link
-  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-  rel="stylesheet"
-  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-  crossorigin="anonymous"
-/>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://ik.imagekit.io/9hpbqscxd/SG/image-66.jpg?updatedAt=1705798245623"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
 
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:description" content="
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:description"
+      content="
   <% if (typeof post !== 'undefined' && post) { %>
     <%= post.title ? post.title : 'Texter, Media Sosial Berbasis Text' %>
   <% } else if (typeof user !== 'undefined' && user.user) { %>
@@ -31,27 +34,36 @@
   <% } else { %>
     Texter, Media Sosial Berbasis Text
   <% } %>
-" />
-<meta name="twitter:image" content="
+"
+    />
+    <meta
+      name="twitter:image"
+      content="
   <% if (typeof post !== 'undefined' && post && post.img) { %>
     <%= post.img %>
   <% } else if (typeof user !== 'undefined' && user.user) { %>
     <%= user.user.pp %>
   <% } %>
-" />
-<meta name="twitter:site" content="Texter">
-<meta name="twitter:creator" content="
+"
+    />
+    <meta name="twitter:site" content="Texter" />
+    <meta
+      name="twitter:creator"
+      content="
   <% if (typeof post !== 'undefined' && post) { %>
     <%= post.user.username %>
   <% } else if (typeof user !== 'undefined' && user.user) { %>
     <%= user.user.username %>
   <% } else { %>
     Texter
-  <% } %>">
+  <% } %>"
+    />
 
-<!-- Open Graph -->
-<meta property="og:type" content="website" />
-<meta property="og:title" content="
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="
   <% if (typeof post !== 'undefined' && post) { %>
     <%= post.user.name %> (@<%= post.user.username %>) on Texter
   <% } else if (typeof user !== 'undefined' && user.user) { %>
@@ -59,8 +71,11 @@
   <% } else { %>
     Texter
   <% } %>
-" />
-<meta property="og:description" content="
+"
+    />
+    <meta
+      property="og:description"
+      content="
   <% if (typeof post !== 'undefined' && post) { %>
     <%= post.title ? post.title : 'Texter, Media Sosial Berbasis Text' %>
   <% } else if (typeof user !== 'undefined' && user.user) { %>
@@ -68,132 +83,160 @@
   <% } else { %>
     Texter, Media Sosial Berbasis Text
   <% } %>
-" />
-<meta property="og:image" content="
+"
+    />
+    <meta
+      property="og:image"
+      content="
   <% if (typeof post !== 'undefined' && post && post.img) { %>
     <%= post.img %>
   <% } else if (typeof user !== 'undefined' && user.user) { %>
     <%= user.user.pp %>
   <% } %>
-" />
+"
+    />
 
-<!-- Application Name -->
-<meta name="application-name" content="Texter" />
+    <!-- Application Name -->
+    <meta name="application-name" content="Texter" />
 
     <script
       src="https://kit.fontawesome.com/f72e788797.js"
       crossorigin="anonymous"
     ></script>
-    <link href="./style.css" rel="stylesheet" />
-    <link href=".././style.css" rel="stylesheet" />
-    <link href="../../../style.css" rel="stylesheet" />
+    <link href="/style.css" rel="stylesheet" />
   </head>
   <body>
-
-    <nav class="navbar container navbar-dark sticky-top bg-dark-glass" style="padding-top: 10px !important; padding-bottom: 10px !important;">
+    <nav
+      class="navbar container navbar-dark sticky-top bg-dark-glass"
+      style="padding-top: 10px !important; padding-bottom: 10px !important"
+    >
       <a class="navbar-brand ms-3 pb-0" href="/">
-        <img src="https://ik.imagekit.io/9hpbqscxd/SG/image-67.jpg?updatedAt=1705798245623" width="30" height="30" alt="">
+        <img
+          src="https://ik.imagekit.io/9hpbqscxd/SG/image-67.jpg?updatedAt=1705798245623"
+          width="30"
+          height="30"
+          alt=""
+        />
       </a>
-        <div id="followingfollowers" class="text-light border-0 pb-0 rounded-0 mx-auto">
+      <div
+        id="followingfollowers"
+        class="text-light border-0 pb-0 rounded-0 mx-auto"
+      >
         <div class="d-flex">
-          <a id="forYou" class="bg-0 text-light rounded-0 flex-fill text-center <%= typeof post !== 'undefined' && post || typeof user !== 'undefined' && user ? '' : 'active'%>" href="/">For you</a>
-          <a id="following" class="bg-0 text-light ms-3 rounded-0 flex-fill text-center" href="?following=true">Following</a>        
+          <a
+            id="forYou"
+            class="bg-0 text-light rounded-0 flex-fill text-center <%= typeof post !== 'undefined' && post || typeof user !== 'undefined' && user ? '' : 'active'%>"
+            href="/"
+            >For you</a
+          >
+          <a
+            id="following"
+            class="bg-0 text-light ms-3 rounded-0 flex-fill text-center"
+            href="?following=true"
+            >Following</a
+          >
         </div>
       </div>
       <a
         class="btn btn-outline-dark rounded-pill m-2 mt-0 mb-0 ms-0"
-        style="font-size: larger; border: none !important;"
-        href="/video">
-          <i class="fa-solid fa-clapperboard"></i>
+        style="font-size: larger; border: none !important"
+        href="/video"
+      >
+        <i class="fa-solid fa-clapperboard"></i>
       </a>
     </nav>
     <div id="popup" class="popup d-none" onclick="togglePopup()">
       <div class="popup-content" onclick="event.stopPropagation()">
-         <form
+        <form
           class="bg-dark-glass text-light p-3 border-light rounded"
           enctype="multipart/form-data"
           onsubmit="sendPostRequest(this, undefined, undefined, undefined, undefined, undefined, 'img')"
+        >
+          <button class="close-btn" onclick="togglePopup()" type="button">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <div class="mb-3">
+            <div class="d-flex mb-2">
+              <img
+                class="rounded-circle"
+                style="width: 100%; height: 100%; width: 70px; height: 70px"
+                id="mypfp"
+                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                alt="Card image"
+              />
+              <div class="ms-2 mt-0">
+                <h5 class="card-title" id="myname"></h5>
+                <h5 class="text-secondary" id="currentTime"></h5>
+              </div>
+            </div>
+            <textarea
+              style="height: 70px; font-size: larger"
+              type="text"
+              class="form-control border-0"
+              id="title"
+              name="title"
+              placeholder="What's Happening?!"
+            ></textarea>
+          </div>
+          <img
+            style="border-radius: 2% !important"
+            class="mb-3 d-none"
+            id="preview"
+            onerror="this.remove()"
+          />
+          <video
+            id="preview"
+            height="450"
+            class="mb-3 border-light d-none"
+            loop
+            style="border-radius: 2% !important"
+            onerror="this.remove()"
+            controls
           >
-    <button class="close-btn" onclick="togglePopup()" type="button">
-        <i class="fa-solid fa-xmark"></i>
-    </button>
-  <div class="mb-3">
-    <div class="d-flex mb-2">
-      <img
-      class="rounded-circle"
-      style="
-      width: 100%;
-      height: 100%;
-      width: 70px;
-      height: 70px;
-      "
-      id="mypfp"
-      src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-      alt="Card image"
-      />
-      <div class="ms-2 mt-0">
-        <h5 class="card-title" id="myname"></h5>
-      <h5 class="text-secondary" id="currentTime"></h5>
+            <source id="videoPreview" type="video/mp4" />
+          </video>
+          <div class="d-flex justify-content-between">
+            <input
+              type="file"
+              class="form-control d-none"
+              id="img"
+              name="image"
+            />
+            <label
+              for="img"
+              class="btn btn-outline-secondary rounded-pill p-3 pt-2 pb-2"
+              style="font-size: larger"
+            >
+              <i class="fa-solid fa-file"></i>
+            </label>
+            <button
+              type="submit"
+              class="btn btn-primary rounded-pill p-4 pt-2 pb-2"
+              style="font-size: larger"
+            >
+              Post
+            </button>
+          </div>
+          <div id="loading-screen" class="d-none">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p>Loading...</p>
+          </div>
+        </form>
       </div>
-                
     </div>
-      <textarea
-        style="height: 70px; font-size:larger;"
-        type="text"
-        class="form-control border-0"
-      
-        id="title"
-        name="title"
-        placeholder="What's Happening?!"
-      ></textarea>
-    </div>
-        <img
-      style="border-radius: 2% !important"
-      class="mb-3 d-none"
-      id="preview"
-      onerror="this.remove()"
-    />
-      <video id="preview" height="450" class="mb-3 border-light d-none" loop style="border-radius: 2% !important" onerror="this.remove()" controls>
-        <source id="videoPreview" type="video/mp4">
-      </video>
-    <div class="d-flex justify-content-between">
-      <input
-        type="file"
-        class="form-control d-none"
-        id="img"
-        name="image"
-      />
-      <label
-        for="img"
-        class="btn btn-outline-secondary rounded-pill p-3 pt-2 pb-2"
-        style="font-size: larger"
-      >
-        <i class="fa-solid fa-file"></i>
-      </label>
-      <button
-        type="submit"
-        class="btn btn-primary rounded-pill p-4 pt-2 pb-2"
-        style="font-size: larger"
-      >
-        Post
-      </button>
-    </div>
-    <div id="loading-screen" class="d-none">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-      <p>Loading...</p>
-    </div>
-  </form>
-    </div>
-</div>
-        <div class="container">
-
+    <div class="container">
       <div class="row no-gutters">
         <div class="col-12 col-lg-3 h-100 sticky-element" id="col-lb-2">
           <div class="d-flex">
-            <a id="notifbtn" class="d-none d-lg-flex btn pe-4 ps-4 text-center bg-dark text-white border-light rounded-lg d-flex align-items-center justify-content-center" href="/notification">
-              <i id="bell-icon" class="fas fa-bell"></i> <!-- Ikon notifikasi dari FontAwesome -->
+            <a
+              id="notifbtn"
+              class="d-none d-lg-flex btn pe-4 ps-4 text-center bg-dark text-white border-light rounded-lg d-flex align-items-center justify-content-center"
+              href="/notification"
+            >
+              <i id="bell-icon" class="fas fa-bell"></i>
+              <!-- Ikon notifikasi dari FontAwesome -->
               <span id="notif-dot" class="notif-dot ms-1"></span>
             </a>
             <div
@@ -212,7 +255,6 @@
               </div>
             </div>
           </div>
-
 
           <div
             class="card bg-dark text-white border-light d-none d-lg-flex pt-3 rounded-lg mt-2"
@@ -250,11 +292,7 @@
               >
                 following
               </p>
-              <p
-                class="card-text"
-                id="myfollowers"
-                style="color: var(--text)"
-              >
+              <p class="card-text" id="myfollowers" style="color: var(--text)">
                 followers
               </p>
               <div class="text-center">
@@ -262,8 +300,9 @@
                   onclick="togglePopup()"
                   class="btn btn-primary rounded-pill ms-3"
                   style="width: 70%; font-size: x-large"
-                  >Post</
                 >
+                  Post
+                </button>
               </div>
             </div>
           </div>
@@ -271,11 +310,12 @@
             class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg mt-2 mb-2"
           >
             <div class="card-body">
-              <h5 class="h5 card-title mb-3" style="font-weight: 900;">Mutuals</h5>
+              <h5 class="h5 card-title mb-3" style="font-weight: 900">
+                Mutuals
+              </h5>
 
               <div id="follower"></div>
             </div>
           </div>
         </div>
-      <div class="col-lg-6 col-12">
-        
+        <div class="col-lg-6 col-12">

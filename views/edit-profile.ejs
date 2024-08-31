@@ -3,64 +3,23 @@
   <h4 class="h1">Settings</h4>
   <h1 class="d-none" id="username"><%= user.username %></h1>
   <h3>Edit Your Profile</h3>
-  <form
-    class="mb-3"
-    enctype="multipart/form-data"
-    onsubmit="sendEditProfile(this, '<%= user.id %>')"
-  >
+  <form class="mb-3" enctype="multipart/form-data" onsubmit="sendEditProfile(this, '<%= user.id %>')">
     <div class="mb-3">
       <label for="displayName" class="form-label">Display Name</label>
-      <input
-        type="text"
-        class="form-control border-light"
-        id="displayName"
-        name="displayName"
-        value="<%= user.name %>"
-        placeholder="Enter your new display name"
-      />
+      <input type="text" class="form-control border-light" id="displayName" name="displayName" value="<%= user.name %>" placeholder="Enter your new display name" />
     </div>
     <div class="mb-3">
       <label for="imgEdit" class="form-label">Profile Picture</label>
       <br />
-      <input
-        type="file"
-        class="form-control d-none"
-        id="imgEdit"
-        name="image"
-        accept="image/*"
-      />
-      <label
-        for="imgEdit"
-        class="btn btn-outline-secondary rounded-pill p-3 pt-2 pb-2"
-        style="font-size: larger"
-      >
-        <i class="fa-solid fa-image"></i> Upload New Picture
-      </label>
-      <img
-        id="previewEdit"
-        src="<%= user.pp %>"
-        class="rounded-circle pfp ms-2"
-      />
+      <input type="file" class="form-control d-none" id="imgEdit" name="image" accept="image/*" />
+      <label for="imgEdit" class="btn btn-outline-secondary rounded-pill p-3 pt-2 pb-2" style="font-size: larger"> <i class="fa-solid fa-image"></i> Upload New Picture </label>
+      <img id="previewEdit" src="<%= user.pp %>" class="rounded-circle pfp ms-2" />
     </div>
     <div class="mb-3">
       <label for="desc" class="form-label">Description</label>
-      <textarea
-        style="height: 120px"
-        class="form-control border-light"
-        id="desc"
-        name="desc"
-        placeholder="Enter your new description"
-      >
-<%= user.desc %></textarea
-      >
+      <textarea style="height: 120px" class="form-control border-light" id="desc" name="desc" placeholder="Enter your new description"><%= user.desc %></textarea>
     </div>
-    <button
-      type="submit"
-      class="btn btn-secondary rounded-pill p-4 pt-2 pb-2"
-      style="font-size: larger"
-    >
-      Save Changes
-    </button>
+    <button type="submit" class="btn btn-secondary rounded-pill p-4 pt-2 pb-2" style="font-size: larger">Save Changes</button>
   </form>
   <div class="mt-1">
     <h1 class="d-none" id="username"><%= user.username %></h1>
@@ -73,13 +32,7 @@
       </article>
       <article class="d-flex justify-content-between mt-2">
         <button id="darkMode" class="btn btn-dark w-100 me-2">Dark Mode</button>
-        <button
-          id="dimMode"
-          class="btn btn-dark w-100"
-          style="background-color: rgb(56, 68, 77)"
-        >
-          Dim
-        </button>
+        <button id="dimMode" class="btn btn-dark w-100" style="background-color: rgb(56, 68, 77)">Dim</button>
       </article>
     </div>
   </div>

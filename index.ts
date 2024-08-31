@@ -13,7 +13,7 @@ const app: Express = express(); //TODO bikin expressnya
 const port: number | string = process.env.PORT || 3000; //TODO bikin port :D
 
 app.set("view engine", "ejs"); //? set view enginenya jadi ejs
-app.use(express.static(path.join(__dirname, "/public"))); //TODO buat frontendnya, css js image di taruh di public
+app.use("/", express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

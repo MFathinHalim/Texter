@@ -8,15 +8,8 @@
 <div class="row mb-2">
   <div class="col-12 text-center">
     <div class="btn-group">
-      <a href="#" id="postLink" class="btn btn-outline-light rounded-pill"
-        >Posts</a
-      >
-      <a
-        href="#"
-        id="usersLink"
-        class="btn btn-light text-black ms-1 rounded-pill"
-        >Users</a
-      >
+      <a href="#" id="postLink" class="btn btn-outline-light rounded-pill">Posts</a>
+      <a href="#" id="usersLink" class="btn btn-light text-black ms-1 rounded-pill">Users</a>
     </div>
   </div>
 </div>
@@ -26,35 +19,24 @@
   <div class="card bg-dark text-white p-3 pt-1 border-0 rounded-0 border-light">
     <article class="d-flex align-items-center justify-content-between mb-0">
       <a href="/@<%= user.username %>" class="d-flex align-items-center">
-        <img
-          src="<%= user.pp %>"
-          class="rounded-circle"
-          style="height: 60px; width: 60px"
-        />
+        <img src="<%= user.pp %>" class="rounded-circle" style="height: 60px; width: 60px" />
         <div class="ms-2 pt-2">
           <h4 class="mb-1"><%= user.name %></h4>
           <p class="text-secondary">@<%= user.username %></p>
         </div>
       </a>
-      <a
-        href="/@<%= user.username %>"
-        class="btn btn-outline-warning text-warning rounded-pill ms-2"
-      >
-        Check
-      </a>
+      <a href="/@<%= user.username %>" class="btn btn-outline-warning text-warning rounded-pill ms-2"> Check </a>
     </article>
     <p class="mb-1"><%= user.desc %></p>
     <div class="d-flex">
-      <p class="mb-0" style="color: var(--accent1)">
-        <i class="fa-solid fa-user-group"></i> <%= user.following %> following
-      </p>
-      <p class="ms-2 mb-0" style="color: var(--accent2)">
-        <i class="fa-solid fa-user-group"></i> <%= user.followers %> followers
-      </p>
+      <p class="mb-0" style="color: var(--accent1)"><i class="fa-solid fa-user-group"></i> <%= user.following %> following</p>
+      <p class="ms-2 mb-0" style="color: var(--accent2)"><i class="fa-solid fa-user-group"></i> <%= user.followers %> followers</p>
     </div>
   </div>
   <% }); %> <% } else { %>
-  <p>No users found.</p>
+  <div class="card bg-dark text-white p-3 text-center border-0 rounded-0 border-light">
+    <h4>No users found.</h4>
+  </div>
   <% } %>
 </div>
 

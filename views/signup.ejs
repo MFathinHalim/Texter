@@ -1,51 +1,21 @@
 <%- include("partials/header.ejs") %>
 
 <div class="border-light rounded-0 p-3 text-center pt-5 pb-5">
-  <img
-    style="max-width: 100px; max-height: 100px"
-    src="https://ik.imagekit.io/9hpbqscxd/SG/image-67.jpg?updatedAt=1705798245623"
-    alt=""
-  />
+  <img style="max-width: 100px; max-height: 100px" src="https://ik.imagekit.io/9hpbqscxd/SG/image-67.jpg?updatedAt=1705798245623" alt="" />
   <h4 class="h1 text-center">Join Texter now</h4>
   <h4 class="h4 text-center text-secondary mb-3">Tell us who are you</h4>
 
   <form action="/signup" method="POST" enctype="application/json">
     <div class="mb-3">
-      <input
-        type="text"
-        class="form-control border-light p-3"
-        id="name"
-        placeholder="Display Name"
-        autocomplete="off"
-        name="name"
-      />
+      <input type="text" class="form-control border-light p-3" id="name" placeholder="Display Name" autocomplete="off" name="name" />
     </div>
     <div class="mb-3">
-      <input
-        type="text"
-        class="form-control border-light p-3"
-        placeholder="Username"
-        id="username"
-        autocomplete="off"
-        name="username"
-      />
+      <input type="text" class="form-control border-light p-3" placeholder="Username" id="username" autocomplete="off" name="username" />
     </div>
     <div class="mb-3">
-      <input
-        type="password"
-        class="form-control border-light p-3"
-        id="password"
-        placeholder="Password"
-        name="password"
-      />
+      <input type="password" class="form-control border-light p-3" id="password" placeholder="Password" name="password" />
     </div>
-    <button
-      type="submit"
-      style="font-size: larger"
-      class="btn btn-success p-3 w-100"
-    >
-      Sign Up
-    </button>
+    <button type="submit" style="font-size: larger" class="btn btn-success p-3 w-100">Sign Up</button>
   </form>
 
   <p class="mt-3">

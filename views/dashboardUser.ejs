@@ -17,28 +17,14 @@
       <% data.forEach((user, index) => { %> <% if (!user.ban) { %>
       <tr>
         <td>
-          <img
-            src="<%= user.pp %>"
-            class="rounded-circle"
-            style="height: 50px; width: 50px; border: 2px solid var(--accent1)"
-          />
+          <img src="<%= user.pp %>" class="rounded-circle" style="height: 50px; width: 50px; border: 2px solid var(--accent1)" />
         </td>
         <td><%= user.username %></td>
         <td><%= user.name %></td>
         <td>
           <% if (!user.isAdmin) { %>
-          <button
-            class="btn btn-danger btn-sm"
-            onclick="banUser('<%= user.id %>')"
-          >
-            Ban User
-          </button>
-          <button
-            class="btn btn-primary btn-sm ml-2"
-            onclick="makeAdmin('<%= user.id %>')"
-          >
-            Make Admin
-          </button>
+          <button class="btn btn-danger btn-sm" onclick="banUser('<%= user.id %>')">Ban User</button>
+          <button class="btn btn-primary btn-sm ml-2" onclick="makeAdmin('<%= user.id %>')">Make Admin</button>
           <% } %>
         </td>
       </tr>

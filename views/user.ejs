@@ -8,53 +8,48 @@
 <div>
   <div class="p-3 border-light rounded-0 pb-0">
     <div class="d-flex align-items-center" id="top">
-      <button class="btn btn-outline-light m-2 ms-0 pb-0 pt-0 text-center" onclick="history.back()" 
-            style=" border: none !important; height:fit-content">
-              <i class="fa-solid fa-arrow-left"></i>
-          </button>
-      <img
-        src="<%= user.user.pp %>"
-        class="rounded-circle pfp"
-      />
+      <button class="btn btn-outline-light m-2 ms-0 pb-0 pt-0 text-center" onclick="history.back()" style="border: none !important; height: fit-content">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      <img src="<%= user.user.pp %>" class="rounded-circle pfp" />
       <div class="d-flex flex-column ms-2 me-auto">
         <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
-        <h5 style="margin-bottom: 3px">
-          <%= user.user.name %>
-        </h5>
-        <p style="margin-bottom: 5px" class="text-secondary">
-          @<%= user.user.username %>
-        </p>
+        <h5 style="margin-bottom: 3px"><%= user.user.name %></h5>
+        <p style="margin-bottom: 5px" class="text-secondary">@<%= user.user.username %></p>
       </div>
 
-      <button
-        class="btn btn-outline-success rounded-pill ms-0 p-3 pt-1 pb-1"
-        style="height: fit-content; font-size: larger"
-        onclick="followPost('<%= user.user.username %>')"
-        id="follow"
-      >
-        Follow
-      </button>
+      <button class="btn btn-outline-success rounded-pill ms-0 p-3 pt-1 pb-1" style="height: fit-content; font-size: larger" onclick="followPost('<%= user.user.username %>')" id="follow">Follow</button>
     </div>
-    <p class="mt-2">
-      <%= user.user.desc != "" ? user.user.desc : "" %>
-    </p>
+    <p class="mt-2"><%= user.user.desc != "" ? user.user.desc : "" %></p>
     <div class="d-flex mt-3" style="padding-left: 5px">
-      <p>
-        <strong><%= user.user.following.length %></strong> following
-      </p>
-      <p class="ms-2">
-        <strong><%= user.user.followers.length %></strong> followers
-      </p>
+      <p><strong><%= user.user.following.length %></strong> following</p>
+      <p class="ms-2"><strong><%= user.user.followers.length %></strong> followers</p>
     </div>
   </div>
   <div id="post-container"></div>
 </div>
 <%- include("partials/footer.ejs") %>
-
 <script>
-       fetch(`/user/check`, {
-              headers: { 'Authorization': `Bearer ${token}` }
-          })        .then((res) => res.json())
+  let currentPage = 1;
+  const postsPerPage = 10; // Adjust as needed
+  async function fetchPosts(page) {
+    try {
+      const url = new URL(window.location.href);
+
+      // Ambil parameter pencarian dari query string
+      const search = url.searchParams.get("search")?.replace("#", "") || "";
+      const response = await fetch(`/get/user/post/<%= user.user.username %>?page=${page}&limit=${postsPerPage}${search !== null ? `&search=${search}` : ""}`);
+      const data = await response.json();
+      return data.posts.posts;
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      return [];
+    }
+  }
+  fetch(`/user/check`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+    .then((res) => res.json())
     .then((check) => {
       if (check.check === true) {
         logout();
@@ -64,9 +59,7 @@
 
       id = check.user.id;
       const followBtn = document.getElementById("follow");
-      fetch(
-        `/user/follow/<%= user.user.username %>?myname=${username}`
-      )
+      fetch(`/user/follow/<%= user.user.username %>?myname=${username}`)
         .then((res) => res.json())
         .then((check) => {
           if (check.isFollowing) {
@@ -88,17 +81,16 @@
         profileLink.classList.add("btn", "btn-outline-white", "rounded-pill", "border-0");
         // Menambahkan teks atau konten di dalam tombol
         profileLink.innerHTML = '<i class="fa-solid fa-gear"></i>';
-      let bookmarkLink = document.createElement("a");
-      bookmarkLink.setAttribute("id", "bookmarkLink");
+        let bookmarkLink = document.createElement("a");
+        bookmarkLink.setAttribute("id", "bookmarkLink");
         bookmarkLink.classList.add("btn", "btn-outline-warning", "text-warning", "rounded-pill", "border-0");
-          bookmarkLink.innerHTML = '<i class="fa-solid fa-bookmark"></i>';
+        bookmarkLink.innerHTML = '<i class="fa-solid fa-bookmark"></i>';
         // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
         document.getElementById("top").appendChild(bookmarkLink);
         document.getElementById("top").appendChild(profileLink);
         document.getElementById("bookmarkLink").setAttribute("href", `/bookmark?username=<%= user.user.username %>`);
 
-
-          let logoutButton = document.createElement("button");
+        let logoutButton = document.createElement("button");
 
         // Menetapkan atribut untuk tombol logout
         logoutButton.setAttribute("type", "button"); // Menetapkan type sebagai "button" agar tidak berfungsi sebagai submit
@@ -110,206 +102,12 @@
         logoutButton.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i>';
 
         // Menetapkan fungsi yang akan dipanggil saat tombol diklik
-        logoutButton.onclick = function() {
-            logout(); // Pastikan fungsi logout() sudah didefinisikan di tempat lain
+        logoutButton.onclick = function () {
+          logout(); // Pastikan fungsi logout() sudah didefinisikan di tempat lain
         };
         // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
         document.getElementById("top").appendChild(logoutButton);
       }
     });
-    async function fetchIsLiked(postId, buttonElement) {
-    try {
-      const response = await fetch(`/isLiked?id=${postId}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`, // Add authorization header if needed
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch like status');
-      }
-
-      const result = await response.json();
-      updateLikeButton(result.isLiked, buttonElement);
-    } catch (error) {
-      console.error('Error fetching like status:', error);
-    }
-  }
-
-  function updateLikeButton(isLiked, buttonElement) {
-    if (isLiked) {
-      buttonElement.classList.remove('btn-outline-danger');
-      buttonElement.classList.add('btn-danger');
-    } else {
-      buttonElement.classList.remove('btn-danger');
-      buttonElement.classList.add('btn-outline-danger');
-    }
-  }
-  const postContainer = document.getElementById("post-container");
-  let currentPage = 1;
-  const postsPerPage = 10; // Adjust as needed
-  async function fetchPosts(page) {
-    try {
-       const url = new URL(window.location.href);
-
-    // Ambil parameter pencarian dari query string
-    const search = url.searchParams.get('search')?.replace("#", "") || '';
-      const response = await fetch(`/get
-/user/post/<%= user.user.username %>?page=${page}&limit=${postsPerPage}${search!== null ? `&search=${search}`: ''}`);
-      const data = await response.json();
-      return data.posts.posts;
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-      return [];
-    }
-  }
-  function escapeHTMLAttribute(jsonString) {
-    return jsonString.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
-  }
-  function renderPosts(posts) {
-    posts.forEach((post) => {
-      const postElement = document.createElement("div");
-      postElement.innerHTML = `
-    <div class="card bg-dark text-white p-3 post rounded-0 border-light">
-      <a href="/@${post.user.username}/${post.id.includes("txtr") ? post._id : post.id}">
-        <div>
-        ${ post.repost ? `<p class="text-secondary mb-1 ms-1">
-          <i class="fa-solid fa-recycle"></i> ${ post.user.name } reposted
-        </p> ` : "" }
-        <article class="d-flex pt-2 justify-content-between">
-                  <article class="d-flex">
-
-        <img class="pfp rounded-circle" src="${post.repost ? post.repost.pp : post.user.pp}" />
-        ${
-          post.repost
-            ? `
-             <div class="ms-2">
-              <h5 class="font-weight-bold">${post.repost.name.replace(/<[^>]+>/g, "")}</h5>
-            `
-            : `
-            <div class="ms-2">
-              <h5 class="font-weight-bold">
-                ${post.user.name.replace(/<[^>]+>/g, "")} ${
-                post.reQuote
-                  ? `Requoted ${post.reQuote.user.name.replace(
-                      /<[^>]+>/g,
-                      ""
-                    )}`
-                  : ""
-              }
-              </h5>
-              `
-        }
-              <h5 class="text-secondary">${post.time}</h5>
-            </div>
-          </article>
-        <button class="btn btn-outline-light border-none rounded-pill ms-2" style=" border: 0px !important" onclick="report('${
-          post._id
-        }', this)">
-        <i class="fa-solid fa-flag"></i>
-        </button>
-        </article>
-      </div>
-        <h3 class="h5 mt-2">
-          ${post.title.replace(/#(\w+)/g, '<a href="/?search=$1" class="text-info">$&</a>')}
-        </h3>
-        ${
-          post.img
-            ? post.img.includes(".mp4") || post.img.includes(".ogg") ? `
-            <video height="450" class="mb-3 border-light" loop style="border-radius: 2% !important; width: 100%;" controls>
-              <source src="${post.img}" type="video/mp4">
-            </video>`
-            : `<img
-                style="border-radius: 2% !important"
-                class="mb-3"
-                src="${post.img}"
-                onerror="this.remove()"
-              />` :""
-        }
-      </a>
-      ${
-        post.reQuote
-          ? `
-        <div class="card bg-dark text-white p-2 mb-2 mt-2 border-1 border-secondary">
-          <a href="/?id=${post.reQuote.id}">
-            <article class="d-flex pt-2">
-              <img class="pfp rounded-circle" src="${post.reQuote.user.pp}" />
-              <div class="ms-2">
-                <h4 class="mb-0">${post.reQuote.user.name.replace(
-                  /<[^>]+>/g,
-                  ""
-                )}</h4>
-                <h5 class="text-secondary">${post.reQuote.time}</h5>
-              </div>
-            </article>
-            <h3 class="h4 mt-2">${post.reQuote.title.replace(
-              /<[^>]+>/g,
-              ""
-            )}</h3>
-            ${
-          post.reQuote.img
-            ? post.reQuote.img.includes(".mp4") || post.reQuote.img.includes(".ogg") ? `
-            <video height="450" class="border-light" loop style="border-radius: 2% !important; width: 100%;" controls>
-              <source src="${post.reQuote.img}" type="video/mp4">
-            </video>`
-            : `<img
-                style="border-radius: 2% !important"
-                class="mb-3"
-                src="${post.reQuote.img}"
-                onerror="this.remove()"
-              />` :""
-        }
-          </a>
-        </div>
-      `
-          : ""
-      }
-      <div class="d-flex">
-        <button class="btn btn-outline-danger rounded-pill" id="like-btn-${post.id}" onclick="sendLikeRequest('${
-          post.id
-        }', this)">
-        <i class="fa-solid fa-heart"></i> ${post.like.users.length}
-        </button>
-        <a href="/?id=${
-          post.id
-        }" class="btn btn-outline-secondary rounded-pill text-black ms-2">
-            <i class="fa-solid fa-comment"></i>
-        </a>
-        <button class="btn btn-outline-success rounded-pill ms-2" onclick='sendPostRequest(undefined, undefined, undefined, "${
-          post.id
-        }", "${post.user._id}"
-        , "${post.title}")'><i class="fa-solid fa-recycle"></i></button>
-        <button class="btn btn-outline-info rounded-pill ms-2" onclick='share("/?id=${post.id}")'><i class="fa-solid fa-share"></i></button>
-        <button
-          class="btn btn-outline-secondary rounded-pill ms-2"
-          onclick="createBookmark('${post._id}')"
-        >
-          <i class="fa-solid fa-bookmark"></i>
-        </button>
-      </div>
-    </div>
-    `;
-      postContainer.appendChild(postElement);
-
-      // Fetch and update like status for this post
-      fetchIsLiked(post.id, document.getElementById(`like-btn-${post.id}`));
-    });
-  }
-
-  async function loadMorePosts() {
-    currentPage++;
-    const newPosts = await fetchPosts(currentPage);
-    renderPosts(newPosts);
-  }
-  // Initial load
-  fetchPosts(currentPage).then(renderPosts);
-  // Add scroll listener for infinite scrolling
-  window.addEventListener("scroll", () => {
-    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    if (scrollTop + clientHeight >= scrollHeight - 100) {
-      // Adjust threshold as needed
-      loadMorePosts();
-    }
-  });
 </script>
+<script src="/homepage.js"></script>

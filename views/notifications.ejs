@@ -1,9 +1,6 @@
 <%- include("partials/header.ejs") %>
 
-<div
-  id="loading-screen"
-  class="d-none position-fixed top-50 start-50 translate-middle"
->
+<div id="loading-screen" class="d-none position-fixed top-50 start-50 translate-middle">
   <div class="spinner-border text-primary" role="status">
     <span class="visually-hidden">Loading...</span>
   </div>
@@ -17,7 +14,6 @@
 </ul>
 
 <%- include("partials/footer.ejs") %>
-
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const loadingScreen = document.getElementById("loading-screen");
@@ -50,13 +46,10 @@
             .reverse()
             .forEach((notification) => {
               const listItem = document.createElement("a");
-              listItem.className =
-                "bg-dark text-white p-3 post rounded-0 border-light d-flex align-items-center";
+              listItem.className = "bg-dark text-white p-3 post rounded-0 border-light d-flex align-items-center";
 
               const icon = document.createElement("i");
-              icon.className = notification.message.includes("liked")
-                ? "fa-solid fa-heart text-danger me-2"
-                : "fa-solid fa-plus text-success me-2";
+              icon.className = notification.message.includes("liked") ? "fa-solid fa-heart text-danger me-2" : "fa-solid fa-plus text-success me-2";
 
               const text = document.createElement("span");
               listItem.href = notification.link;
