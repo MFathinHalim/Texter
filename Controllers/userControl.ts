@@ -51,12 +51,7 @@ class Users {
     return Users.instances;
   }
 
-  async signUp(
-    name: string,
-    username: string,
-    password: string,
-    desc: string
-  ): Promise<userType> {
+  async signUp(name: string, username: string, password: string, desc: string): Promise<userType> {
     password = await bcrypt.hash(btoa(password), 10); //bikin crypt buat passwordnya (biar gak diliat cihuyyy)
     const MAX_USERNAME_LENGTH = 16;
 
@@ -67,14 +62,7 @@ class Users {
     const hasHTMLTags = /<\/?[a-z][\s\S]*>/i.test(username);
 
     // Check for invalid username
-    if (
-      username.trim().length === 0 ||
-      hasInvalidCharacters ||
-      hasHTMLTags ||
-      username.trim().length > MAX_USERNAME_LENGTH ||
-      name.trim().length > MAX_USERNAME_LENGTH ||
-      username.trim().includes("/")
-    ) {
+    if (username.trim().length === 0 || hasInvalidCharacters || hasHTMLTags || username.trim().length > MAX_USERNAME_LENGTH || name.trim().length > MAX_USERNAME_LENGTH || username.trim().includes("/")) {
       return this.#error[0]; // Handle username errors
     }
     //untuk signup
@@ -85,15 +73,10 @@ class Users {
     ////////////////////////////////////////////////
     const time = new Date().toLocaleDateString(); //Bikin timenya
     const newUser: userType = {
-      id:
-        "txtr-usr" +
-        username +
-        Math.random().toString(16).slice(2) +
-        "tme:" +
-        time,
+      id: "txtr-usr" + username + Math.random().toString(16).slice(2) + "tme:" + time,
       name: name.replace(/<[^>]+>/g, ""), //! )
       username: username.replace(/<[^>]+>/g, ""), //! )====> Bikin supaya gak nambahin html <></> dan kawan kawan<(0O0)/
-      desc: desc.replace(/<[^>]+>/g, ""), //! )
+      desc: "", //! )
       password: password,
       pp: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
       ban: false,
@@ -117,10 +100,7 @@ class Users {
         return this.#error[1]; // User not found or banned
       }
 
-      const isPasswordValid = await bcrypt.compare(
-        btoa(password),
-        user.password
-      ); //? check apakah passwordnya sesuai
+      const isPasswordValid = await bcrypt.compare(btoa(password), user.password); //? check apakah passwordnya sesuai
       if (!isPasswordValid) return this.#error[1]; // Invalid password
 
       return {
@@ -135,33 +115,16 @@ class Users {
     }
   }
 
-  async createAccessToken(
-    id: string
-  ): Promise<{ newToken: string; refreshToken: string }> {
+  async createAccessToken(id: string): Promise<{ newToken: string; refreshToken: string }> {
     try {
       const user = await this.#users.findOne({ id });
       if (!user) return { newToken: "", refreshToken: "" };
-      const {
-        notification,
-        followers,
-        following,
-        desc,
-        bookmark,
-        ...userPayload
-      } = user.toObject();
+      const { notification, followers, following, desc, bookmark, ...userPayload } = user.toObject();
 
-      const newToken: string = jwt.sign(
-        userPayload,
-        process.env.JWT_SECRET_KEY || "",
-        { expiresIn: "1d" }
-      ); // Buat access token
-      const refreshToken = jwt.sign(
-        { id: user.id },
-        process.env.JWT_SECRET_KEY,
-        {
-          expiresIn: "7d",
-        }
-      );
+      const newToken: string = jwt.sign(userPayload, process.env.JWT_SECRET_KEY || "", { expiresIn: "1d" }); // Buat access token
+      const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
+        expiresIn: "7d",
+      });
 
       return { newToken, refreshToken };
     } catch (error) {
@@ -171,65 +134,44 @@ class Users {
   }
 
   createRefreshToken(refresh: string): Promise<string> {
-    return jwt.verify(
-      refresh,
-      process.env.JWT_SECRET_KEY,
-      async (err: Error, user: userType) => {
-        if (err) return "error";
-        const createAccessToken = await this.createAccessToken(user.id);
-        const accessToken: string = createAccessToken.newToken;
+    return jwt.verify(refresh, process.env.JWT_SECRET_KEY, async (err: Error, user: userType) => {
+      if (err) return "error";
+      const createAccessToken = await this.createAccessToken(user.id);
+      const accessToken: string = createAccessToken.newToken;
 
-        return accessToken;
-      }
-    );
+      return accessToken;
+    });
   }
 
   async createBookmark(id: string, postId: string) {
-    const user: (Document<userType, any, any> & userType) | null =
-      await this.#users.findOne({ id });
+    const user: (Document<userType, any, any> & userType) | null = await this.#users.findOne({ id });
     if (!user) {
       return this.#error[1];
     }
-    const userAlreadyBookmark: userType | undefined = user.bookmark.find(
-      (entry: Document<postType, any, any> & postType) =>
-        entry._id?.toString() === postId
-    );
+    const userAlreadyBookmark: userType | undefined = user.bookmark.find((entry: Document<postType, any, any> & postType) => entry._id?.toString() === postId);
     if (userAlreadyBookmark) {
-      user.bookmark = user.bookmark.filter(
-        (entry: Document<postType, any, any> & postType) =>
-          entry._id?.toString() !== postId
-      );
+      user.bookmark = user.bookmark.filter((entry: Document<postType, any, any> & postType) => entry._id?.toString() !== postId);
     } else {
       user.bookmark.push(postId);
     }
-    return this.#users
-      .updateOne({ id: id }, { $set: { bookmark: user.bookmark } })
-      .then(() => 200);
+    return this.#users.updateOne({ id: id }, { $set: { bookmark: user.bookmark } }).then(() => 200);
   }
-  async getBookmarks(
-    id: string,
-    page: number = 1,
-    limit: number = 5
-  ): Promise<{ posts?: postType[]; totalPages?: number } | userType> {
+  async getBookmarks(id: string, page: number = 1, limit: number = 5): Promise<{ posts?: postType[]; totalPages?: number } | userType> {
     try {
       // Validasi halaman dan limit
       if (page < 1 || limit <= 0) {
         throw new Error("Invalid page number or limit");
       }
-      const objectId = mongoose.Types.ObjectId.isValid(id)
-        ? new mongoose.Types.ObjectId(id)
-        : null;
+      const objectId = mongoose.Types.ObjectId.isValid(id) ? new mongoose.Types.ObjectId(id) : null;
 
       // Temukan pengguna dengan ID dan populasi bookmark
-      const user = await this.#users
-        .findOne({ $or: [{ _id: objectId }, { id: id }] })
-        .populate({
-          path: "bookmark",
-          populate: {
-            path: "user",
-            select: "-password",
-          },
-        });
+      const user = await this.#users.findOne({ $or: [{ _id: objectId }, { id: id }] }).populate({
+        path: "bookmark",
+        populate: {
+          path: "user",
+          select: "-password",
+        },
+      });
 
       if (!user) {
         return this.#error[1];
@@ -262,15 +204,13 @@ class Users {
     }
   }
   async checkWhatUserFollowing(id: string) {
-    const user: (Document<userType, any, any> & userType) | any =
-      await this.#users.findOne({ id });
+    const user: (Document<userType, any, any> & userType) | any = await this.#users.findOne({ id });
     return user.following;
   }
   async checkIsAdmin(id: string): Promise<boolean | userType> {
     try {
       // Find the user by their ID
-      const user: (Document<userType, any, any> & userType) | null =
-        await this.#users.findOne({ id });
+      const user: (Document<userType, any, any> & userType) | null = await this.#users.findOne({ id });
 
       // If user is not found, return the error message
       if (!user) {
@@ -290,8 +230,7 @@ class Users {
   async makeAdmin(userId: string): Promise<boolean | string> {
     try {
       // Find the user by their ID
-      const user: (Document<userType, any, any> & userType) | null =
-        await this.#users.findOne({ id: userId });
+      const user: (Document<userType, any, any> & userType) | null = await this.#users.findOne({ id: userId });
 
       // If user is not found, return an error message
       if (!user) {
@@ -311,8 +250,7 @@ class Users {
   async banUser(userId: string): Promise<boolean | string> {
     try {
       // Find the user by their ID
-      const user: (Document<userType, any, any> & userType) | null =
-        await this.#users.findOne({ id: userId });
+      const user: (Document<userType, any, any> & userType) | null = await this.#users.findOne({ id: userId });
 
       // If user is not found, return an error message
       if (!user) {
@@ -332,8 +270,7 @@ class Users {
   async removeAdmin(userId: string): Promise<boolean | string> {
     try {
       // Find the user by their ID
-      const user: (Document<userType, any, any> & userType) | null =
-        await this.#users.findOne({ id: userId });
+      const user: (Document<userType, any, any> & userType) | null = await this.#users.findOne({ id: userId });
 
       // If user is not found, return an error message
       if (!user) {
@@ -377,14 +314,9 @@ class Users {
       return this.#error[1];
     }
   }
-  async follow(
-    username: string,
-    myusername: string
-  ): Promise<userType | number> {
-    const user: (Document<userType, any, any> & userType) | null =
-      await this.#users.findOne({ username });
-    const mine: (Document<userType, any, any> & userType) | null =
-      await this.#users.findOne({ username: myusername });
+  async follow(username: string, myusername: string): Promise<userType | number> {
+    const user: (Document<userType, any, any> & userType) | null = await this.#users.findOne({ username });
+    const mine: (Document<userType, any, any> & userType) | null = await this.#users.findOne({ username: myusername });
 
     if (user && mine) {
       // @ts-ignore: Unreachable code error
@@ -395,22 +327,10 @@ class Users {
           { $pull: { following: user._id } },
           { new: true } // Return the updated document
         );
-        await this.#users.findByIdAndUpdate(
-          user._id,
-          { $pull: { followers: mine._id } },
-          { new: true }
-        );
+        await this.#users.findByIdAndUpdate(user._id, { $pull: { followers: mine._id } }, { new: true });
       } else {
-        await this.#users.findByIdAndUpdate(
-          mine._id,
-          { $push: { following: user._id } },
-          { new: true }
-        );
-        await this.#users.findByIdAndUpdate(
-          user._id,
-          { $push: { followers: mine._id } },
-          { new: true }
-        );
+        await this.#users.findByIdAndUpdate(mine._id, { $push: { following: user._id } }, { new: true });
+        await this.#users.findByIdAndUpdate(user._id, { $push: { followers: mine._id } }, { new: true });
       }
       await user.save();
       await mine.save();
@@ -421,10 +341,8 @@ class Users {
   } //sistem follow, sama kayak like :D
 
   async checkFollow(username: string, myusername: string): Promise<boolean> {
-    const user: (Document<userType, any, any> & userType) | null =
-      await this.#users.findOne({ username });
-    const mine: (Document<userType, any, any> & userType) | null =
-      await this.#users.findOne({ username: myusername });
+    const user: (Document<userType, any, any> & userType) | null = await this.#users.findOne({ username });
+    const mine: (Document<userType, any, any> & userType) | null = await this.#users.findOne({ username: myusername });
     /* 
     ? check udah follow atau belum 
     ! (keperluan frontend)
@@ -442,16 +360,14 @@ class Users {
   }
   async checkUserDetails(username: string, myusername?: string) {
     let following: boolean = false;
-    const user: (Document<userType, any, any> & userType) | null =
-      await this.#users.findOne({ username: username });
+    const user: (Document<userType, any, any> & userType) | null = await this.#users.findOne({ username: username });
     const userWithoutPassword = {
       ...user?.toObject(),
       password: undefined,
     }; //check user detail (gak ngasihi password)
 
     if (myusername) {
-      const mine: (Document<userType, any, any> & userType) | null =
-        await this.#users.findOne({ username: myusername });
+      const mine: (Document<userType, any, any> & userType) | null = await this.#users.findOne({ username: myusername });
       if (user && mine && user.followers && mine.following) {
         const isFollowing = mine.following.some(
           // @ts-ignore: Unreachable code error
@@ -476,11 +392,8 @@ class Users {
     };
   }
 
-  async checkUserId(
-    userId: string
-  ): Promise<(Document<userType, any, any> & userType) | userType> {
-    const user: (Document<userType, any, any> & userType) | null =
-      await this.#users.findOne({ id: userId });
+  async checkUserId(userId: string): Promise<(Document<userType, any, any> & userType) | userType> {
+    const user: (Document<userType, any, any> & userType) | null = await this.#users.findOne({ id: userId });
     if (user) {
       return user;
     } else {
@@ -488,11 +401,8 @@ class Users {
     }
   } //cari usernya berdasarkan id
 
-  async checkUserUname(
-    username: string
-  ): Promise<(Document<userType, any, any> & userType) | userType> {
-    const user: (Document<userType, any, any> & userType) | null =
-      await this.#users.findOne({ username: username }); //cari berdasarkan username
+  async checkUserUname(username: string): Promise<(Document<userType, any, any> & userType) | userType> {
+    const user: (Document<userType, any, any> & userType) | null = await this.#users.findOne({ username: username }); //cari berdasarkan username
     if (user) {
       return user;
     } else {
@@ -500,11 +410,8 @@ class Users {
     }
   }
 
-  async checkIsUserBan(
-    id: string
-  ): Promise<(Document<userType, any, any> & userType) | userType> {
-    const user: (Document<userType, any, any> & userType) | null =
-      await this.#users.findOne({ id: id });
+  async checkIsUserBan(id: string): Promise<(Document<userType, any, any> & userType) | userType> {
+    const user: (Document<userType, any, any> & userType) | null = await this.#users.findOne({ id: id });
     if (user) {
       return user;
     } else {
@@ -514,15 +421,12 @@ class Users {
   async getTopUsersByFollowers(limit: number = 5): Promise<userType[]> {
     try {
       // Ambil semua pengguna yang tidak dibanned
-      const users: (Document<userType, any, any> & userType)[] =
-        await this.#users.find({
-          ban: false,
-        });
+      const users: (Document<userType, any, any> & userType)[] = await this.#users.find({
+        ban: false,
+      });
 
       // Urutkan pengguna berdasarkan jumlah followers secara menurun
-      const sortedUsers = users.sort(
-        (a, b) => b.followers.length - a.followers.length
-      );
+      const sortedUsers = users.sort((a, b) => b.followers.length - a.followers.length);
 
       // Ambil 5 pengguna teratas dari hasil urutan
       const topUsers = sortedUsers.slice(0, limit);
@@ -543,33 +447,19 @@ class Users {
       return []; // Kembalikan array kosong jika terjadi kesalahan
     }
   }
-  async editProfile(
-    userData: userType,
-    profilePicture: string
-  ): Promise<userType | {}> {
+  async editProfile(userData: userType, profilePicture: string): Promise<userType | {}> {
     try {
       const user = await this.#users.findOne({ id: userData.id });
-      const hasInvalidCharacters =
-        /[\u200B-\u200D\uFEFF]/.test(userData.username) ||
-        /[\u200B-\u200D\uFEFF]/.test(userData.name);
+      const hasInvalidCharacters = /[\u200B-\u200D\uFEFF]/.test(userData.username) || /[\u200B-\u200D\uFEFF]/.test(userData.name);
 
       // Regular expression to detect HTML tags
-      const hasHTMLTags =
-        /<\/?[a-z][\s\S]*>/i.test(userData.username) ||
-        /<\/?[a-z][\s\S]*>/i.test(userData.name);
+      const hasHTMLTags = /<\/?[a-z][\s\S]*>/i.test(userData.username) || /<\/?[a-z][\s\S]*>/i.test(userData.name);
 
       // Maximum length for Discord username
       const MAX_DISCORD_USERNAME_LENGTH = 16;
 
       // Check for invalid fields
-      if (
-        userData.username.trim().length === 0 ||
-        userData.name.trim().length === 0 ||
-        hasInvalidCharacters ||
-        hasHTMLTags ||
-        userData.username.trim().length > MAX_DISCORD_USERNAME_LENGTH ||
-        userData.name.trim().length > MAX_DISCORD_USERNAME_LENGTH
-      ) {
+      if (userData.username.trim().length === 0 || userData.name.trim().length === 0 || hasInvalidCharacters || hasHTMLTags || userData.username.trim().length > MAX_DISCORD_USERNAME_LENGTH || userData.name.trim().length > MAX_DISCORD_USERNAME_LENGTH) {
         return this.#error[0];
       }
       if (!user) {
@@ -592,12 +482,9 @@ class Users {
       return this.#error[1];
     }
   }
-  async getAllUsers(): Promise<
-    (userType & { password?: never; following?: never; followers?: never })[]
-  > {
+  async getAllUsers(): Promise<(userType & { password?: never; following?: never; followers?: never })[]> {
     try {
-      const users: (Document<userType, any, any> & userType)[] =
-        await this.#users.find();
+      const users: (Document<userType, any, any> & userType)[] = await this.#users.find();
       return users.map((user) => ({
         id: user.id,
         name: user.name,
@@ -612,10 +499,7 @@ class Users {
       return [];
     }
   }
-  async createPostNotification(
-    userId: string,
-    postId: string
-  ): Promise<void | boolean> {
+  async createPostNotification(userId: string, postId: string): Promise<void | boolean> {
     try {
       const user = await userModel.findOne({ id: userId });
       if (!user) return console.error("User not found");
@@ -673,20 +557,14 @@ class Users {
       );
 
       // Filter untuk menghapus nilai undefined (jika ada)
-      return followersDetails
-        .filter((detail) => detail !== undefined)
-        .slice(0, 5);
+      return followersDetails.filter((detail) => detail !== undefined).slice(0, 5);
     } catch (error) {
       console.error("Error fetching followers details:", error);
       return this.#error[1];
     }
   }
   // Function to create a like post notification
-  async likePostNotification(
-    userId: string,
-    ownerId: string,
-    postId: string
-  ): Promise<boolean | void> {
+  async likePostNotification(userId: string, ownerId: string, postId: string): Promise<boolean | void> {
     try {
       const postOwner = await userModel.findOne({ id: ownerId });
       if (!postOwner) return console.error("Post owner not found");
@@ -710,10 +588,7 @@ class Users {
   }
 
   // Function to create a follow notification
-  async followPostNotification(
-    userId: string,
-    ownerId: string
-  ): Promise<boolean | void> {
+  async followPostNotification(userId: string, ownerId: string): Promise<boolean | void> {
     try {
       const postOwner = await userModel.findOne({ id: ownerId });
       if (!postOwner) return console.error("Post owner not found");
@@ -738,19 +613,16 @@ class Users {
   async searchUser(searchTerm: string): Promise<userType[]> {
     try {
       // Menghilangkan HTML tags dan whitespace ekstra dari searchTerm
-      const cleanSearchTerm = searchTerm
-        .replace(/<\/?[a-z][\s\S]*>/i, "")
-        .trim();
+      const cleanSearchTerm = searchTerm.replace(/<\/?[a-z][\s\S]*>/i, "").trim();
 
       // Mencari pengguna berdasarkan nama atau username yang mirip dengan searchTerm
-      const users: (Document<userType, any, any> & userType)[] =
-        await this.#users.find({
-          $or: [
-            { username: { $regex: cleanSearchTerm, $options: "i" } }, // Pencarian tidak sensitif huruf
-            { name: { $regex: cleanSearchTerm, $options: "i" } }, // Pencarian tidak sensitif huruf
-          ],
-          ban: false, // Pastikan pengguna tidak dibanned
-        });
+      const users: (Document<userType, any, any> & userType)[] = await this.#users.find({
+        $or: [
+          { username: { $regex: cleanSearchTerm, $options: "i" } }, // Pencarian tidak sensitif huruf
+          { name: { $regex: cleanSearchTerm, $options: "i" } }, // Pencarian tidak sensitif huruf
+        ],
+        ban: false, // Pastikan pengguna tidak dibanned
+      });
 
       // Menghilangkan password dari data pengguna yang dikembalikan
       return users.map((user) => ({
@@ -777,14 +649,10 @@ class Users {
       }
 
       // Ambil notifikasi dari user
-      let notifications: { message: string; link: string }[] =
-        user.notification?.messages || [];
+      let notifications: { message: string; link: string }[] = user.notification?.messages || [];
 
       // Filter notifikasi untuk memastikan setiap notifikasi memiliki message dan link
-      notifications = notifications.filter(
-        (notification: { message: string; link: string }) =>
-          notification.message && notification.link
-      );
+      notifications = notifications.filter((notification: { message: string; link: string }) => notification.message && notification.link);
 
       // Ambil hanya 20 notifikasi terakhir
       const last20Notifications = notifications.slice(-20);
