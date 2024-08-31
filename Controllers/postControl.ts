@@ -1,12 +1,18 @@
-import { type Model, type Document } from "mongoose";
+import { type Model, type Document, mongo } from "mongoose";
 import { mainModel, reportModel } from "../models/post";
-const { htmlToText } = require("html-to-text");
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
+import { htmlToText } from "html-to-text";
 
 dotenv.config();
 //function untuk shuffle array
-function shuffleArray(array: any[]) {
+function shuffleArray(
+  array:
+    | (
+        | Document<unknown, {}, postType> &
+            postType & { _id: mongoose.Types.ObjectId }
+      )[]
+) {
   let currentIndex = array.length,
     temporaryValue,
     randomIndex;
@@ -105,48 +111,48 @@ class Posts {
     | { posts: string[] } // Type getData
   > {
     if (trend) {
-      // Ambil semua post dari database
-      let posts: any = await this.#posts.find().exec();
+      // Fetch all posts from the database
+      let posts: postType[] = await this.#posts.find().exec();
 
       // Populate fields
-      await this.#posts.populate(posts, {
+      posts = await this.#posts.populate(posts, {
         path: "user",
         select: "-password",
       });
-      await this.#posts.populate(posts, {
+      posts = await this.#posts.populate(posts, {
         path: "reQuote",
         populate: {
           path: "user",
           select: "-password",
         },
       });
-      await this.#posts.populate(posts, {
+      posts = await this.#posts.populate(posts, {
         path: "repost",
         select: "-password",
       });
-
-      // Fungsi untuk mengekstrak hashtag dari teks
-      const extractHashtags = (text: string): string[] => {
+      // Function to extract hashtags from text
+      const extractHashtags = (text: string | undefined): string[] => {
         const hashtagPattern = /#(\w+)/g;
         const hashtags = new Set<string>();
         let match: RegExpExecArray | null;
-        while ((match = hashtagPattern.exec(text)) !== null) {
-          hashtags.add(match[1]); // tambahkan hashtag ke dalam set
+        while ((match = hashtagPattern.exec(text || "")) !== null) {
+          hashtags.add(match[1]); // Add hashtag to set
         }
         return Array.from(hashtags);
       };
 
-      // Kumpulkan semua hashtag dari semua judul post
-      const allHashtags = new Set<string>();
-      posts.forEach((post: postType) => {
+      // Collect all hashtags from all post titles
+      const allHashtags = new Set<any>();
+      posts.forEach((post) => {
         const hashtags = extractHashtags(post.title);
-        hashtags.forEach((tag) => allHashtags.add(tag));
+        hashtags.forEach((tag) => allHashtags.add(tag)); // `tag` is a string
       });
 
-      // Konversi set hashtag ke dalam array
-      posts = Array.from(allHashtags);
-      posts = shuffleArray(posts);
-      return { posts };
+      // Convert set of hashtags to an array and shuffle
+      const hashtagsArray = Array.from(allHashtags);
+      const shuffledHashtags = shuffleArray(hashtagsArray);
+
+      return { posts: shuffledHashtags };
     }
 
     if (!id && userId === undefined) {
@@ -198,7 +204,7 @@ class Posts {
           select: "-password",
         });
 
-        posts = posts.filter((post) => !post.user.ban && !post.replyTo);
+        posts = posts.filter((post) => !post.user?.ban && !post.replyTo);
 
         return { posts };
       } catch (error) {
@@ -238,7 +244,12 @@ class Posts {
         const objectId = mongoose.Types.ObjectId.isValid(id)
           ? new mongoose.Types.ObjectId(id)
           : null;
-        const post: postType | any = await this.#posts
+        const post:
+          | (Document<unknown, {}, postType> &
+              postType & {
+                _id: mongoose.Types.ObjectId;
+              })
+          | null = await this.#posts
           .findOne({ $or: [{ _id: objectId }, { id: id }] })
           .populate("user", "-password")
           .populate("user", "-notification")
@@ -255,14 +266,14 @@ class Posts {
           })
           .exec();
         // Tambahkan informasi replyTo ke dalam post jika ada
-        if (post.replyTo) {
+        if (post?.replyTo && post?.replyTo !== null) {
           const replyToPost = await this.#posts
-            .findOne({ id: post.replyTo })
+            .findOne({ id: post?.replyTo })
             .populate("user", "-password")
             .populate("user", "-notification")
             .exec();
 
-          post.replyTo = JSON.stringify(replyToPost) || null;
+          post!.replyTo = replyToPost ? JSON.stringify(replyToPost) : "";
         }
         return { post: post || null };
       } catch (error) {
@@ -271,7 +282,11 @@ class Posts {
       }
     }
   }
-  async getDataByFollowedUsers(followingUserIds: any, page = 1, limit = 10) {
+  async getDataByFollowedUsers(
+    followingUserIds: mongoose.ObjectId | string,
+    page = 1,
+    limit = 10
+  ) {
     try {
       // Parameter paginasi
       const skip = (page - 1) * limit;
@@ -322,7 +337,12 @@ class Posts {
     const objectId = mongoose.Types.ObjectId.isValid(id)
       ? new mongoose.Types.ObjectId(id)
       : null;
-    const post: postType | any = await this.#posts
+    const post:
+      | (Document<unknown, {}, postType> &
+          postType & {
+            _id: mongoose.Types.ObjectId;
+          })
+      | null = await this.#posts
       .findOne({ $or: [{ _id: objectId }, { id: id }] })
       .populate("user", "-password")
       .populate("user", "-notification")
@@ -349,7 +369,10 @@ class Posts {
     const skip = (page - 1) * limit;
 
     // Ambil replies dengan limit dan skip
-    let replies: any = await this.#posts
+    let replies: (Document<unknown, {}, postType> &
+      postType & {
+        _id: mongoose.Types.ObjectId;
+      })[] = await this.#posts
       .find({ replyTo: post.id })
       .populate("user", "-password")
       .populate("user", "-notification")
@@ -358,14 +381,19 @@ class Posts {
       .exec();
 
     // Filter replies yang valid
-    replies = replies.filter(
-      (reply: postType | any) => reply.user !== undefined
-    );
+    replies = replies.filter((reply: postType) => reply.user !== undefined);
 
     // Hapus elemen yang tidak valid (opsional)
     const invalidReplyIds = replies
-      .filter((reply: postType | any) => reply.user === undefined)
-      .map((reply: postType | any) => reply._id);
+      .filter((reply: postType) => reply.user === undefined)
+      .map(
+        (
+          reply: Document<unknown, {}, postType> &
+            postType & {
+              _id: mongoose.Types.ObjectId;
+            }
+        ) => reply._id
+      );
 
     if (invalidReplyIds.length > 0) {
       await this.#posts.deleteMany({ _id: { $in: invalidReplyIds } });
@@ -542,39 +570,51 @@ class Posts {
     }
   }
 
-  liking(postId: string, user: any): Promise<number> {
+  liking(
+    postId: string,
+    user: Document<userType, any, any> & userType
+  ): Promise<number> {
     //Fungsi ngelike
     return this.#posts
       .findOne({ id: postId })
       .populate("like.users", "-password") //intinya nyari dulu
       .exec()
-      .then((post: any) => {
-        if (!post) {
-          throw new Error("Post not found");
+      .then(
+        (
+          post:
+            | (Document<unknown, {}, postType> &
+                postType & {
+                  _id: mongoose.Types.ObjectId;
+                })
+            | null
+        ) => {
+          if (!post) {
+            throw new Error("Post not found");
+          }
+
+          const userAlreadyLike: userType | undefined = post.like.users.find(
+            (entry: userType) => entry.id.toString() === user.id
+          ); //kalau usernya udah ngelike
+
+          if (!userAlreadyLike) {
+            // User belum like, tambahkan like
+            post.like.users.push(user._id); //? bakal di push
+          } else {
+            // User sudah like, hapus like
+            post.like.users = post.like.users.filter(
+              (entry: userType) => entry.id.toString() !== user.id
+            ); //? di filter
+          }
+
+          //! Update post di database
+          return this.#posts
+            .updateOne(
+              { id: postId },
+              { $set: { "like.users": post.like.users } }
+            )
+            .then(() => post.like.users.length);
         }
-
-        const userAlreadyLike: userType | undefined = post.like.users.find(
-          (entry: userType) => entry.id.toString() === user.id
-        ); //kalau usernya udah ngelike
-
-        if (!userAlreadyLike) {
-          // User belum like, tambahkan like
-          post.like.users.push(user._id); //? bakal di push
-        } else {
-          // User sudah like, hapus like
-          post.like.users = post.like.users.filter(
-            (entry: userType) => entry.id.toString() !== user.id
-          ); //? di filter
-        }
-
-        //! Update post di database
-        return this.#posts
-          .updateOne(
-            { id: postId },
-            { $set: { "like.users": post.like.users } }
-          )
-          .then(() => post.like.users.length);
-      })
+      )
       .catch((error: any) => {
         console.error("Error in liking:", error);
         return this.#notFound;
