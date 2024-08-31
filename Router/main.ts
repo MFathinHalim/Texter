@@ -75,7 +75,7 @@ router.route("/@:username/:id").get(async (req: Request, res: Response) => {
     // Fetch user details or other data related to username and id
     try {
       const userDetails = await userClass.checkUserUname(username);
-      const data: any = await PostsClass.getData(id, 0, 0, search);
+      const data = await PostsClass.getData(id, 0, 0, search);
       if (data && userDetails.ban === false) {
         return res.render("details", {
           ...data,
@@ -127,7 +127,7 @@ router
             useUniqueFileName: false,
             folder: "Txtr",
           },
-          async function (error: any, result: any) {
+          async function (error: Error, result: any) {
             if (error) {
               console.error("Error uploading to ImageKit:", error);
               return res
@@ -294,13 +294,13 @@ router.route("/like/").post(async (req: Request, res: Response) => {
   const checkToken = await userClass.checkAccessToken(token);
   let likes: number | postType = 0;
   if (checkToken) {
-    const owner: any = await PostsClass.getOwner(req.body.id);
+    const owner = await PostsClass.getOwner(req.body.id);
     let postId = req.body.id;
     if (postId.includes("txtr")) {
       const post: any = await PostsClass.getData(req.body.id, 0, 0, "");
       postId = post.post._id;
     }
-    userClass.likePostNotification(checkToken.id, owner.id, postId);
+    userClass.likePostNotification(checkToken.id, owner!.id, postId);
     likes = await PostsClass.liking(req.body.id, checkToken);
   }
   return res.json({
@@ -468,7 +468,7 @@ router
             useUniqueFileName: false,
             folder: "Txtr",
           },
-          async function (error: any, result: any) {
+          async function (error: Error, result: any) {
             if (error) {
               console.error("Error uploading to ImageKit:", error);
               return res
@@ -610,7 +610,9 @@ router
     const checkToken = await userClass.checkAccessToken(token);
     if (checkToken) {
       await userClass.follow(req.params.username, req.body.myname);
-      const owner: any = await userClass.getUserByUsername(req.params.username);
+      const owner: userType = await userClass.getUserByUsername(
+        req.params.username
+      );
       await userClass.followPostNotification(checkToken.id, owner.id);
     }
     res.send(200);
@@ -638,7 +640,7 @@ router
     return res.render("login", { searchTerm: "" });
   }) //untuk get login, ya di render aja
   .post(async (req: Request, res: Response) => {
-    let result: any = await userClass.login(
+    let result: userType = await userClass.login(
       req.body.username.replace(" ", ""),
       req.body.password
     ); //liat hasil resultnya nih

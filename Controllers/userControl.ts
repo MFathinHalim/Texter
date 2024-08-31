@@ -106,7 +106,7 @@ class Users {
     return newUser; //di return
   }
 
-  async login(username: string, password: string): Promise<userType | {}> {
+  async login(username: string, password: string): Promise<userType> {
     //Login
     try {
       const user = await this.#users.findOne({
@@ -127,6 +127,7 @@ class Users {
         username: user.username.replace(/<[^>]+>/g, ""),
         name: user.name.replace(/<[^>]+>/g, ""),
         id: user.id,
+        desc: "",
       };
     } catch (error) {
       console.error("Error during login:", error);
