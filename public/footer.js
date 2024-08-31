@@ -730,12 +730,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("theme") || "auto"; // Default to 'dark' if no theme is saved
   applyTheme(savedTheme);
   // List of paths where loading screen should be hidden
-  const hiddenPaths = [`/settings/${username}`, "/login", "/signup", "/notification"];
+  const hiddenPaths = ["/login", "/signup", "/notification"];
 
   // Get the current path
   const currentPath = window.location.pathname;
   // Check if the current path is in the list of hidden paths
-  if (hiddenPaths.includes(currentPath)) {
+  if (hiddenPaths.includes(currentPath) || currentPath.includes("/settings")) {
     document.getElementById("loading-screen-bottom").classList.add("d-none");
   }
 });
