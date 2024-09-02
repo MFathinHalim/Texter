@@ -55,7 +55,6 @@ function renderPosts(posts) {
       const postElement = document.createElement("div");
       postElement.innerHTML = `
     <div class="card bg-dark text-white p-3 post rounded-0 border-light">
-      <a href="/@${post.user.username}/${post.id.includes("txtr") ? post._id : post.id}">
         <div>
         ${
           post.repost
@@ -66,8 +65,10 @@ function renderPosts(posts) {
         }
         <article class="d-flex pt-2 justify-content-between">
                   <article class="d-flex">
-
-        <img class="pfp rounded-circle" src="${post.repost ? post.repost.pp : post.user.pp}" />
+            <a href="/@${post.user.username}/">
+            <img class="pfp rounded-circle" src="${post.repost ? post.repost.pp : post.user.pp}" />
+            </a>
+            <a href="/@${post.user.username}/">
         ${
           post.repost
             ? `
@@ -82,6 +83,7 @@ function renderPosts(posts) {
               `
         }
               <h5 class="text-secondary">${post.time}</h5>
+              </a>
             </div>
           </article>
         <button class="btn btn-outline-light border-none rounded-pill ms-2" style=" border: 0px !important" onclick="report('${post._id}', this)">
@@ -89,6 +91,7 @@ function renderPosts(posts) {
         </button>
         </article>
       </div>
+      <a href="/@${post.user.username}/${post.id.includes("txtr") ? post._id : post.id}">
         <h3 class="h5 mt-2">
           ${post.title.replace(/#(\w+)/g, '<a href="/?search=$1" class="text-info">$&</a>')}
         </h3>
