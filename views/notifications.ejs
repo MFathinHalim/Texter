@@ -9,11 +9,10 @@
 <article class="card bg-dark text-light p-3 border-light rounded-0">
   <h4 class="m-0">Notification</h4>
 </article>
-<ul id="notifications-list" class="list-unstyled">
+<ul id="notifications-list" class="list-unstyled border-light">
   <!-- Notifikasi akan ditampilkan di sini -->
 </ul>
 
-<%- include("partials/footer.ejs") %>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const loadingScreen = document.getElementById("loading-screen");
@@ -46,7 +45,7 @@
             .reverse()
             .forEach((notification) => {
               const listItem = document.createElement("a");
-              listItem.className = "bg-dark text-white p-3 post rounded-0 border-light d-flex align-items-center";
+              listItem.className = "text-white p-3 post rounded-0 border-light d-flex align-items-center";
 
               const icon = document.createElement("i");
               icon.className = notification.message.includes("liked") ? "fa-solid fa-heart text-danger me-2" : "fa-solid fa-plus text-success me-2";
@@ -73,3 +72,4 @@
     fetchNotifications(); // Panggil fungsi saat halaman dimuat
   });
 </script>
+<%- include("partials/footer.ejs") %>

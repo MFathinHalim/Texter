@@ -15,7 +15,7 @@
       type="image/x-icon"
       href="https://ik.imagekit.io/9hpbqscxd/SG/image-66.jpg?updatedAt=1705798245623"
     />
-    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.css"/>
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -135,9 +135,9 @@
       <a
         class="btn btn-outline-dark rounded-pill m-2 mt-0 mb-0 ms-0"
         style="font-size: larger; border: none !important"
-        href="/video"
+        href="/notification"
       >
-        <i class="fa-solid fa-clapperboard"></i>
+        <i class="fa-solid fa-bell"></i>
       </a>
     </nav>
     <div id="popup" class="popup d-none" onclick="togglePopup()">
@@ -223,94 +223,58 @@
     </div>
     <div class="container">
       <div class="row no-gutters">
-        <div class="col-12 col-lg-3 h-100 sticky-element" id="col-lb-2">
-          <div class="d-flex">
-            <a
-              id="notifbtn"
-              class="d-none d-lg-flex btn pe-4 ps-4 text-center bg-dark text-white border-light rounded-lg d-flex align-items-center justify-content-center"
-              href="/notification"
-            >
-              <i id="bell-icon" class="fas fa-bell"></i>
-              <!-- Ikon notifikasi dari FontAwesome -->
-              <span id="notif-dot" class="notif-dot ms-1"></span>
-            </a>
-            <div
-              class="card bg-dark text-white ms-2 border-light d-none d-lg-flex rounded-lg"
-              style="max-width: 300px"
-            >
-              <div class="card-body">
-                <input
-                  type="text"
-                  autocomplete="off"
-                  value="<%= searchTerm %>"
-                  id="searchInput"
-                  class="form-control"
-                  placeholder="Search"
-                />
+        <div class="col-12 col-lg-3 h-100" id="col-lb-2">
+          <div class="fixed-on-navbar">
+          <div class="card border-0 bg-dark text-white rounded-0 d-none d-lg-flex post " style="flex-grow: 1;">
+            <div class="card-body p-0">
+              <div>
+                <div class="p-3 pb-2 d-flex align-items-center">
+                  <i class="fa-solid fa-house h4 me-2"></i>
+                  <a href="/" class="h4 mb-0">Home</a>
+                </div>
+                <div class="p-3 pb-2 d-flex align-items-center">
+                  <i class="fa-solid fa-magnifying-glass h4 me-2"></i>
+                  <a href="/search" class="h4 mt-0">Search</a>
+                </div>
+                <div class="p-3 pb-2 d-flex align-items-center">
+                  <i class="fa-solid fa-bookmark h4 me-3"></i>
+                  <a href="/bookmark" class="h4 mt-0">Saved</a>
+                </div>
+                <div class="p-3 pb-2 d-flex align-items-center">
+                  <i class="fa-solid fa-clapperboard h4 me-3"></i>
+                  <a href="/video" class="h4 mt-0">Videos</a>
+                </div>
+                <div class="p-3 pb-2 d-flex align-items-center">
+                  <i class="fa-solid fa-bell h4 me-3"></i>
+                  <a class="h4 mt-0" href="/notification">Notification</a>
+                </div>
               </div>
-            </div>
-          </div>
-
-          <div
-            class="card bg-dark text-white border-light d-none d-lg-flex pt-3 rounded-lg mt-2"
-          >
-            <a href="#" id="myDetails" class="d-lg-flex">
-              <img
-                class="rounded-circle mx-auto"
-                style="
-                  width: 100%;
-                  height: 100%;
-                  max-width: 100px;
-                  max-height: 100px;
-                "
-                id="mypfp"
-                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                alt="Card image"
-              />
-            </a>
-            <div class="card-body">
-              <h5 class="card-title text-center" id="myname"></h5>
-              <p
-                class="card-text text-secondary text-center"
-                id="myusername"
-              ></p>
-              <p
-                class="card-text"
-                id="mydesc"
-                style="height: fit-content !important"
-              ></p>
-
-              <p
-                class="card-text mb-0"
-                id="myfollowing"
-                style="color: var(--text)"
-              >
-                following
-              </p>
-              <p class="card-text" id="myfollowers" style="color: var(--text)">
-                followers
-              </p>
-              <div class="text-center">
-                <button
-                  onclick="togglePopup()"
-                  class="btn btn-primary rounded-pill ms-3"
-                  style="width: 70%; font-size: x-large"
-                >
+        
+              <div class="text-center pb-4 p-3">
+                <button class="btn btn-primary rounded-pill" onclick="togglePopup()" style="width: 100%; font-size: x-large;">
                   Post
                 </button>
               </div>
             </div>
           </div>
-          <div
-            class="card bg-dark text-white border-light d-none d-lg-flex rounded-lg mt-2 mb-2"
-          >
+        
+          <div class="card border-0 bg-dark text-white rounded-0 d-none d-lg-flex post h-100">
             <div class="card-body">
-              <h5 class="h5 card-title mb-3" style="font-weight: 900">
-                Mutuals
-              </h5>
+              <h5 class="h5 card-title mb-3" style="font-weight: 900;">Mutuals</h5>
+              <div id="follower">
 
-              <div id="follower"></div>
+                  <p>No mutuals found.</p>
+              </div>
+        
+                <a id="myDetails" class="border-light rounded mt-auto d-flex pt-2 pb-2 p-3">
+                  <img class="rounded-circle me-2" style="width: 50px; height: 50px;" id="mypfp" alt="Profile"/>
+                  <div>
+                    <h5 class="card-title mb-0" id="myname"></h5>
+                    <p class="card-text text-secondary" id="myusername">@</p>
+                  </div>
+                </a>
             </div>
           </div>
         </div>
+      </div>
         <div class="col-lg-6 col-12">

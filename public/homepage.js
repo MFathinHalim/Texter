@@ -60,7 +60,7 @@ function renderPosts(posts) {
       post.repost
         ? `
     <p class="text-secondary mb-1 ms-1">
-      <i class="fa-solid fa-recycle"></i> ${post.user.name} reposted
+      <i class="fa-solid fa-retweet"></i> ${post.user.name} reposted
     </p>`
         : ""
     }
@@ -72,10 +72,10 @@ function renderPosts(posts) {
         </a>
         <div class="ms-2">
           <a href="/@${post.user.username}/">
-            <h5 class="font-weight-bold">
+            <h4 class="font-weight-bold h5">
               ${post.repost ? post.repost.name.replace(/<[^>]+>/g, "") : post.user.name.replace(/<[^>]+>/g, "")}
               ${post.reQuote ? ` Requoted ${post.reQuote.user.name.replace(/<[^>]+>/g, "")}` : ""}
-            </h5>
+            </h4>
           </a>
           <h5 class="text-secondary">${post.time}</h5>
         </div>
@@ -110,11 +110,11 @@ function renderPosts(posts) {
       <article class="d-flex pt-2">
         <img class="pfp rounded-circle" src="${post.reQuote.user.pp}" />
         <div class="ms-2">
-          <h4 class="mb-0">${post.reQuote.user.name.replace(/<[^>]+>/g, "")}</h4>
+          <h4 class="mb-0 h5">${post.reQuote.user.name.replace(/<[^>]+>/g, "")}</h4>
           <h5 class="text-secondary">${post.reQuote.time}</h5>
         </div>
       </article>
-      <h3 class="h4 mt-2">${post.reQuote.title.replace(/<[^>]+>/g, "")}</h3>
+      <h3 class="h5 mt-2">${post.reQuote.title.replace(/<[^>]+>/g, "")}</h3>
       ${
         post.reQuote.img
           ? post.reQuote.img.includes(".mp4") || post.reQuote.img.includes(".ogg")
@@ -139,7 +139,7 @@ function renderPosts(posts) {
       <i class="fa-solid fa-comment"></i>
     </a>
     <button class="btn btn-outline-success rounded-pill ms-2" onclick="event.stopPropagation(); sendPostRequest(undefined, undefined, undefined, '${post.id}', '${post.user._id}', '${post.title}')">
-      <i class="fa-solid fa-recycle"></i>
+      <i class="fa-solid fa-retweet"></i>
     </button>
     <button class="btn btn-outline-info rounded-pill ms-2" onclick="event.stopPropagation(); share('/?id=${post.id}')">
       <i class="fa-solid fa-share"></i>

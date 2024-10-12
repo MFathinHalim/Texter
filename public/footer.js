@@ -337,16 +337,15 @@ if (!window.location.href.toString().includes("/login") && !window.location.href
           profilePic.classList.add("pfp", "rounded-circle");
           profilePic.style.width = "50px"; // Set the width of the profile picture
           profilePic.style.height = "50px"; // Set the height of the profile picture
-          profilePic.style.marginRight = "10px"; // Margin between profile picture and text
           listItem.appendChild(profilePic);
 
           // User info
           const userInfo = document.createElement("div");
-          userInfo.classList.add("d-flex", "flex-column");
+          userInfo.classList.add("d-flex", "flex-column", "ms-2");
 
           const dName = document.createElement("a");
           dName.href = `/@${user.username}`; // Link to user profile page
-          dName.classList.add("text-white", "text-decoration-none", "h5");
+          dName.classList.add("text-white", "text-decoration-none", "h5", "mb-1");
           dName.textContent = user.name;
           userInfo.appendChild(dName);
 
@@ -374,7 +373,7 @@ if (!window.location.href.toString().includes("/login") && !window.location.href
         var rect = el.getBoundingClientRect();
         var viewportHeight = window.innerHeight;
 
-        const dynamicTop = 1000; // Adjust this value if needed
+        const dynamicTop = 1200; // Adjust this value if needed
         if (rect.bottom < viewportHeight) {
           el.style.top = `${viewportHeight - dynamicTop}px`; // Set top to be -10px from the viewport height
         }

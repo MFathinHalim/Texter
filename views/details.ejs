@@ -16,7 +16,7 @@
       </button>
       <img src="<%= JSON.parse(post.replyTo).user.pp %>" class="pfp rounded-circle" />
       <div class="d-flex flex-column ms-2 me-auto">
-        <h5 class="mb-1"><%= JSON.parse(post.replyTo).user.name %></h5>
+        <h4 class="mb-1 h5"><%= JSON.parse(post.replyTo).user.name %></h4>
         <h5 class="text-secondary"><%= JSON.parse(post.replyTo).time %></h5>
       </div>
     </article>
@@ -34,8 +34,7 @@
   <img style="border-radius: 2% !important" class="mb-3 border-light" src="<%= JSON.parse(post.replyTo).img %>" />
   <% } %> <% } %>
 </div>
-<div class="d-flex align-items-center" style="height: 50px" id="target">
-  <div class="vr" style="width: 5px; background-color: #969696 !important"></div>
+<div class="d-flex align-items-center border-light" style="height: 50px" id="target">
   <h4 class="text-center ms-3">Reply For <%= JSON.parse(post.replyTo).user.name %></h4>
 </div>
 <% } %>
@@ -51,7 +50,7 @@
       <img src="<%= post.repost ? post.repost.pp : post.user.pp %>" class="pfp rounded-circle ms-1" />
       <div class="d-flex flex-column ms-2 me-auto">
         <!-- ms-2 untuk margin kiri 2, me-auto untuk margin kanan otomatis -->
-        <h5 class="mb-0"><%= post.repost ? post.repost.name : post.user.name %></h5>
+        <h4 class="mb-0 h5"><%= post.repost ? post.repost.name : post.user.name %></h4>
         <h5 class="text-secondary"><%= post.time %></h5>
       </div>
     </article>
@@ -106,7 +105,7 @@
     <div class="d-flex mb-2">
       <img class="rounded-circle" style="width: 100%; height: 100%; max-width: 60px; max-height: 60px" id="mypfp" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Card image" />
       <div class="ms-2 mt-0">
-        <h5 class="card-title" id="myname"></h5>
+        <h4 class="card-title h5" id="myname"></h4>
         <h5 class="text-secondary" id="currentTime"></h5>
       </div>
     </div>
@@ -129,7 +128,7 @@
     <div class="d-flex mb-2">
       <img class="rounded-circle" style="width: 100%; height: 100%; max-width: 60px; max-height: 60px" id="mypfp" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Card image" />
       <div class="ms-2 mt-0">
-        <h5 class="card-title" id="myname"></h5>
+        <h4 class="card-title h5" id="myname"></h4>
         <h5 class="text-secondary" id="currentTime"></h5>
       </div>
     </div>

@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Mulish:700|Ubuntu:400");
 
+/*# sourceMappingURL=bootstrap.css.map */
 :root {
   --background3: #f7f5feef;
   --background2: rgba(237, 235, 241, 0.322);
@@ -23,9 +24,9 @@
   --primary: #f8f6fe;
   --secondary: #393e46;
   --accent1: #efbd46;
-  --accent2: #3aaaef;
-  --success: rgb(0, 203, 136);
-  --error: rgb(255, 45, 143);
+  --accent2: #1da1f2;
+  --success: rgb(0, 186, 124);
+  --error: rgb(249, 24, 128);
   --glass-bg: rgba(18, 18, 18, 0.49);
 }
 [data-theme="dim"] {
@@ -42,10 +43,16 @@
   --error: rgb(255, 45, 143);
   --glass-bg: rgba(21, 32, 43, 0.49);
 }
-.text-white {
+
+div > .text-white,
+div.text-white,
+div.text-light,
+div > .text-light,
+h3.text-light {
   color: var(--text) !important;
 }
-.text-info {
+a.text-info,
+a.text-info {
   color: var(--accent2) !important;
 }
 
@@ -170,10 +177,12 @@ a.disabled {
 }
 .table-dark-custom th,
 .table-dark-custom td {
-  border-color: var(--secondary);
+  border-color: var(--secondary) !important;
 }
-.border-light,
-.border-secondary {
+div > .border-light,
+div > .border-secondary,
+a > .border-light,
+div.border-secondary {
   border: 1px solid #96969648 !important;
 }
 
@@ -196,6 +205,8 @@ a.disabled {
 }
 img {
   object-fit: cover !important;
+  border-radius: 12px !important;
+  max-height: 700px !important;
 }
 
 .btn {
@@ -256,7 +267,7 @@ body {
   height: 30px;
   border-radius: 0.5rem;
   margin-right: 0.5rem;
-  border: 2px solid var(--text);
+  border: 2px solid var(--text) !important;
 }
 
 .theme-box.light {
@@ -341,6 +352,26 @@ strong {
   font-size: larger;
   font-weight: bolder;
 }
+::-webkit-scrollbar {
+  height: 2px !important;
+}
+::-webkit-scrollbar:hover {
+  height: 10px !important;
+}
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.125);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--secondary);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary);
+}
 
 .btn-outline-danger:hover {
   background-color: var(--error) !important;
@@ -348,12 +379,12 @@ strong {
   color: var(--text) !important;
 }
 .btn-outline-light {
-  border: 1px solid var(--text) !important;
+  border: 0px solid var(--text) !important;
   color: var(--text) !important;
 }
 .btn-outline-light:hover {
   background-color: var(--background) !important;
-  border: 1px solid var(--background) !important;
+  border: 0px solid var(--background) !important;
   color: var(--text) !important;
 }
 
@@ -385,7 +416,8 @@ input {
   opacity: 40% !important;
 }
 
-.bg-dark {
+div.bg-dark,
+div > .bg-dark {
   background-color: var(--background) !important;
 }
 .sticky-on-navbar {
@@ -393,13 +425,21 @@ input {
   top: 56px; /* Adjust this value based on your navbar height */
   z-index: 1020; /* Ensure it's above the navbar if necessary */
 }
+.fixed-on-navbar {
+  position: fixed;
+  top: 6vh; /* Menggunakan 5vh untuk memastikan elemen berada di bawah navbar, disesuaikan dengan tinggi viewport */
+  width: 16vw; /* Atur lebar maksimum menggunakan vw agar lebih responsif */
+  z-index: 1020; /* Tetap gunakan z-index agar berada di atas navbar jika diperlukan */
+}
+
 .bg-dark-glass {
   /* From https://css.glass */
   background: var(--glass-bg) !important;
   backdrop-filter: blur(7.4px) !important;
   -webkit-backdrop-filter: blur(7.4px) !important;
 }
-.text-light {
+.text-light,
+button.text-light {
   color: var(--text) !important;
 }
 .bg-dark2 {
