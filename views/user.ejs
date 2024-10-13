@@ -89,24 +89,6 @@
         document.getElementById("top").appendChild(bookmarkLink);
         document.getElementById("top").appendChild(profileLink);
         document.getElementById("bookmarkLink").setAttribute("href", `/bookmark?username=<%= user.user.username %>`);
-
-        let logoutButton = document.createElement("button");
-
-        // Menetapkan atribut untuk tombol logout
-        logoutButton.setAttribute("type", "button"); // Menetapkan type sebagai "button" agar tidak berfungsi sebagai submit
-
-        // Menambahkan kelas Bootstrap untuk tampilan tombol
-        logoutButton.classList.add("btn", "btn-outline-danger", "rounded-pill", "ms-1");
-
-        // Menambahkan ikon dan teks di dalam tombol
-        logoutButton.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i>';
-
-        // Menetapkan fungsi yang akan dipanggil saat tombol diklik
-        logoutButton.onclick = function () {
-          logout(); // Pastikan fungsi logout() sudah didefinisikan di tempat lain
-        };
-        // Menambahkan elemen ke dalam DOM (misalnya, ke dalam div dengan id "buttonContainer")
-        document.getElementById("top").appendChild(logoutButton);
       }
     });
 </script>
