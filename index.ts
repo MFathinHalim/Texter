@@ -10,7 +10,7 @@ import router from "./Router/main";
 dotenv.config();
 
 const app: Express = express(); //TODO bikin expressnya
-const port: number | string = process.env.PORT || 3000; //TODO bikin port :D
+const port: number | string = process.env.PORT || 2000; //TODO bikin port :D
 
 app.set("view engine", "ejs"); //? set view enginenya jadi ejs
 app.use("/", express.static(path.join(__dirname, "public")));

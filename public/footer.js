@@ -386,6 +386,20 @@ if (!window.location.href.toString().includes("/login") && !window.location.href
     // Initial check
     handleScroll();
   });
+  function checkCurrentPath() {
+    const currentPath = window.location.pathname; // Get the current path of the page
+
+    if (currentPath === "/") {
+      document.getElementById("followingfollowers").classList.remove("d-none");
+      // Do something if it's the homepage
+    } else {
+      document.getElementById("followingfollowers").classList.add("d-none");
+      // Do something else for other paths
+    }
+  }
+
+  // Call the function when the DOM is fully loaded
+  document.addEventListener("DOMContentLoaded", checkCurrentPath);
 
   async function getTrendingPosts() {
     try {
